@@ -14,7 +14,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="../../public/images/logo.png" />
       </Head>
-      <h1>Hello</h1>
+      <h1 className="text-yellow">Hello</h1>
+      <h1 className="text-blue1">Hello</h1>
+      <h1 className="text-blue2">Hello</h1>
+      <h1 className="text-blue3">Hello</h1>
+      <h1 className="text-blue4">Hello</h1>
     </>
   );
 }
