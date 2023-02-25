@@ -279,48 +279,58 @@ export default function Timer() {
     <div>
       {/* Timer Option Headers: Pomodoro, Short Break, Long Break, Cycle */}
       <div className="flex space-x-14 mt-8 w-full place-content-center">
-        {(isSessionOn === false ||
-          (isSessionOn && timerOption === "pomodoro")) && (
+        {(!isSessionOn || (isSessionOn && timerOption === "pomodoro")) && (
           <div
-            className={`px-2 py-1 rounded cursor-pointer text-center ${
-              timerOption === "pomodoro" && "font-bold bg-blue1"
-            }`}
-            onClick={handleToggleToPomodoroTimerClick}
+            className={`w-[115px] px-2 py-1 rounded  text-center ${
+              !isSessionOn && "cursor-pointer"
+            } ${timerOption === "pomodoro" && "font-bold bg-blue1"}`}
+            onClick={isSessionOn ? undefined : handleToggleToPomodoroTimerClick}
           >
             Pomodoro
           </div>
         )}
 
-        {(isSessionOn === false ||
-          (isSessionOn && timerOption === "shortBreak")) && (
+        {(!isSessionOn || (isSessionOn && timerOption === "shortBreak")) && (
           <div
-            className={`px-2 py-1 rounded cursor-pointer text-center ${
-              timerOption === "shortBreak" && "font-bold bg-blue1"
-            }`}
-            onClick={handleToggleToShortBreakTimerClick}
+            className={`w-[115px] px-2 py-1 rounded text-center ${
+              !isSessionOn && "cursor-pointer"
+            } ${timerOption === "shortBreak" && "font-bold bg-blue1"}`}
+            onClick={
+              isSessionOn ? undefined : handleToggleToShortBreakTimerClick
+            }
           >
             Short Break
           </div>
         )}
-        {(isSessionOn === false ||
-          (isSessionOn && timerOption === "longBreak")) && (
+        {(!isSessionOn || (isSessionOn && timerOption === "longBreak")) && (
           <div
-            className={`px-2 py-1 rounded cursor-pointer text-center ${
-              timerOption === "longBreak" && "font-bold bg-blue1"
-            }`}
-            onClick={handleToggleToLongBreakTimerClick}
+            className={`w-[115px] px-2 py-1 rounded text-center ${
+              !isSessionOn && "cursor-pointer"
+            } ${timerOption === "longBreak" && "font-bold bg-blue1"}`}
+            onClick={
+              isSessionOn ? undefined : handleToggleToLongBreakTimerClick
+            }
           >
             Long Break
           </div>
         )}
-        {isSessionOn === false && (
+        {!isSessionOn && (
           <div
-            className={`px-2 py-1 rounded cursor-pointer text-center ${
+            className={`w-[115px] px-2 py-1 rounded text-center cursor-pointer ${
               timerOption === "cycle" && "font-bold bg-blue1"
             }`}
-            onClick={handleToggleToCycleTimerClick}
+            onClick={isSessionOn ? undefined : handleToggleToCycleTimerClick}
           >
             Cycle
+          </div>
+        )}
+        {isSessionOn && timerOption === "cycle" && (
+          <div className="w-[200px] px-2 py-1 rounded text-center font-bold bg-blue1">
+            {timerOptionInCycle === "pomodoro" &&
+              `Cycle: Pomodoro #${pomodoroCountInCycle}`}
+            {timerOptionInCycle === "shortBreak" &&
+              `Cycle: Short Break #${pomodoroCountInCycle}`}
+            {timerOptionInCycle === "longBreak" && `Cycle: Long Break`}
           </div>
         )}
       </div>
@@ -339,7 +349,7 @@ export default function Timer() {
       {/* Buttons: STOP, START, PAUSE */}
       <div className=" flex flex-row mt-2 mb-8 w-full place-content-center space-x-4">
         {/* STOP */}
-        {isSessionOn === true && (
+        {isSessionOn && (
           <div onClick={handleStopClick}>
             <BaseButton
               type="button"
@@ -351,21 +361,18 @@ export default function Timer() {
 
         {/* START */}
         {/* Scenario 1: To start session */}
-        {isSessionOn === false &&
-          isCycleOn === false &&
-          isTimerOn === false &&
-          isPauseOn === false && (
-            <div onClick={handleStartClick}>
-              <BaseButton
-                type="button"
-                label="START"
-                className="text-white bg-blue4 py-1 w-24"
-              />
-            </div>
-          )}
+        {!isSessionOn && !isCycleOn && !isTimerOn && !isPauseOn && (
+          <div onClick={handleStartClick}>
+            <BaseButton
+              type="button"
+              label="START"
+              className="text-white bg-blue4 py-1 w-24"
+            />
+          </div>
+        )}
 
         {/* Scenario 2: To resume a pause */}
-        {isPauseOn === true && (
+        {isPauseOn && (
           <div onClick={handleStartClick}>
             <BaseButton
               type="button"
@@ -375,7 +382,7 @@ export default function Timer() {
           </div>
         )}
         {/* Scenario 3: Go to next session in cycle */}
-        {isCycleOn === true && isTimerOn === false && isPauseOn === false && (
+        {isCycleOn && !isTimerOn && !isPauseOn && (
           <div onClick={handleStartClick}>
             <BaseButton
               type="button"
@@ -386,7 +393,7 @@ export default function Timer() {
         )}
 
         {/* PAUSE */}
-        {isTimerOn === true && isPauseOn === false && (
+        {isTimerOn && !isPauseOn && (
           <div onClick={handlePauseClick}>
             <BaseButton
               type="button"
