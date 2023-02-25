@@ -3,7 +3,7 @@ import BaseButton from "./BaseButton";
 
 export default function Nav() {
   return (
-    <div className="flex items-center px-10 py-6">
+    <div className="flex items-center px-10 py-6 w-[1280px] mx-auto">
       <Link href="/" className="flex-grow font-bold text-slate-900">
         Pomogrids
       </Link>
