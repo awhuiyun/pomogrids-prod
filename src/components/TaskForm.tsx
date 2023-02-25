@@ -5,7 +5,10 @@ import BaseButton from "./BaseButton";
 
 export default function TaskForm() {
   // Global states: useTaskStore
-  const { setTaskFormOpenFalse, addTask } = useTaskStore();
+  const { taskFormType, setTaskFormOpenFalse } = useTaskStore();
+  const { addTask } = useTaskStore();
+  const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
+    useTaskStore();
 
   // Local states
   const [taskNameInput, setTaskNameInput] = useState("");
@@ -25,10 +28,8 @@ export default function TaskForm() {
     }
   }
 
-  // Function to handle form submit
-  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  // Function to create new task
+  function createNewTask() {
     // Create unique key for new task
     const uniqueId = uuid();
 
@@ -42,6 +43,25 @@ export default function TaskForm() {
       isSelectedForTimer: false,
       isSelectedForEdit: false,
     });
+  }
+
+  // Function to edit existing task
+  function editExistingTask() {
+    setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
+    unselectAllTasksForEdit();
+  }
+
+  // Function to handle form submit
+  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // Conditional: Create new task or Edit existing task
+    if (taskFormType === "add") {
+      createNewTask();
+    } else if (taskFormType === "edit") {
+      editExistingTask();
+    }
+
     // Close Add Task section
     setTaskFormOpenFalse();
   }
@@ -57,7 +77,9 @@ export default function TaskForm() {
         onSubmit={handleSubmitClick}
       >
         {/* Form title */}
-        <p className="font-bold text-xl text-center">Create new task</p>
+        <p className="font-bold text-xl text-center">
+          {taskFormType === "add" ? "Create new task" : "Update task"}
+        </p>
 
         {/* Task Name */}
         <label>

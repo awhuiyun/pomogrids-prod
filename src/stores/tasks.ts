@@ -3,10 +3,10 @@ import { ITaskItem } from "../types/interfaces";
 
 interface IUseTaskStore {
   tasks: ITaskItem[];
-  isTaskFormOpen: boolean;
+  taskFormType: string;
   taskSelectedForTimer: string;
   taskSelectedForEdit: string;
-  setTaskFormOpenTrue: () => void;
+  setTaskFormOpenTrue: (type: string) => void;
   setTaskFormOpenFalse: () => void;
   unselectAllTasksForTimer: () => void;
   setSelectedTaskForTimer: (id: string) => void;
@@ -38,16 +38,16 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       isSelectedForEdit: false,
     },
   ],
-  isTaskFormOpen: false,
+  taskFormType: "",
   taskSelectedForEdit: "",
   taskSelectedForTimer: "",
-  setTaskFormOpenTrue: () =>
+  setTaskFormOpenTrue: (type: string) =>
     set(() => ({
-      isTaskFormOpen: true,
+      taskFormType: type,
     })),
   setTaskFormOpenFalse: () =>
     set(() => ({
-      isTaskFormOpen: false,
+      taskFormType: "",
     })),
   unselectAllTasksForTimer: () =>
     set((state) => ({

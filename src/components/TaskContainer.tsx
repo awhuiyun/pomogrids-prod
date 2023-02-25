@@ -7,7 +7,7 @@ export default function TaskContainer() {
 
   // Function to toggle isTaskFromOpen=True
   function toggleTaskFormOpenTrue() {
-    setTaskFormOpenTrue();
+    setTaskFormOpenTrue("add");
   }
 
   return (

@@ -6,7 +6,7 @@ import TaskForm from "@/components/TaskForm";
 
 export default function Home() {
   // Global states: useTaskStore
-  const { isTaskFormOpen } = useTaskStore();
+  const { taskFormType } = useTaskStore();
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">
@@ -16,7 +16,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {/* Task Form */}
-      {isTaskFormOpen && <TaskForm />}
+      {taskFormType && <TaskForm />}
 
       {/* Timer and Tasks section */}
       <div className="flex space-x-4">
