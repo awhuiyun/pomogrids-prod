@@ -21,7 +21,26 @@ interface IUseTaskStore {
 }
 
 const useTaskStore = create<IUseTaskStore>((set) => ({
-  tasks: [],
+  tasks: [
+    {
+      uniqueId: "1",
+      taskName: "Work on Pomogrids",
+      targetNumOfSessions: 5,
+      completedNumOfSessions: 3,
+      isCompleted: false,
+      isSelectedForTimer: false,
+      isSelectedForEdit: false,
+    },
+    {
+      uniqueId: "2",
+      taskName: "Buy groceries",
+      targetNumOfSessions: 1,
+      completedNumOfSessions: 1,
+      isCompleted: true,
+      isSelectedForTimer: false,
+      isSelectedForEdit: false,
+    },
+  ],
   isAddTaskSectionOpen: false,
   isEditTaskSectionOpen: false,
   taskSelectedForTimer: "",
