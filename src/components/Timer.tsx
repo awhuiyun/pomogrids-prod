@@ -278,7 +278,7 @@ export default function Timer() {
   return (
     <div>
       {/* Timer Option Headers: Pomodoro, Short Break, Long Break, Cycle */}
-      <div className="flex space-x-14 mt-8 w-full place-content-center">
+      <div className="flex space-x-4 mt-6 w-full place-content-center">
         {(!isSessionOn || (isSessionOn && timerOption === "pomodoro")) && (
           <div
             className={`w-[115px] px-2 py-1 rounded  text-center ${
@@ -336,7 +336,7 @@ export default function Timer() {
       </div>
 
       {/* Timer Display */}
-      <div className="flex flex-row text-8xl font-bold mt-8 mb-8 mx-auto w-fit">
+      <div className="flex flex-row text-8xl font-bold mt-8 mb-10 mx-auto w-fit">
         <div className="w-52 text-end">
           {timerMinutes > 9 ? timerMinutes : "0" + timerMinutes}
         </div>
@@ -347,7 +347,7 @@ export default function Timer() {
       </div>
 
       {/* Buttons: STOP, START, PAUSE */}
-      <div className=" flex flex-row mt-2 mb-8 w-full place-content-center space-x-4">
+      <div className=" flex flex-row mt-2 mb-5 w-full place-content-center space-x-4">
         {/* STOP */}
         {isSessionOn && (
           <div onClick={handleStopClick}>
