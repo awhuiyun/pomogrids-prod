@@ -4,7 +4,7 @@ import Timer from "./Timer";
 
 export default function TimerContainer() {
   return (
-    <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded h-64 w-[600px] p-4">
+    <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded w-[600px] p-4">
       {/* Timer and Settings icons */}
       <div className="flex flex-row text-slate-400">
         <p className="flex-grow text-xs">Timer:</p>

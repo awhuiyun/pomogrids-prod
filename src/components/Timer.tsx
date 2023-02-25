@@ -278,6 +278,52 @@ export default function Timer() {
   return (
     <div>
       {/* Timer Option Headers: Pomodoro, Short Break, Long Break, Cycle */}
+      <div className="flex space-x-14 mt-8 w-full place-content-center">
+        {(isSessionOn === false ||
+          (isSessionOn && timerOption === "pomodoro")) && (
+          <div
+            className={`px-2 py-1 rounded cursor-pointer text-center ${
+              timerOption === "pomodoro" && "font-bold bg-blue1"
+            }`}
+            onClick={handleToggleToPomodoroTimerClick}
+          >
+            Pomodoro
+          </div>
+        )}
+
+        {(isSessionOn === false ||
+          (isSessionOn && timerOption === "shortBreak")) && (
+          <div
+            className={`px-2 py-1 rounded cursor-pointer text-center ${
+              timerOption === "shortBreak" && "font-bold bg-blue1"
+            }`}
+            onClick={handleToggleToShortBreakTimerClick}
+          >
+            Short Break
+          </div>
+        )}
+        {(isSessionOn === false ||
+          (isSessionOn && timerOption === "longBreak")) && (
+          <div
+            className={`px-2 py-1 rounded cursor-pointer text-center ${
+              timerOption === "longBreak" && "font-bold bg-blue1"
+            }`}
+            onClick={handleToggleToLongBreakTimerClick}
+          >
+            Long Break
+          </div>
+        )}
+        {isSessionOn === false && (
+          <div
+            className={`px-2 py-1 rounded cursor-pointer text-center ${
+              timerOption === "cycle" && "font-bold bg-blue1"
+            }`}
+            onClick={handleToggleToCycleTimerClick}
+          >
+            Cycle
+          </div>
+        )}
+      </div>
 
       {/* Timer Display */}
       <div className="flex flex-row text-8xl font-bold mt-8 mb-8 mx-auto w-fit">
