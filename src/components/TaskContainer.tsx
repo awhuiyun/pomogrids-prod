@@ -3,7 +3,12 @@ import TaskItem from "./TaskItem";
 
 export default function TaskContainer() {
   // Global states: useTaskStore
-  const { tasks } = useTaskStore();
+  const { tasks, setTaskFormOpenTrue } = useTaskStore();
+
+  // Function to toggle isTaskFromOpen=True
+  function toggleTaskFormOpenTrue() {
+    setTaskFormOpenTrue();
+  }
 
   return (
     <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded p-4 pb-8 w-full h-fit space-y-2">
@@ -16,7 +21,12 @@ export default function TaskContainer() {
       })}
 
       {/* Add Task */}
-      <div className="text-slate-400 cursor-pointer p-1 pt-4">+ Add task</div>
+      <div
+        className="text-slate-400 cursor-pointer p-1 pt-4"
+        onClick={toggleTaskFormOpenTrue}
+      >
+        + Add task
+      </div>
     </div>
   );
 }

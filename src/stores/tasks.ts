@@ -3,14 +3,11 @@ import { ITaskItem } from "../types/interfaces";
 
 interface IUseTaskStore {
   tasks: ITaskItem[];
-  isAddTaskSectionOpen: boolean;
-  isEditTaskSectionOpen: boolean;
+  isTaskFormOpen: boolean;
   taskSelectedForTimer: string;
   taskSelectedForEdit: string;
-  setAddTaskSectionOpenTrue: () => void;
-  setAddTaskSectionOpenFalse: () => void;
-  setEditTaskSectionOpenTrue: () => void;
-  setEditTaskSectionOpenFalse: () => void;
+  setTaskFormOpenTrue: () => void;
+  setTaskFormOpenFalse: () => void;
   unselectAllTasksForTimer: () => void;
   setSelectedTaskForTimer: (id: string) => void;
   unselectAllTasksForEdit: () => void;
@@ -41,25 +38,16 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       isSelectedForEdit: false,
     },
   ],
-  isAddTaskSectionOpen: false,
-  isEditTaskSectionOpen: false,
-  taskSelectedForTimer: "",
+  isTaskFormOpen: false,
   taskSelectedForEdit: "",
-  setAddTaskSectionOpenTrue: () =>
+  taskSelectedForTimer: "",
+  setTaskFormOpenTrue: () =>
     set(() => ({
-      isAddTaskSectionOpen: true,
+      isTaskFormOpen: true,
     })),
-  setAddTaskSectionOpenFalse: () =>
+  setTaskFormOpenFalse: () =>
     set(() => ({
-      isAddTaskSectionOpen: false,
-    })),
-  setEditTaskSectionOpenTrue: () =>
-    set(() => ({
-      isEditTaskSectionOpen: true,
-    })),
-  setEditTaskSectionOpenFalse: () =>
-    set(() => ({
-      isEditTaskSectionOpen: false,
+      isTaskFormOpen: false,
     })),
   unselectAllTasksForTimer: () =>
     set((state) => ({
