@@ -4,14 +4,17 @@ import { ITaskItem } from "../types/interfaces";
 interface IUseTaskStore {
   tasks: ITaskItem[];
   taskFormType: string;
+  taskEditMenuId: string;
   taskSelectedForTimer: string;
+  addTask: (task: ITaskItem) => void;
+  deleteTask: (id: string) => void;
   setTaskFormOpenTrue: (type: string) => void;
   setTaskFormOpenFalse: () => void;
+  setTaskEditMenuid: (id: string) => void;
   unselectAllTasksForTimer: () => void;
   setSelectedTaskForTimer: (id: string) => void;
   unselectAllTasksForEdit: () => void;
   setSelectedTaskForEdit: (id: string) => void;
-  addTask: (task: ITaskItem) => void;
   addSessionCountToTaskAndCheckCompletion: (id: string) => void;
   setEditsToSelectedTaskForEdit: (name: string, sessionNum: number) => void;
 }
@@ -37,8 +40,19 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       isSelectedForEdit: false,
     },
   ],
-  taskFormType: "",
+  taskFormType: "", // "create", "update", ""; Modal is closed on ""
+  taskEditMenuId: "", // uniqueId, ""; Menu is closed on ""
   taskSelectedForTimer: "",
+  addTask: (task: ITaskItem) =>
+    set((state) => ({
+      tasks: [...state.tasks, task],
+    })),
+  deleteTask: (id: string) =>
+    set((state) => ({
+      tasks: state.tasks.filter((item) => {
+        return item.uniqueId !== id;
+      }),
+    })),
   setTaskFormOpenTrue: (type: string) =>
     set(() => ({
       taskFormType: type,
@@ -46,6 +60,10 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   setTaskFormOpenFalse: () =>
     set(() => ({
       taskFormType: "",
+    })),
+  setTaskEditMenuid: (id: string) =>
+    set(() => ({
+      taskEditMenuId: id,
     })),
   unselectAllTasksForTimer: () =>
     set((state) => ({
@@ -79,10 +97,6 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         }
         return item;
       }),
-    })),
-  addTask: (task: ITaskItem) =>
-    set((state) => ({
-      tasks: [...state.tasks, task],
     })),
   addSessionCountToTaskAndCheckCompletion: (id: string) =>
     set((state) => ({

@@ -1,9 +1,9 @@
-import useTaskStore from "@/stores/tasks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-regular-svg-icons";
 import { ITaskItem } from "@/types/interfaces";
+import useTaskStore from "@/stores/tasks";
 
 export default function TaskItem({
   uniqueId,
@@ -12,13 +12,11 @@ export default function TaskItem({
   completedNumOfSessions,
   isCompleted,
 }: ITaskItem) {
-  // Global states: useTaskStore
-  const { setTaskFormOpenTrue, setSelectedTaskForEdit } = useTaskStore();
+  const setTaskEditMenuid = useTaskStore((state) => state.setTaskEditMenuid);
 
-  // Function to handle click on Update Task Icon
-  function handleUpdateTaskClick() {
-    setTaskFormOpenTrue("update");
-    setSelectedTaskForEdit(uniqueId);
+  // Function to handle click on Grip Icon
+  function handleGripIconClick() {
+    setTaskEditMenuid(uniqueId);
   }
 
   return (
@@ -27,7 +25,7 @@ export default function TaskItem({
       <FontAwesomeIcon
         icon={faGripVertical}
         className="text-slate-400 hover:text-slate-900 "
-        onClick={handleUpdateTaskClick}
+        onClick={handleGripIconClick}
       />
 
       {/* Task */}

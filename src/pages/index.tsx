@@ -7,7 +7,7 @@ import TaskEditMenu from "@/components/TaskEditMenu";
 
 export default function Home() {
   // Global states: useTaskStore
-  const { taskFormType } = useTaskStore();
+  const { taskFormType, taskEditMenuId, setTaskEditMenuid } = useTaskStore();
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">
@@ -19,13 +19,14 @@ export default function Home() {
       {/* Task Form */}
       {taskFormType && <TaskForm />}
 
+      {/* Task Edit Menu */}
+      {taskEditMenuId && <TaskEditMenu />}
+
       {/* Timer and Tasks section */}
       <div className="flex space-x-4">
         <TimerContainer />
         <TaskContainer />
       </div>
-
-      <TaskEditMenu />
     </div>
   );
 }
