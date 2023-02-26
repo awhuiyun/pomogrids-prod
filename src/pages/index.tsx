@@ -3,6 +3,7 @@ import useTaskStore from "@/stores/tasks";
 import TimerContainer from "@/components/TimerContainer";
 import TaskContainer from "@/components/TaskContainer";
 import TaskForm from "@/components/TaskForm";
+import TaskEditMenu from "@/components/TaskEditMenu";
 
 export default function Home() {
   // Global states: useTaskStore
@@ -23,6 +24,8 @@ export default function Home() {
         <TimerContainer />
         <TaskContainer />
       </div>
+
+      <TaskEditMenu />
     </div>
   );
 }
