@@ -12,7 +12,10 @@ export default function TaskEditMenu() {
     setTaskFormOpenTrue,
     setSelectedTaskForEdit,
     deleteTask,
+    mousePos,
   } = useTaskStore();
+
+  console.log(mousePos.x, mousePos.y);
 
   // Function to handle click on Update Task option
   function handleUpdateTaskClick() {
@@ -37,9 +40,12 @@ export default function TaskEditMenu() {
   }
 
   return (
-    <div className="inset-0 absolute" onClick={handleClickToCloseEditMenu}>
+    <div
+      className="inset-0 absolute bg-slate-200"
+      onClick={handleClickToCloseEditMenu}
+    >
       <div
-        className="w-[150px] border border-slate-200 shadow shadow-slate-400 rounded py-1 my-2"
+        className={`w-[150px] border border-slate-200 shadow shadow-slate-400 rounded py-1 my-2 bg-white fixed top-[${mousePos.y}px] left-[${mousePos.x}px]`}
         onClick={(e) => e.stopPropagation()}
       >
         <div onClick={handleUpdateTaskClick}>

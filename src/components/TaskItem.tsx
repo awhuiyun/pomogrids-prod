@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
@@ -12,11 +13,27 @@ export default function TaskItem({
   completedNumOfSessions,
   isCompleted,
 }: ITaskItem) {
-  const setTaskEditMenuid = useTaskStore((state) => state.setTaskEditMenuid);
+  // Global states: useTaskStore
+  const { setTaskEditMenuid, setMousePos } = useTaskStore();
+
+  // Local states
+  const [mousePosLocal, setMousePosLocal] = useState({ x: 0, y: 0 });
+
+  // Tracks mouse position
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) =>
+      setMousePosLocal({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   // Function to handle click on Grip Icon
   function handleGripIconClick() {
     setTaskEditMenuid(uniqueId);
+    setMousePos(mousePosLocal.x, mousePosLocal.y);
   }
 
   return (

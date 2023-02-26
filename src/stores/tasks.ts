@@ -5,12 +5,14 @@ interface IUseTaskStore {
   tasks: ITaskItem[];
   taskFormType: string;
   taskEditMenuId: string;
+  mousePos: { x: number; y: number };
   taskSelectedForTimer: string;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
   setTaskFormOpenTrue: (type: string) => void;
   setTaskFormOpenFalse: () => void;
   setTaskEditMenuid: (id: string) => void;
+  setMousePos: (x: number, y: number) => void;
   unselectAllTasksForTimer: () => void;
   setSelectedTaskForTimer: (id: string) => void;
   unselectAllTasksForEdit: () => void;
@@ -42,6 +44,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   ],
   taskFormType: "", // "create", "update", ""; Modal is closed on ""
   taskEditMenuId: "", // uniqueId, ""; Menu is closed on ""
+  mousePos: { x: 0, y: 0 },
   taskSelectedForTimer: "",
   addTask: (task: ITaskItem) =>
     set((state) => ({
@@ -64,6 +67,10 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   setTaskEditMenuid: (id: string) =>
     set(() => ({
       taskEditMenuId: id,
+    })),
+  setMousePos: (posX: number, posY: number) =>
+    set(() => ({
+      mousePos: { x: posX, y: posY },
     })),
   unselectAllTasksForTimer: () =>
     set((state) => ({
