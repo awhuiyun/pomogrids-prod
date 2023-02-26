@@ -5,7 +5,6 @@ interface IUseTaskStore {
   tasks: ITaskItem[];
   taskFormType: string;
   taskSelectedForTimer: string;
-  taskSelectedForEdit: string;
   setTaskFormOpenTrue: (type: string) => void;
   setTaskFormOpenFalse: () => void;
   unselectAllTasksForTimer: () => void;
@@ -39,7 +38,6 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
     },
   ],
   taskFormType: "",
-  taskSelectedForEdit: "",
   taskSelectedForTimer: "",
   setTaskFormOpenTrue: (type: string) =>
     set(() => ({
@@ -81,7 +79,6 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         }
         return item;
       }),
-      taskSelectedForEdit: id,
     })),
   addTask: (task: ITaskItem) =>
     set((state) => ({
@@ -119,14 +116,14 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
             return {
               ...item,
               taskName: name,
-              numOfSessions: sessionNum,
+              targetNumOfSessions: sessionNum,
               isCompleted: true,
             };
           else {
             return {
               ...item,
               taskName: name,
-              numOfSessions: sessionNum,
+              targetNumOfSessions: sessionNum,
               isCompleted: false,
             };
           }

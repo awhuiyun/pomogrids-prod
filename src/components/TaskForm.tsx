@@ -10,14 +10,18 @@ export default function TaskForm() {
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
 
-  // Local states
-  const [taskNameInput, setTaskNameInput] = useState("");
-  const [targetNumOfSessionsInput, setTargetNumOfSessionsInput] = useState(1);
-
-  // Function to toggle isTaskFromOpen=False
-  function toggleTaskFormOpenFalse() {
-    setTaskFormOpenFalse();
-  }
+  // Local states and variables
+  const taskSelectedForEdit = tasks.filter((item) => {
+    return item.isSelectedForEdit === true;
+  })[0];
+  const [taskNameInput, setTaskNameInput] = useState(
+    taskFormType === "create" ? "" : taskSelectedForEdit.taskName
+  );
+  const [targetNumOfSessionsInput, setTargetNumOfSessionsInput] = useState(
+    taskFormType === "create" ? 1 : taskSelectedForEdit.targetNumOfSessions
+  );
+  const completedNumOfSessionsInput =
+    taskFormType === "create" ? 0 : taskSelectedForEdit.completedNumOfSessions;
 
   // Function to handle input changes
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,6 +30,13 @@ export default function TaskForm() {
     } else {
       setTargetNumOfSessionsInput(parseInt(e.target.value));
     }
+  }
+
+  // Function to toggle isTaskFromOpen=False
+  function toggleTaskFormOpenFalse() {
+    // Close modal & reset states
+    setTaskFormOpenFalse();
+    unselectAllTasksForEdit();
   }
 
   // Function to create new task
@@ -46,7 +57,7 @@ export default function TaskForm() {
   }
 
   // Function to edit existing task
-  function editExistingTask() {
+  function updateExistingTask() {
     setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
     unselectAllTasksForEdit();
   }
@@ -55,15 +66,15 @@ export default function TaskForm() {
   function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Conditional: Create new task or Edit existing task
-    if (taskFormType === "add") {
+    // Conditional: Create new task or Update existing task
+    if (taskFormType === "create") {
       createNewTask();
-    } else if (taskFormType === "edit") {
-      editExistingTask();
+    } else if (taskFormType === "update") {
+      updateExistingTask();
     }
 
-    // Close Add Task section
-    setTaskFormOpenFalse();
+    // Close modal & reset states
+    toggleTaskFormOpenFalse();
   }
 
   return (
@@ -78,7 +89,7 @@ export default function TaskForm() {
       >
         {/* Form title */}
         <p className="font-bold text-xl text-center">
-          {taskFormType === "add" ? "Create new task" : "Update task"}
+          {taskFormType === "create" ? "Create new task" : "Update task"}
         </p>
 
         {/* Task Name */}
@@ -102,19 +113,41 @@ export default function TaskForm() {
             type="number"
             id="targetNumOfSessionsInput"
             value={targetNumOfSessionsInput}
-            min="1"
+            min={taskFormType === "create" ? 1 : completedNumOfSessionsInput}
             className="mx-2 focus:outline-0 w-[60px]"
             onChange={handleInputChange}
             required
           />
         </label>
 
+        {/* Completed number of sessions */}
+        {taskFormType === "update" && (
+          <label>
+            Completed number of sessions:
+            <input
+              type="number"
+              id="completedNumOfSessionsInput"
+              value={completedNumOfSessionsInput}
+              className="mx-2 focus:outline-0 w-[60px]"
+              disabled
+            />
+          </label>
+        )}
+
         {/* Button */}
-        <BaseButton
-          type="submit"
-          label="Add task"
-          className="text-white bg-blue4 px-4 py-1 w-fit mx-auto"
-        />
+        {taskFormType === "create" ? (
+          <BaseButton
+            type="submit"
+            label="Create"
+            className="text-white bg-blue4 px-4 py-1 w-fit mx-auto"
+          />
+        ) : (
+          <BaseButton
+            type="submit"
+            label="Update"
+            className="text-white bg-blue4 px-4 py-1 w-fit mx-auto"
+          />
+        )}
       </form>
     </div>
   );
