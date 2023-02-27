@@ -1,3 +1,4 @@
+import styles from "../styles/TaskEditMenu.module.css";
 import useTaskStore from "@/stores/tasks";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,7 +16,11 @@ export default function TaskEditMenu() {
     mousePos,
   } = useTaskStore();
 
-  console.log(mousePos.x, mousePos.y);
+  // Variable to store the position of the menu
+  const position = {
+    top: mousePos.y,
+    left: mousePos.x,
+  };
 
   // Function to handle click on Update Task option
   function handleUpdateTaskClick() {
@@ -40,12 +45,10 @@ export default function TaskEditMenu() {
   }
 
   return (
-    <div
-      className="inset-0 absolute bg-slate-200"
-      onClick={handleClickToCloseEditMenu}
-    >
+    <div className="inset-0 absolute" onClick={handleClickToCloseEditMenu}>
       <div
-        className={`w-[150px] border border-slate-200 shadow shadow-slate-400 rounded py-1 my-2 bg-white fixed top-[${mousePos.y}px] left-[${mousePos.x}px]`}
+        className={`w-[150px] border border-slate-200 shadow shadow-slate-400 rounded py-1 my-2 bg-white fixed`}
+        style={position}
         onClick={(e) => e.stopPropagation()}
       >
         <div onClick={handleUpdateTaskClick}>
