@@ -13,14 +13,10 @@ interface IUseTimerStore {
   setTimerMinutes: (minutes: number) => void;
   setTimerSeconds: (seconds: number) => void;
   setRemainingDurationInMilliseconds: (num: number) => void;
-  setTimerOnTrue: () => void;
-  setTimerOnFalse: () => void;
-  setPauseOnTrue: () => void;
-  setPauseOnFalse: () => void;
-  setSessionOnTrue: () => void;
-  setSessionOnFalse: () => void;
-  setCycleOnTrue: () => void;
-  setCycleOnFalse: () => void;
+  toggleTimerOn: (status: boolean) => void;
+  togglePauseOn: (status: boolean) => void;
+  toggleSessionOn: (status: boolean) => void;
+  toggleCycleOn: (status: boolean) => void;
   setTimerOptionInCycle: (option: string) => void;
   incrementPomodoroCountInCycle: () => void;
   setPomodoroCountInCycleToOne: () => void;
@@ -48,37 +44,21 @@ const useTimerStore = create<IUseTimerStore>((set) => ({
     set(() => ({
       remainingDurationInMilliseconds: num,
     })),
-  setTimerOnTrue: () =>
+  toggleTimerOn: (status: boolean) =>
     set(() => ({
-      isTimerOn: true,
+      isTimerOn: status,
     })),
-  setTimerOnFalse: () =>
+  togglePauseOn: (status: boolean) =>
     set(() => ({
-      isTimerOn: false,
+      isPauseOn: status,
     })),
-  setPauseOnTrue: () =>
+  toggleSessionOn: (status: boolean) =>
     set(() => ({
-      isPauseOn: true,
+      isSessionOn: status,
     })),
-  setPauseOnFalse: () =>
+  toggleCycleOn: (status: boolean) =>
     set(() => ({
-      isPauseOn: false,
-    })),
-  setSessionOnTrue: () =>
-    set(() => ({
-      isSessionOn: true,
-    })),
-  setSessionOnFalse: () =>
-    set(() => ({
-      isSessionOn: false,
-    })),
-  setCycleOnTrue: () =>
-    set(() => ({
-      isCycleOn: true,
-    })),
-  setCycleOnFalse: () =>
-    set(() => ({
-      isCycleOn: false,
+      isCycleOn: status,
     })),
   setTimerOptionInCycle: (option: string) =>
     set(() => ({

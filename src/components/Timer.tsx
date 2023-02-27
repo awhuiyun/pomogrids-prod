@@ -30,14 +30,10 @@ export default function Timer() {
     setTimerMinutes,
     setTimerSeconds,
     setRemainingDurationInMilliseconds,
-    setTimerOnTrue,
-    setTimerOnFalse,
-    setPauseOnTrue,
-    setPauseOnFalse,
-    setSessionOnTrue,
-    setSessionOnFalse,
-    setCycleOnTrue,
-    setCycleOnFalse,
+    toggleTimerOn,
+    togglePauseOn,
+    toggleSessionOn,
+    toggleCycleOn,
     setTimerOptionInCycle,
     incrementPomodoroCountInCycle,
     setPomodoroCountInCycleToOne,
@@ -74,8 +70,8 @@ export default function Timer() {
 
       // Run regardless of timerOption
       clearInterval(interval);
-      setTimerOnFalse();
-      setPauseOnFalse();
+      toggleTimerOn(false);
+      togglePauseOn(false);
       setEndTime(0);
       setTimerSeconds(0);
 
@@ -95,8 +91,8 @@ export default function Timer() {
       // Updates specific to timer type
       if (timerOption !== "cycle") {
         // Scenario 1: timerOption = pomodoro/shortBreak/longBreak
-        setCycleOnFalse();
-        setSessionOnFalse();
+        toggleCycleOn(false);
+        toggleSessionOn(false);
         unselectAllTasksForTimer();
 
         if (timerOption === "pomodoro") {
@@ -116,8 +112,8 @@ export default function Timer() {
       else {
         if (timerOptionInCycle === "longBreak") {
           // Reset variables
-          setCycleOnFalse();
-          setSessionOnFalse();
+          toggleCycleOn(false);
+          toggleSessionOn(false);
           unselectAllTasksForTimer();
 
           // Reset display timer
@@ -213,7 +209,7 @@ export default function Timer() {
 
     // Update isCycleOn = True when user starts a cycle
     if (timerOption === "cycle") {
-      setCycleOnTrue();
+      toggleCycleOn(true);
     }
 
     // Update endTime
@@ -221,9 +217,9 @@ export default function Timer() {
     setEndTime(currentTimeStamp + remainingDurationInMilliseconds);
 
     // Update isStarted=True so that timer runs
-    setTimerOnTrue();
-    setSessionOnTrue();
-    setPauseOnFalse();
+    toggleTimerOn(true);
+    toggleSessionOn(true);
+    togglePauseOn(false);
   }
 
   // Function that handles pause button
@@ -233,19 +229,19 @@ export default function Timer() {
     setRemainingDurationInMilliseconds(endTime - currentTimeStamp);
 
     // Update isStarted=false so timer stops
-    setTimerOnFalse();
+    toggleTimerOn(false);
 
     // Update isPauseOn=true
-    setPauseOnTrue();
+    togglePauseOn(true);
   }
 
   // Function that handles stop button
   function handleStopClick() {
     // Reset isStarted, endTime, remainingDurationInMilliseconds, timerHours, timerMinutes, timerSeconds
-    setTimerOnFalse();
-    setSessionOnFalse();
-    setPauseOnFalse();
-    setCycleOnFalse();
+    toggleTimerOn(false);
+    toggleSessionOn(false);
+    togglePauseOn(false);
+    toggleCycleOn(false);
     setEndTime(0);
     setTimerSeconds(0);
     unselectAllTasksForTimer();
