@@ -29,7 +29,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       targetNumOfSessions: 5,
       completedNumOfSessions: 3,
       isCompleted: false,
-      isSelectedForTimer: false,
+      isSelectedForTimer: true,
       isSelectedForEdit: false,
     },
     {
@@ -38,6 +38,15 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       targetNumOfSessions: 1,
       completedNumOfSessions: 1,
       isCompleted: true,
+      isSelectedForTimer: false,
+      isSelectedForEdit: false,
+    },
+    {
+      uniqueId: "3",
+      taskName: "Homework u4d7",
+      targetNumOfSessions: 5,
+      completedNumOfSessions: 3,
+      isCompleted: false,
       isSelectedForTimer: false,
       isSelectedForEdit: false,
     },
@@ -114,7 +123,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         ) {
           return {
             ...item,
-            numOfCompletedSessions: item.completedNumOfSessions + 1,
+            completedNumOfSessions: item.completedNumOfSessions + 1,
           };
         } else if (
           item.uniqueId === id &&
@@ -122,7 +131,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         ) {
           return {
             ...item,
-            numOfCompletedSessions: item.completedNumOfSessions + 1,
+            completedNumOfSessions: item.completedNumOfSessions + 1,
             isCompleted: true,
           };
         }

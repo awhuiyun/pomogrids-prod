@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useTimerStore from "@/stores/timer";
 import useSettingStore from "@/stores/settings";
+import useTaskStore from "@/stores/tasks";
 import BaseButton from "./BaseButton";
 
 export default function Timer() {
@@ -43,6 +44,11 @@ export default function Timer() {
   } = useTimerStore();
 
   // Global states: useTaskStore
+  const {
+    unselectAllTasksForTimer,
+    taskSelectedForTimer,
+    addSessionCountToTaskAndCheckCompletion,
+  } = useTaskStore();
 
   // Local states
   const [endTime, setEndTime] = useState(0);
@@ -91,12 +97,12 @@ export default function Timer() {
         // Scenario 1: timerOption = pomodoro/shortBreak/longBreak
         setCycleOnFalse();
         setSessionOnFalse();
-        // unselectAllTasksForTimer();
+        unselectAllTasksForTimer();
 
         if (timerOption === "pomodoro") {
           setTimerMinutes(pomodoroTimerMinutes);
           setRemainingDurationInMilliseconds(pomodoroTimerMinutes * 1000 * 60);
-          //   addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
+          addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
         } else if (timerOption === "shortBreak") {
           setTimerMinutes(shortBreakTimerMinutes);
           setRemainingDurationInMilliseconds(
@@ -112,7 +118,7 @@ export default function Timer() {
           // Reset variables
           setCycleOnFalse();
           setSessionOnFalse();
-          //   unselectAllTasksForTimer();
+          unselectAllTasksForTimer();
 
           // Reset display timer
           setTimerMinutes(pomodoroTimerMinutes);
@@ -134,7 +140,7 @@ export default function Timer() {
           pomodoroCountInCycle < numberOfPomodoroSessionsInCycle
         ) {
           // Add increment to completed count
-          //   addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
+          addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
 
           // Update display timer
           setTimerMinutes(shortBreakTimerMinutes);
@@ -149,7 +155,7 @@ export default function Timer() {
           pomodoroCountInCycle === numberOfPomodoroSessionsInCycle
         ) {
           // Add increment to completed count
-          //   addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
+          addSessionCountToTaskAndCheckCompletion(taskSelectedForTimer);
 
           // Update display timer
           setTimerMinutes(longBreakTimerMinutes);
@@ -161,7 +167,7 @@ export default function Timer() {
       }
     }
   }
-
+  console.log(timerOption);
   // Functions that toggles the timer options
   function handleToggleToPomodoroTimerClick() {
     setTimerOption("pomodoro");
@@ -197,13 +203,13 @@ export default function Timer() {
   // Function that handles start button
   function handleStartClick() {
     // Check that user has selected a task if starting "pomodoro" or "cycle"
-    // if (
-    //   (timerOption === "pomodoro" || timerOption === "cycle") &&
-    //   taskSelectedForTimer === ""
-    // ) {
-    //   alert("Pls select a task to work on!");
-    //   return "";
-    // }
+    if (
+      (timerOption === "pomodoro" || timerOption === "cycle") &&
+      taskSelectedForTimer === ""
+    ) {
+      alert("Pls select a task to work on!");
+      return "";
+    }
 
     // Update isCycleOn = True when user starts a cycle
     if (timerOption === "cycle") {
@@ -242,7 +248,7 @@ export default function Timer() {
     setCycleOnFalse();
     setEndTime(0);
     setTimerSeconds(0);
-    // unselectAllTasksForTimer();
+    unselectAllTasksForTimer();
 
     if (timerOption === "pomodoro") {
       setTimerMinutes(pomodoroTimerMinutes);
