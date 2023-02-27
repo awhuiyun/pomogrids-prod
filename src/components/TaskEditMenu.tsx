@@ -10,7 +10,7 @@ export default function TaskEditMenu() {
   const {
     taskEditMenuId,
     setTaskEditMenuid,
-    setTaskFormOpenTrue,
+    toggleTaskFormOpen,
     setSelectedTaskForEdit,
     deleteTask,
     mousePos,
@@ -24,7 +24,7 @@ export default function TaskEditMenu() {
 
   // Function to handle click on Update Task option
   function handleUpdateTaskClick() {
-    setTaskFormOpenTrue("update");
+    toggleTaskFormOpen("update");
     setSelectedTaskForEdit(taskEditMenuId);
 
     // Reset

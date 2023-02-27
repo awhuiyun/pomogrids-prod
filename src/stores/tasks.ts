@@ -9,8 +9,7 @@ interface IUseTaskStore {
   taskSelectedForTimer: string;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
-  setTaskFormOpenTrue: (type: string) => void;
-  setTaskFormOpenFalse: () => void;
+  toggleTaskFormOpen: (type: string) => void;
   setTaskEditMenuid: (id: string) => void;
   setMousePos: (x: number, y: number) => void;
   unselectAllTasksForTimer: () => void;
@@ -65,13 +64,9 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         return item.uniqueId !== id;
       }),
     })),
-  setTaskFormOpenTrue: (type: string) =>
+  toggleTaskFormOpen: (type: string) =>
     set(() => ({
       taskFormType: type,
-    })),
-  setTaskFormOpenFalse: () =>
-    set(() => ({
-      taskFormType: "",
     })),
   setTaskEditMenuid: (id: string) =>
     set(() => ({

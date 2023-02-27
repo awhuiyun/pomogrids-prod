@@ -3,11 +3,11 @@ import TaskItem from "./TaskItem";
 
 export default function TaskContainer() {
   // Global states: useTaskStore
-  const { tasks, setTaskFormOpenTrue } = useTaskStore();
+  const { tasks, toggleTaskFormOpen } = useTaskStore();
 
   // Function to toggle isTaskFromOpen=True
   function toggleTaskFormOpenTrue() {
-    setTaskFormOpenTrue("create");
+    toggleTaskFormOpen("create");
   }
 
   return (

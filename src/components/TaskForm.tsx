@@ -5,7 +5,7 @@ import BaseButton from "./BaseButton";
 
 export default function TaskForm() {
   // Global states: useTaskStore
-  const { taskFormType, setTaskFormOpenFalse } = useTaskStore();
+  const { taskFormType, toggleTaskFormOpen } = useTaskStore();
   const { addTask } = useTaskStore();
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
@@ -35,7 +35,7 @@ export default function TaskForm() {
   // Function to toggle isTaskFromOpen=False
   function toggleTaskFormOpenFalse() {
     // Close modal & reset states
-    setTaskFormOpenFalse();
+    toggleTaskFormOpen("");
     unselectAllTasksForEdit();
   }
 
