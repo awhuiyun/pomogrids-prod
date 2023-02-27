@@ -167,7 +167,7 @@ export default function Timer() {
       }
     }
   }
-  console.log(timerOption);
+
   // Functions that toggles the timer options
   function handleToggleToPomodoroTimerClick() {
     setTimerOption("pomodoro");

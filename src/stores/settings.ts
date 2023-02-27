@@ -16,8 +16,7 @@ interface IUseSettingStore {
   setNumberOfPomodoroSessionsInCycle: (num: number) => void;
   setAlarmRingtone: (selection: string) => void;
   setAlarmVolume: (num: number) => void;
-  setSettingOpenTrue: () => void;
-  setSettingOpenFalse: () => void;
+  toggleIsSettingOpen: (status: boolean) => void;
 }
 
 const useSettingStore = create<IUseSettingStore>((set) => ({
@@ -57,13 +56,9 @@ const useSettingStore = create<IUseSettingStore>((set) => ({
     set(() => ({
       alarmVolume: num,
     })),
-  setSettingOpenTrue: () =>
+  toggleIsSettingOpen: (status: boolean) =>
     set(() => ({
-      isSettingOpen: true,
-    })),
-  setSettingOpenFalse: () =>
-    set(() => ({
-      isSettingOpen: false,
+      isSettingOpen: status,
     })),
 }));
 

@@ -27,13 +27,13 @@ interface IUseTimerStore {
 }
 
 const useTimerStore = create<IUseTimerStore>((set) => ({
-  timerMinutes: 25, // Minutes shown in Timer
-  timerSeconds: 0, // Seconds shown in Timer
+  timerMinutes: 25, // minutes display
+  timerSeconds: 0, // seconds display
   remainingDurationInMilliseconds: 1500000,
-  isTimerOn: false,
-  isPauseOn: false,
-  isSessionOn: false,
-  isCycleOn: false,
+  isTimerOn: false, // true if timer minutes and seconds are ticking ()
+  isPauseOn: false, // true if timer is on pause
+  isSessionOn: false, // true if session is on (pomodoro, shortBreak, longBreak or cycle). Objective: turn of clickables during sessions; Can't use timer cause it might be on pause
+  isCycleOn: false, // true if cycle is on
   timerOptionInCycle: "pomodoro",
   pomodoroCountInCycle: 1,
   setTimerMinutes: (minutes: number) =>
