@@ -3,6 +3,8 @@ import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
 import BaseButton from "./BaseButton";
 
+import { createNewTaskInTaskTable } from "@/services/tasks";
+
 export default function TaskForm() {
   // Global states: useTaskStore
   const { taskFormType, toggleTaskFormOpen } = useTaskStore();
@@ -40,7 +42,7 @@ export default function TaskForm() {
   }
 
   // Function to create new task
-  function createNewTask() {
+  async function createNewTask() {
     // Create unique key for new task
     const uniqueId = uuid();
 
@@ -54,6 +56,15 @@ export default function TaskForm() {
       isSelectedForTimer: false,
       isSelectedForEdit: false,
     });
+
+    // POST request: Create new task in tasks table
+    createNewTaskInTaskTable(
+      "ca00d32a-b740-11ed-8877-0242ac110002",
+      taskNameInput,
+      targetNumOfSessionsInput,
+      0,
+      false
+    );
   }
 
   // Function to edit existing task
