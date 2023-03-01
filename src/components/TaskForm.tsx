@@ -4,7 +4,10 @@ import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import BaseButton from "./BaseButton";
 
-import { createNewTaskInTaskTable } from "@/services/tasks";
+import {
+  createNewTaskService,
+  updateExistingTaskService,
+} from "@/services/tasks";
 
 export default function TaskForm() {
   // Global states: useTaskStore
@@ -62,7 +65,7 @@ export default function TaskForm() {
     });
 
     // POST request: Create new task in tasks table
-    createNewTaskInTaskTable(
+    createNewTaskService(
       user_id,
       taskNameInput,
       targetNumOfSessionsInput,
@@ -73,8 +76,28 @@ export default function TaskForm() {
 
   // Function to edit existing task
   function updateExistingTask() {
+    // Update global states
     setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
     unselectAllTasksForEdit();
+
+    // Calculate if the the task is completed after updating the targetNumOfSessions
+    let isCompleted;
+
+    if (
+      taskSelectedForEdit.completedNumOfSessions >= targetNumOfSessionsInput
+    ) {
+      isCompleted = true;
+    } else {
+      isCompleted = false;
+    }
+    // PATCH request: Update existing task
+    updateExistingTaskService(
+      user_id,
+      taskSelectedForEdit.uniqueId,
+      taskNameInput,
+      targetNumOfSessionsInput,
+      isCompleted
+    );
   }
 
   // Function to handle form submit
