@@ -1,9 +1,10 @@
-import styles from "../styles/TaskEditMenu.module.css";
 import useTaskStore from "@/stores/tasks";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+
+import { deleteExistingTaskService } from "@/services/tasks";
 
 export default function TaskEditMenu() {
   // Global states: useTaskStore
@@ -33,7 +34,11 @@ export default function TaskEditMenu() {
 
   // Function to handle click on Delete Task option
   function handleDeleteTaskClick() {
+    // Delete task in useTaskStore
     deleteTask(taskEditMenuId);
+
+    // DELETE request: Delete task from tasks and tasks_session table
+    deleteExistingTaskService(taskEditMenuId);
 
     // Reset
     setTaskEditMenuid("");

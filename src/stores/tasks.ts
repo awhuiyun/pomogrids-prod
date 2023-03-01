@@ -50,8 +50,8 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       isSelectedForEdit: false,
     },
     {
-      uniqueId: "10",
-      taskName: "Learn typescript for express",
+      uniqueId: "12",
+      taskName: "Learn Grids on D3",
       targetNumOfSessions: 1,
       completedNumOfSessions: 0,
       isCompleted: false,

@@ -70,6 +70,24 @@ export async function updateExistingTaskService(
 }
 
 // Function to delete existing task
+export async function deleteExistingTaskService(task_id: string) {
+  try {
+    const result = await axios({
+      method: "delete",
+      url: "http://127.0.0.1:5001/tasks/delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        task_id,
+      },
+    });
+    console.log(result.data);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 // Function to update task after session completes
 export async function updateTaskAfterSessionService(
