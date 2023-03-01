@@ -1,6 +1,7 @@
 import { useState } from "react";
 import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
+import useUserStore from "@/stores/user";
 import BaseButton from "./BaseButton";
 
 import { createNewTaskInTaskTable } from "@/services/tasks";
@@ -11,6 +12,9 @@ export default function TaskForm() {
   const { addTask } = useTaskStore();
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
+
+  // Global states: useUserStore
+  const { user_id } = useUserStore();
 
   // Local states and variables
   const taskSelectedForEdit = tasks.filter((item) => {
@@ -59,7 +63,7 @@ export default function TaskForm() {
 
     // POST request: Create new task in tasks table
     createNewTaskInTaskTable(
-      "ca00d32a-b740-11ed-8877-0242ac110002",
+      user_id,
       taskNameInput,
       targetNumOfSessionsInput,
       0,
