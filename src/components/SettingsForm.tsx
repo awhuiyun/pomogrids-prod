@@ -1,10 +1,14 @@
 import { useState } from "react";
+import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import BaseButton from "./BaseButton";
 import { updateSettingsService } from "@/services/settings";
 
 export default function SettingsForm() {
+  // Global states: useUserStore
+  const { user_id } = useUserStore();
+
   // Global states: useSettingStore
   const {
     pomodoroTimerMinutes,
@@ -74,21 +78,13 @@ export default function SettingsForm() {
   function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Save settings for pomodoro timer
+    // Save settings in useSettingsStore:
     setPomodoroTimerMinutes(pomodoroTimerInput);
-
-    // Save settings for short break timer
     setShortBreakTimerMinutes(shortBreakTimerInput);
-
-    // Save settings for long break timer
     setLongBreakTimerMinutes(longBreakTimerInput);
-
-    // Save settings for number of pomodoro sessions in a cycle
     setNumberOfPomodoroSessionsInCycle(numberOfPomodoroSessionsInCycleInput);
-
-    // Save settings for alarm ringtone & volume
-    // setAlarmRingtone(alarmRingtoneInput);
-    // setAlarmVolume(alarmVolumeInput);
+    setAlarmRingtone(alarmRingtoneInput);
+    setAlarmVolume(alarmVolumeInput);
     // Howler.volume(alarmVolumeInput);
 
     // Save settings for timer display (dependent on timerOption)
@@ -106,7 +102,16 @@ export default function SettingsForm() {
       setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
     }
 
-    //
+    // PATCH request: Update user settings
+    updateSettingsService(
+      user_id,
+      pomodoroTimerInput,
+      shortBreakTimerInput,
+      longBreakTimerInput,
+      numberOfPomodoroSessionsInCycleInput,
+      alarmRingtoneInput,
+      alarmVolumeInput
+    );
 
     // Close Settings Form modal
     toggleIsSettingOpen(false);
