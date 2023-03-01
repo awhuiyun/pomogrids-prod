@@ -4,6 +4,8 @@ import useSettingStore from "@/stores/settings";
 import useTaskStore from "@/stores/tasks";
 import BaseButton from "./BaseButton";
 
+import { updateTaskAfterSessionService } from "@/services/tasks";
+
 export default function Timer() {
   // Global states: useSettingStore
   const {
@@ -75,17 +77,16 @@ export default function Timer() {
       setEndTime(0);
       setTimerSeconds(0);
 
-      // POST information to backend: Update pomodoro table
+      // PATCH request: Update task_sessions table
       if (
         timerOption === "pomodoro" ||
         (timerOption === "cycle" && timerOptionInCycle === "pomodoro")
       ) {
-        // Axios.post("http://localhost:5000/complete-pomodoro-session", {
-        //   date: new Date(),
-        //   task_id: taskSelectedForTimer,
-        //   user_id: username,
-        //   duration: pomodoroTimerMinutes,
-        // }).then(() => console.log("Successfully send GET request to backend!"));
+        updateTaskAfterSessionService(
+          taskSelectedForTimer,
+          1,
+          pomodoroTimerMinutes
+        );
       }
 
       // Updates specific to timer type

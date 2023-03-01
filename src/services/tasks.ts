@@ -68,3 +68,31 @@ export async function updateExistingTaskService(
     throw error;
   }
 }
+
+// Function to delete existing task
+
+// Function to update task after session completes
+export async function updateTaskAfterSessionService(
+  task_id: string,
+  number_of_sessions: number,
+  number_of_minutes: number
+) {
+  try {
+    const result = await axios({
+      method: "patch",
+      url: "http://127.0.0.1:5001/tasks/session-complete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        task_id,
+        number_of_sessions,
+        number_of_minutes,
+      },
+    });
+    console.log(result.data);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
