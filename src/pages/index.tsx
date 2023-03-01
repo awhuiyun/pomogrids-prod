@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import Head from "next/head";
+import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
 import TimerContainer from "@/components/TimerContainer";
@@ -6,13 +8,40 @@ import TaskContainer from "@/components/TaskContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
+import { getSettingsService } from "@/services/settings";
 
 export default function Home() {
-  // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId, setTaskEditMenuid } = useTaskStore();
+  // Global states: useUserStore
+  const { user_id } = useUserStore();
 
-  // Global states: useSettingsForm
+  // Global states: useTaskStore
+  const { taskFormType, taskEditMenuId } = useTaskStore();
+
+  // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
+  const {
+    setPomodoroTimerMinutes,
+    setShortBreakTimerMinutes,
+    setLongBreakTimerMinutes,
+    setNumberOfPomodoroSessionsInCycle,
+    setAlarmRingtone,
+    setAlarmVolume,
+  } = useSettingStore();
+
+  // UseEffect to fetch settings of user on mount
+  useEffect(() => {
+    // GET request: Retrieve user's settings
+    getSettingsService(user_id)
+      .then((res) => {
+        setPomodoroTimerMinutes(res.pomodoro_minutes);
+        setShortBreakTimerMinutes(res.short_break_minutes);
+        setLongBreakTimerMinutes(res.long_break_minutes);
+        setNumberOfPomodoroSessionsInCycle(res.number_of_sessions_in_a_cycle);
+        setAlarmRingtone(res.alarm_ringtone);
+        setAlarmVolume(res.alarm_volume);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">

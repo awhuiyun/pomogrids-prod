@@ -2,6 +2,7 @@ import { useState } from "react";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import BaseButton from "./BaseButton";
+import { updateSettingsService } from "@/services/settings";
 
 export default function SettingsForm() {
   // Global states: useSettingStore
@@ -104,6 +105,8 @@ export default function SettingsForm() {
       setTimerMinutes(pomodoroTimerInput);
       setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
     }
+
+    //
 
     // Close Settings Form modal
     toggleIsSettingOpen(false);
