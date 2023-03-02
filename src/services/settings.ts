@@ -1,7 +1,6 @@
 import axios from "axios";
 
 // Function to retrieve settings for user
-
 export async function getSettingsService(user_id: string) {
   try {
     const result = await axios({

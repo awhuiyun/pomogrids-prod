@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Head from "next/head";
 import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
@@ -14,15 +14,14 @@ import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function Home() {
-  // Counter to track how many times useEffect has ran
-  const [counter, setCounter] = useState(0);
+  // useRef to ensure useEffect only runs once
   const apiCalledRef = useRef(false);
 
   // Global states: useUserStore
   const { user_id } = useUserStore();
 
   // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId, addTask, tasks, clearAllTasks } =
+  const { taskFormType, taskEditMenuId, addTask, clearAllTasks } =
     useTaskStore();
 
   // Global states: useSettingsStore
@@ -57,7 +56,6 @@ export default function Home() {
         setAlarmVolume(res.alarm_volume);
         setTimerMinutes(res.pomodoro_minutes);
         setRemainingDurationInMilliseconds(res.pomodoro_minutes * 1000 * 60);
-        setCounter((prev) => prev + 1);
       })
       .catch((error) => console.log(error));
 
@@ -71,12 +69,9 @@ export default function Home() {
             return addTask(task);
           });
         }
-        setCounter((prev) => prev + 1);
       })
       .catch((error) => console.log(error));
   }, []);
-
-  console.log(tasks);
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">
