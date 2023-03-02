@@ -5,6 +5,11 @@ export default function TaskContainer() {
   // Global states: useTaskStore
   const { tasks, toggleTaskFormOpen } = useTaskStore();
 
+  // Filter to tasks that are not archived
+  const unarchivedTasks = tasks.filter((item) => {
+    return item.isArchived === false;
+  });
+
   // Function to toggle isTaskFromOpen=True
   function toggleTaskFormOpenTrue() {
     toggleTaskFormOpen("create");
@@ -16,7 +21,7 @@ export default function TaskContainer() {
       <p className="text-slate-400 text-xs">Tasks:</p>
 
       {/* Tasks section */}
-      {tasks.map((item) => {
+      {unarchivedTasks.map((item) => {
         return <TaskItem key={item.uniqueId} {...item} />;
       })}
 

@@ -2,9 +2,9 @@ import useTaskStore from "@/stores/tasks";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-
-import { deleteExistingTaskService } from "@/services/tasks";
+import { deleteExistingTaskService, archiveTask } from "@/services/tasks";
 
 export default function TaskEditMenu() {
   // Global states: useTaskStore
@@ -15,6 +15,7 @@ export default function TaskEditMenu() {
     setSelectedTaskForEdit,
     deleteTask,
     mousePos,
+    archiveTask,
   } = useTaskStore();
 
   // Variable to store the position of the menu
@@ -27,6 +28,18 @@ export default function TaskEditMenu() {
   function handleUpdateTaskClick() {
     toggleTaskFormOpen("update");
     setSelectedTaskForEdit(taskEditMenuId);
+
+    // Reset
+    setTaskEditMenuid("");
+  }
+
+  // Function to handle click on Archive Task option
+  function handleArchiveTaskClick() {
+    // Archive task in useTaskStore
+    archiveTask(taskEditMenuId);
+
+    // PATCH request: Archive task in tasks table (toggle is_archived = true)
+    archiveTask(taskEditMenuId);
 
     // Reset
     setTaskEditMenuid("");
@@ -60,6 +73,12 @@ export default function TaskEditMenu() {
           <TaskMenuItem>
             <FontAwesomeIcon icon={faPen} className="mr-2" />
             Update task
+          </TaskMenuItem>
+        </div>
+        <div onClick={handleArchiveTaskClick}>
+          <TaskMenuItem>
+            <FontAwesomeIcon icon={faFolder} className="mr-2" />
+            Archive task
           </TaskMenuItem>
         </div>
         <div onClick={handleDeleteTaskClick}>

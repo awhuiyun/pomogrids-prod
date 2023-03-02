@@ -3,19 +3,23 @@ import Head from "next/head";
 import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
+import useTimerStore from "@/stores/timer";
 import TimerContainer from "@/components/TimerContainer";
 import TaskContainer from "@/components/TaskContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
 import { getSettingsService } from "@/services/settings";
+import { getUnarchivedTasks } from "@/services/tasks";
+import { ITaskItem } from "@/types/interfaces";
 
 export default function Home() {
   // Global states: useUserStore
   const { user_id } = useUserStore();
 
   // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId } = useTaskStore();
+  const { taskFormType, taskEditMenuId, addTask, tasks, clearAllTasks } =
+    useTaskStore();
 
   // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
@@ -28,6 +32,9 @@ export default function Home() {
     setAlarmVolume,
   } = useSettingStore();
 
+  // Global states: useTimerStore
+  const { setTimerMinutes, setRemainingDurationInMilliseconds } =
+    useTimerStore();
   // UseEffect to fetch settings of user on mount
   useEffect(() => {
     // GET request: Retrieve user's settings
@@ -39,9 +46,25 @@ export default function Home() {
         setNumberOfPomodoroSessionsInCycle(res.number_of_sessions_in_a_cycle);
         setAlarmRingtone(res.alarm_ringtone);
         setAlarmVolume(res.alarm_volume);
+        setTimerMinutes(res.pomodoro_minutes);
+        setRemainingDurationInMilliseconds(res.pomodoro_minutes * 1000 * 60);
+      })
+      .catch((error) => console.log(error));
+
+    // GET request: Retrieve user's unarchived tasks
+    clearAllTasks();
+    getUnarchivedTasks<ITaskItem>(user_id)
+      .then((res) => {
+        if (res !== undefined) {
+          res.forEach((task) => {
+            return addTask(task);
+          });
+        }
       })
       .catch((error) => console.log(error));
   }, []);
+
+  console.log(tasks);
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">

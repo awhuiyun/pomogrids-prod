@@ -1,5 +1,5 @@
 // require("dotenv").config();
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // Function to create new task in tasks table
 export async function createNewTaskService(
@@ -31,7 +31,6 @@ export async function createNewTaskService(
     console.log(result.data);
   } catch (error) {
     console.log(error);
-    throw error;
   }
 }
 
@@ -65,7 +64,6 @@ export async function updateExistingTaskService(
     console.log(result.data);
   } catch (error) {
     console.log(error);
-    throw error;
   }
 }
 
@@ -85,7 +83,6 @@ export async function deleteExistingTaskService(task_id: string) {
     console.log(result.data);
   } catch (error) {
     console.log(error);
-    throw error;
   }
 }
 
@@ -111,6 +108,43 @@ export async function updateTaskAfterSessionService(
     console.log(result.data);
   } catch (error) {
     console.log(error);
-    throw error;
+  }
+}
+
+// Function to archive task
+export async function archiveTask(task_id: string) {
+  try {
+    const result = await axios({
+      method: "patch",
+      url: "http://127.0.0.1:5001/tasks/archive-task",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        task_id,
+      },
+    });
+    console.log(result.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// Function to retrieve all unarchived tasks to populate TaskContainer
+export async function getUnarchivedTasks<T>(user_id: string) {
+  try {
+    const result = await axios<T[]>({
+      method: "post",
+      url: "http://127.0.0.1:5001/tasks/unarchived-tasks",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        user_id,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.log(error);
   }
 }

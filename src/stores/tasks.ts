@@ -9,6 +9,8 @@ interface IUseTaskStore {
   taskSelectedForTimer: string;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
+  archiveTask: (id: string) => void;
+  clearAllTasks: () => void;
   toggleTaskFormOpen: (type: string) => void;
   setTaskEditMenuid: (id: string) => void;
   setMousePos: (x: number, y: number) => void;
@@ -21,44 +23,7 @@ interface IUseTaskStore {
 }
 
 const useTaskStore = create<IUseTaskStore>((set) => ({
-  tasks: [
-    {
-      uniqueId: "1",
-      taskName: "Work on Pomogrids",
-      targetNumOfSessions: 5,
-      completedNumOfSessions: 3,
-      isCompleted: false,
-      isSelectedForTimer: false,
-      isSelectedForEdit: false,
-    },
-    {
-      uniqueId: "2",
-      taskName: "Buy groceries",
-      targetNumOfSessions: 1,
-      completedNumOfSessions: 1,
-      isCompleted: true,
-      isSelectedForTimer: false,
-      isSelectedForEdit: false,
-    },
-    {
-      uniqueId: "3",
-      taskName: "Homework u4d7",
-      targetNumOfSessions: 5,
-      completedNumOfSessions: 3,
-      isCompleted: false,
-      isSelectedForTimer: false,
-      isSelectedForEdit: false,
-    },
-    {
-      uniqueId: "12",
-      taskName: "Learn Grids on D3",
-      targetNumOfSessions: 1,
-      completedNumOfSessions: 0,
-      isCompleted: false,
-      isSelectedForTimer: false,
-      isSelectedForEdit: false,
-    },
-  ],
+  tasks: [],
   taskFormType: "", // "create", "update", ""; Modal is closed on ""
   taskEditMenuId: "", // uniqueId, ""; Menu is closed on ""
   mousePos: { x: 0, y: 0 },
@@ -72,6 +37,19 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
       tasks: state.tasks.filter((item) => {
         return item.uniqueId !== id;
       }),
+    })),
+  archiveTask: (id: string) =>
+    set((state) => ({
+      tasks: state.tasks.map((item) => {
+        if (item.uniqueId === id) {
+          return { ...item, isArchived: true };
+        }
+        return item;
+      }),
+    })),
+  clearAllTasks: () =>
+    set((state) => ({
+      tasks: [],
     })),
   toggleTaskFormOpen: (type: string) =>
     set(() => ({
