@@ -68,13 +68,7 @@ export default function TaskForm() {
     });
 
     // POST request: Create new task in tasks table
-    createNewTaskService(
-      user_id,
-      taskNameInput,
-      targetNumOfSessionsInput,
-      0,
-      false
-    );
+    createNewTaskService(user_id, taskNameInput, targetNumOfSessionsInput);
   }
 
   // Function to edit existing task
@@ -98,8 +92,7 @@ export default function TaskForm() {
       user_id,
       taskSelectedForEdit.uniqueId,
       taskNameInput,
-      targetNumOfSessionsInput,
-      isCompleted
+      targetNumOfSessionsInput
     );
   }
 

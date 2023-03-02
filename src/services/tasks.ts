@@ -6,8 +6,6 @@ export async function createNewTaskService(
   user_id: string,
   task_name: string,
   target_num_of_sessions: number,
-  completed_num_of_sessions: number,
-  is_completed: boolean,
   category_name?: string,
   category_colour?: string
 ) {
@@ -22,8 +20,6 @@ export async function createNewTaskService(
         user_id,
         task_name,
         target_num_of_sessions,
-        completed_num_of_sessions,
-        is_completed,
         category_name,
         category_colour,
       },
@@ -40,7 +36,6 @@ export async function updateExistingTaskService(
   task_id: string,
   task_name: string,
   target_num_of_sessions: number,
-  is_completed: boolean,
   category_name?: string,
   category_colour?: string
 ) {
@@ -56,7 +51,6 @@ export async function updateExistingTaskService(
         task_id,
         task_name,
         target_num_of_sessions,
-        is_completed,
         category_name,
         category_colour,
       },
