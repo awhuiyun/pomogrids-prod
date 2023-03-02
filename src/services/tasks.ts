@@ -112,7 +112,7 @@ export async function updateTaskAfterSessionService(
 }
 
 // Function to archive task
-export async function archiveTask(task_id: string) {
+export async function archiveTaskService(task_id: string) {
   try {
     const result = await axios({
       method: "patch",
@@ -131,7 +131,7 @@ export async function archiveTask(task_id: string) {
 }
 
 // Function to retrieve all unarchived tasks to populate TaskContainer
-export async function getUnarchivedTasks<T>(user_id: string) {
+export async function getUnarchivedTasksService<T>(user_id: string) {
   try {
     const result = await axios<T[]>({
       method: "post",

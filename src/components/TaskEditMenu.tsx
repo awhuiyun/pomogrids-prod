@@ -4,7 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { deleteExistingTaskService, archiveTask } from "@/services/tasks";
+import {
+  deleteExistingTaskService,
+  archiveTaskService,
+} from "@/services/tasks";
 
 export default function TaskEditMenu() {
   // Global states: useTaskStore
@@ -39,7 +42,7 @@ export default function TaskEditMenu() {
     archiveTask(taskEditMenuId);
 
     // PATCH request: Archive task in tasks table (toggle is_archived = true)
-    archiveTask(taskEditMenuId);
+    archiveTaskService(taskEditMenuId);
 
     // Reset
     setTaskEditMenuid("");

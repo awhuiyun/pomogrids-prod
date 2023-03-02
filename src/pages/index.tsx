@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
@@ -10,10 +10,14 @@ import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
 import { getSettingsService } from "@/services/settings";
-import { getUnarchivedTasks } from "@/services/tasks";
+import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function Home() {
+  // Counter to track how many times useEffect has ran
+  const [counter, setCounter] = useState(0);
+  const apiCalledRef = useRef(false);
+
   // Global states: useUserStore
   const { user_id } = useUserStore();
 
@@ -35,9 +39,14 @@ export default function Home() {
   // Global states: useTimerStore
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
-  // UseEffect to fetch settings of user on mount
+
+  // UseEffect to fetch settings and unarchived tasks on mount
   useEffect(() => {
-    // GET request: Retrieve user's settings
+    // Check if the apiCalledRef has been called
+    if (apiCalledRef.current) return;
+    apiCalledRef.current = true;
+
+    // POST request: Retrieve user's settings
     getSettingsService(user_id)
       .then((res) => {
         setPomodoroTimerMinutes(res.pomodoro_minutes);
@@ -48,18 +57,21 @@ export default function Home() {
         setAlarmVolume(res.alarm_volume);
         setTimerMinutes(res.pomodoro_minutes);
         setRemainingDurationInMilliseconds(res.pomodoro_minutes * 1000 * 60);
+        setCounter((prev) => prev + 1);
       })
       .catch((error) => console.log(error));
 
-    // GET request: Retrieve user's unarchived tasks
+    // POST request: Retrieve user's unarchived tasks
     clearAllTasks();
-    getUnarchivedTasks<ITaskItem>(user_id)
+    getUnarchivedTasksService<ITaskItem>(user_id)
       .then((res) => {
+        console.log(res);
         if (res !== undefined) {
           res.forEach((task) => {
             return addTask(task);
           });
         }
+        setCounter((prev) => prev + 1);
       })
       .catch((error) => console.log(error));
   }, []);
