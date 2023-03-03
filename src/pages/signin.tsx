@@ -3,6 +3,8 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { signInWithGoogle } from "@/auth/functions";
 import useUserStore from "@/stores/user";
 
+import axios from "axios";
+
 export default function Signin() {
   // Global states: useUserStore
   const { setUserId, setEmail } = useUserStore();
@@ -11,14 +13,25 @@ export default function Signin() {
   async function handleSignInWithGoogle() {
     try {
       const result = await signInWithGoogle();
+      console.log(result);
+      // Set useUserStore states
+      setEmail(result?.user.email ?? "");
+      setUserId(result?.user.uid ?? "");
 
+      // Route to home page
+
+      // Check if user exists in db; If no, create a new account
       if (result) {
-        if (result.user.email !== null) {
-          setEmail(result.user.email);
-        }
-        if (result.user.uid !== null) {
-          setUserId(result.user.uid);
-        }
+        const firebaseUserIdToken = await result.user.getIdToken(true);
+        const response = await axios({
+          method: "patch",
+          url: "http://127.0.0.1:5001/users/create-new-account",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + firebaseUserIdToken,
+          },
+        });
+        console.log(response.data);
       }
     } catch (error) {
       console.log(error);
