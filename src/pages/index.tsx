@@ -13,16 +13,21 @@ import { getSettingsService } from "@/services/settings";
 import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
 
+import { isUserSignedIn, isUserSignedIn2 } from "@/auth/functions";
+
 export default function Home() {
   // useRef to ensure useEffect only runs once
   const apiCalledRef = useRef(false);
 
   // Global states: useUserStore
-  const { user_id } = useUserStore();
+  const { user_id, email } = useUserStore();
 
   // Global states: useTaskStore
   const { taskFormType, taskEditMenuId, addTask, clearAllTasks } =
     useTaskStore();
+
+  // console.log(user_id, email);
+  // console.log(auth.currentUser);
 
   // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
@@ -41,6 +46,8 @@ export default function Home() {
 
   // UseEffect to fetch settings and unarchived tasks on mount
   useEffect(() => {
+    console.log(isUserSignedIn());
+
     // Check if the apiCalledRef has been called
     if (apiCalledRef.current) return;
     apiCalledRef.current = true;
