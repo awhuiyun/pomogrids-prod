@@ -8,7 +8,7 @@ interface IUseUserStore {
 }
 
 const useUserStore = create<IUseUserStore>((set) => ({
-  user_id: "ca00d32a-b740-11ed-8877-0242ac110002",
+  user_id: "",
   email: "",
   setUserId: (id: string) =>
     set(() => ({

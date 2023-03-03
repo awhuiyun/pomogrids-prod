@@ -20,7 +20,7 @@ export async function signInWithGoogle() {
   }
 }
 
-export async function signOutFromGoogleAccount() {
+export async function signOutwithGoogle() {
   try {
     await signOut(auth);
 
@@ -30,30 +30,20 @@ export async function signOutFromGoogleAccount() {
   }
 }
 
-export async function isUserSignedIn() {
-  try {
-    const result = await new Promise((resolve, reject) => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          return resolve(user);
-        } else {
-          return resolve("No user is signed in");
-        }
-      });
-    });
-
-    return result;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function isUserSignedIn2() {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      return user;
-    } else {
-      return "No user is signed in";
-    }
-  });
-}
+// export async function isUserSignedIn() {
+//   try {
+//     const result: any = await new Promise((resolve, reject) => {
+//       onAuthStateChanged(auth, (user) => {
+//         console.log("function:", user);
+//         if (user) {
+//           return resolve(user);
+//         } else {
+//           return resolve("User not signed in");
+//         }
+//       });
+//       return result;
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
