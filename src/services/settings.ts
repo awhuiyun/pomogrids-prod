@@ -8,7 +8,7 @@ export async function getSettingsService(user: User | null) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "post",
-        url: "http://127.0.0.1:5001/settings/get",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/settings/get",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -37,7 +37,7 @@ export async function updateSettingsService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "patch",
-        url: "http://127.0.0.1:5001/settings/update",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/settings/update",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

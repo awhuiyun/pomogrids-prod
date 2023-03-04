@@ -22,7 +22,7 @@ export default function Signin() {
         const firebaseUserIdToken = await result.user.getIdToken(true);
         const response = await axios({
           method: "patch",
-          url: "http://127.0.0.1:5001/users/create-new-account",
+          url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/create-new-account",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + firebaseUserIdToken,

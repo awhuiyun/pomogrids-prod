@@ -18,7 +18,7 @@ export async function createNewTaskService(
 
       const result = await axios({
         method: "post",
-        url: "http://127.0.0.1:5001/tasks/create",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/create",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -54,7 +54,7 @@ export async function updateExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "patch",
-        url: "http://127.0.0.1:5001/tasks/update",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/update",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -85,7 +85,7 @@ export async function deleteExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "delete",
-        url: "http://127.0.0.1:5001/tasks/delete",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/delete",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -114,7 +114,7 @@ export async function updateTaskAfterSessionService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "patch",
-        url: "http://127.0.0.1:5001/tasks/session-complete",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/session-complete",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -140,7 +140,7 @@ export async function archiveTaskService(user: User | null, task_id: string) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
         method: "patch",
-        url: "http://127.0.0.1:5001/tasks/archive-task",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/archive-task",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -164,7 +164,7 @@ export async function getUnarchivedTasksService<T>(user: User | null) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios<T[]>({
         method: "post",
-        url: "http://127.0.0.1:5001/tasks/unarchived-tasks",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/unarchived-tasks",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
