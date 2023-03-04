@@ -30,6 +30,12 @@ export async function signOutwithGoogle() {
   }
 }
 
+export function getCurrentUser() {
+  const currentuser = auth.currentUser;
+  console.log(currentuser);
+  return currentuser;
+}
+
 // export async function isUserSignedIn() {
 //   try {
 //     const result: any = await new Promise((resolve, reject) => {

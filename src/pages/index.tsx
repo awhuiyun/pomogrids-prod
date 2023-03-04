@@ -12,7 +12,7 @@ import TaskEditMenu from "@/components/TaskEditMenu";
 import { getSettingsService } from "@/services/settings";
 import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
-// import { isUserSignedIn, auth } from "@/auth/functions";
+import { getCurrentUser, auth } from "@/auth/functions";
 
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -74,7 +74,7 @@ export default function Home() {
     //
 
     // POST request: Retrieve user's settings
-    getSettingsService(user_id)
+    getSettingsService()
       .then((res) => {
         setPomodoroTimerMinutes(res.pomodoro_minutes);
         setShortBreakTimerMinutes(res.short_break_minutes);

@@ -104,7 +104,6 @@ export default function SettingsForm() {
 
     // PATCH request: Update user settings
     updateSettingsService(
-      user_id,
       pomodoroTimerInput,
       shortBreakTimerInput,
       longBreakTimerInput,

@@ -1,11 +1,14 @@
+import axios from "axios";
+import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { signInWithGoogle } from "@/auth/functions";
 import useUserStore from "@/stores/user";
 
-import axios from "axios";
-
 export default function Signin() {
+  // Router
+  let router = useRouter();
+
   // Global states: useUserStore
   const { setUserId, setEmail } = useUserStore();
 
@@ -17,8 +20,6 @@ export default function Signin() {
       // Set useUserStore states
       setEmail(result?.user.email ?? "");
       setUserId(result?.user.uid ?? "");
-
-      // Route to home page
 
       // Check if user exists in db; If no, create a new account
       if (result) {
@@ -33,6 +34,9 @@ export default function Signin() {
         });
         console.log(response.data);
       }
+
+      // Route to home page
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
