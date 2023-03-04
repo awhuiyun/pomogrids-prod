@@ -15,6 +15,7 @@ export async function createNewTaskService(
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
+
       const result = await axios({
         method: "post",
         url: "http://127.0.0.1:5001/tasks/create",
@@ -30,6 +31,7 @@ export async function createNewTaskService(
           category_colour,
         },
       });
+
       console.log(result.data);
     }
   } catch (error) {

@@ -21,7 +21,7 @@ export default function TaskForm() {
   const taskSelectedForEdit = tasks.filter((item) => {
     return item.isSelectedForEdit === true;
   })[0];
-  console.log(taskFormType, taskSelectedForEdit);
+
   const [taskNameInput, setTaskNameInput] = useState(
     taskFormType === "create" ? "" : taskSelectedForEdit.taskName
   );

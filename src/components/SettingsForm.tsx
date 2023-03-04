@@ -75,43 +75,47 @@ export default function SettingsForm() {
   }
 
   // Function to handle form submit
-  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Save settings in useSettingsStore:
-    setPomodoroTimerMinutes(pomodoroTimerInput);
-    setShortBreakTimerMinutes(shortBreakTimerInput);
-    setLongBreakTimerMinutes(longBreakTimerInput);
-    setNumberOfPomodoroSessionsInCycle(numberOfPomodoroSessionsInCycleInput);
-    setAlarmRingtone(alarmRingtoneInput);
-    setAlarmVolume(alarmVolumeInput);
-    // Howler.volume(alarmVolumeInput);
+    try {
+      // PATCH request: Update user settings
+      await updateSettingsService(
+        user,
+        pomodoroTimerInput,
+        shortBreakTimerInput,
+        longBreakTimerInput,
+        numberOfPomodoroSessionsInCycleInput,
+        alarmRingtoneInput,
+        alarmVolumeInput
+      );
 
-    // Save settings for timer display (dependent on timerOption)
-    if (timerOption === "pomodoro") {
-      setTimerMinutes(pomodoroTimerInput);
-      setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
-    } else if (timerOption === "shortBreak") {
-      setTimerMinutes(shortBreakTimerInput);
-      setRemainingDurationInMilliseconds(shortBreakTimerInput * 1000 * 60);
-    } else if (timerOption === "longBreak") {
-      setTimerMinutes(longBreakTimerInput);
-      setRemainingDurationInMilliseconds(longBreakTimerInput * 1000 * 60);
-    } else if (timerOption === "cycle") {
-      setTimerMinutes(pomodoroTimerInput);
-      setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
+      // Save settings in useSettingsStore:
+      setPomodoroTimerMinutes(pomodoroTimerInput);
+      setShortBreakTimerMinutes(shortBreakTimerInput);
+      setLongBreakTimerMinutes(longBreakTimerInput);
+      setNumberOfPomodoroSessionsInCycle(numberOfPomodoroSessionsInCycleInput);
+      setAlarmRingtone(alarmRingtoneInput);
+      setAlarmVolume(alarmVolumeInput);
+      // Howler.volume(alarmVolumeInput);
+
+      // Save settings for timer display (dependent on timerOption)
+      if (timerOption === "pomodoro") {
+        setTimerMinutes(pomodoroTimerInput);
+        setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
+      } else if (timerOption === "shortBreak") {
+        setTimerMinutes(shortBreakTimerInput);
+        setRemainingDurationInMilliseconds(shortBreakTimerInput * 1000 * 60);
+      } else if (timerOption === "longBreak") {
+        setTimerMinutes(longBreakTimerInput);
+        setRemainingDurationInMilliseconds(longBreakTimerInput * 1000 * 60);
+      } else if (timerOption === "cycle") {
+        setTimerMinutes(pomodoroTimerInput);
+        setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
+      }
+    } catch (error) {
+      console.log(error);
     }
-
-    // PATCH request: Update user settings
-    updateSettingsService(
-      user,
-      pomodoroTimerInput,
-      shortBreakTimerInput,
-      longBreakTimerInput,
-      numberOfPomodoroSessionsInCycleInput,
-      alarmRingtoneInput,
-      alarmVolumeInput
-    );
 
     // Close Settings Form modal
     toggleIsSettingOpen(false);
