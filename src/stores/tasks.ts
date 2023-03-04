@@ -11,6 +11,7 @@ interface IUseTaskStore {
   deleteTask: (id: string) => void;
   archiveTask: (id: string) => void;
   clearAllTasks: () => void;
+  setTaskArray: (type: ITaskItem[]) => void;
   toggleTaskFormOpen: (type: string) => void;
   setTaskEditMenuid: (id: string) => void;
   setMousePos: (x: number, y: number) => void;
@@ -50,6 +51,10 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   clearAllTasks: () =>
     set((state) => ({
       tasks: [],
+    })),
+  setTaskArray: (tasks: ITaskItem[]) =>
+    set(() => ({
+      tasks: tasks,
     })),
   toggleTaskFormOpen: (type: string) =>
     set(() => ({

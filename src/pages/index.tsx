@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Head from "next/head";
 import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
@@ -14,64 +14,55 @@ import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function Home() {
-  // useRef to ensure useEffect only runs once
-  const apiCalledRef = useRef(false);
-
   // Global states: useUserStore
-  const { user_id, user } = useUserStore();
+  // const { user } = useUserStore();
 
   // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId, addTask, clearAllTasks } =
+  const { taskFormType, taskEditMenuId, setTaskArray, clearAllTasks } =
     useTaskStore();
 
   // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
-  const {
-    setPomodoroTimerMinutes,
-    setShortBreakTimerMinutes,
-    setLongBreakTimerMinutes,
-    setNumberOfPomodoroSessionsInCycle,
-    setAlarmRingtone,
-    setAlarmVolume,
-  } = useSettingStore();
+  // const {
+  //   setPomodoroTimerMinutes,
+  //   setShortBreakTimerMinutes,
+  //   setLongBreakTimerMinutes,
+  //   setNumberOfPomodoroSessionsInCycle,
+  //   setAlarmRingtone,
+  //   setAlarmVolume,
+  // } = useSettingStore();
 
-  // Global states: useTimerStore
-  const { setTimerMinutes, setRemainingDurationInMilliseconds } =
-    useTimerStore();
+  // // Global states: useTimerStore
+  // const { setTimerMinutes, setRemainingDurationInMilliseconds } =
+  //   useTimerStore();
 
-  // ON MOUNT: UseEffect to fetch settings and unarchived tasks
-  useEffect(() => {
-    // Ensure that useEffect is only called once on mount
-    if (apiCalledRef.current) return;
-    apiCalledRef.current = true;
+  // // ON MOUNT: UseEffect to fetch settings and unarchived tasks
+  // useEffect(() => {
+  //   // POST request: Retrieve user's settings
+  //   getSettingsService(user)
+  //     .then((res) => {
+  //       setPomodoroTimerMinutes(res.pomodoro_minutes);
+  //       setShortBreakTimerMinutes(res.short_break_minutes);
+  //       setLongBreakTimerMinutes(res.long_break_minutes);
+  //       setNumberOfPomodoroSessionsInCycle(res.number_of_sessions_in_a_cycle);
+  //       setAlarmRingtone(res.alarm_ringtone);
+  //       setAlarmVolume(res.alarm_volume);
+  //       setTimerMinutes(res.pomodoro_minutes);
+  //       setRemainingDurationInMilliseconds(res.pomodoro_minutes * 1000 * 60);
+  //     })
+  //     .catch((error) => console.log(error));
 
-    // POST request: Retrieve user's settings
-    getSettingsService(user)
-      .then((res) => {
-        setPomodoroTimerMinutes(res.pomodoro_minutes);
-        setShortBreakTimerMinutes(res.short_break_minutes);
-        setLongBreakTimerMinutes(res.long_break_minutes);
-        setNumberOfPomodoroSessionsInCycle(res.number_of_sessions_in_a_cycle);
-        setAlarmRingtone(res.alarm_ringtone);
-        setAlarmVolume(res.alarm_volume);
-        setTimerMinutes(res.pomodoro_minutes);
-        setRemainingDurationInMilliseconds(res.pomodoro_minutes * 1000 * 60);
-      })
-      .catch((error) => console.log(error));
-
-    // POST request: Retrieve user's unarchived tasks
-    clearAllTasks();
-    getUnarchivedTasksService<ITaskItem>(user)
-      .then((res) => {
-        console.log(res);
-        if (res !== undefined) {
-          res.forEach((task) => {
-            return addTask(task);
-          });
-        }
-      })
-      .catch((error) => console.log(error));
-  }, []);
+  //   // POST request: Retrieve user's unarchived tasks
+  //   clearAllTasks();
+  //   getUnarchivedTasksService<ITaskItem>(user)
+  //     .then((res) => {
+  //       console.log(res);
+  //       if (res) {
+  //         setTaskArray(res);
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []);
 
   return (
     <div className="pt-2 text-slate-900 w-[1280px] mx-auto">
