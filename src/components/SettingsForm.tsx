@@ -7,7 +7,7 @@ import { updateSettingsService } from "@/services/settings";
 
 export default function SettingsForm() {
   // Global states: useUserStore
-  const { user_id } = useUserStore();
+  const { user } = useUserStore();
 
   // Global states: useSettingStore
   const {
@@ -104,6 +104,7 @@ export default function SettingsForm() {
 
     // PATCH request: Update user settings
     updateSettingsService(
+      user,
       pomodoroTimerInput,
       shortBreakTimerInput,
       longBreakTimerInput,

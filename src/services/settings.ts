@@ -1,11 +1,9 @@
 import axios from "axios";
-import { getCurrentUser } from "@/auth/functions";
+import { User } from "firebase/auth";
 
 // Function to retrieve settings for user
-export async function getSettingsService() {
+export async function getSettingsService(user: User | null) {
   try {
-    const user = getCurrentUser();
-
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({
@@ -26,6 +24,7 @@ export async function getSettingsService() {
 
 // Function to update settings for user
 export async function updateSettingsService(
+  user: User | null,
   pomodoro_minutes: number,
   short_break_minutes: number,
   long_break_minutes: number,
@@ -34,8 +33,6 @@ export async function updateSettingsService(
   alarm_volume: number
 ) {
   try {
-    const user = getCurrentUser();
-
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const result = await axios({

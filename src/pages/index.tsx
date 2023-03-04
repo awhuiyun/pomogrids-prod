@@ -12,16 +12,13 @@ import TaskEditMenu from "@/components/TaskEditMenu";
 import { getSettingsService } from "@/services/settings";
 import { getUnarchivedTasksService } from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
-import { getCurrentUser, auth } from "@/auth/functions";
-
-import { onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
   // useRef to ensure useEffect only runs once
   const apiCalledRef = useRef(false);
 
   // Global states: useUserStore
-  const { user_id, email, setUserId, setEmail } = useUserStore();
+  const { user_id, user } = useUserStore();
 
   // Global states: useTaskStore
   const { taskFormType, taskEditMenuId, addTask, clearAllTasks } =
@@ -42,39 +39,14 @@ export default function Home() {
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
 
-  // async function checkUserStatusAndRetrieveData() {
-  //   try {
-  //     // Check if user is signed in
-  //     const user = await isUserSignedIn();
-
-  //     // If user is not signed in
-  //     if (!user) {
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // UseEffect to fetch settings and unarchived tasks on mount
+  // ON MOUNT: UseEffect to fetch settings and unarchived tasks
   useEffect(() => {
     // Ensure that useEffect is only called once on mount
     if (apiCalledRef.current) return;
     apiCalledRef.current = true;
 
-    // Check if user is signed in
-
-    // console.log(isUserSignedIn());
-    // If no user is signed in, break out of useEffect
-    // if (user === "No user is signed in!") {
-    //   return;
-    // }
-
-    console.log("Running");
-    //
-
     // POST request: Retrieve user's settings
-    getSettingsService()
+    getSettingsService(user)
       .then((res) => {
         setPomodoroTimerMinutes(res.pomodoro_minutes);
         setShortBreakTimerMinutes(res.short_break_minutes);
@@ -89,7 +61,7 @@ export default function Home() {
 
     // POST request: Retrieve user's unarchived tasks
     clearAllTasks();
-    getUnarchivedTasksService<ITaskItem>(user_id)
+    getUnarchivedTasksService<ITaskItem>(user)
       .then((res) => {
         console.log(res);
         if (res !== undefined) {

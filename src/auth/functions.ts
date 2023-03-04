@@ -31,6 +31,8 @@ export async function signOutwithGoogle() {
 }
 
 export function getCurrentUser() {
+  // onAuthStateChanged
+
   const currentuser = auth.currentUser;
   console.log(currentuser);
   return currentuser;

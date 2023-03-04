@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import useTimerStore from "@/stores/timer";
 import useSettingStore from "@/stores/settings";
 import useTaskStore from "@/stores/tasks";
+import useUserStore from "@/stores/user";
 import BaseButton from "./BaseButton";
 
 import { updateTaskAfterSessionService } from "@/services/tasks";
 
 export default function Timer() {
+  // Global states: useUserStore
+  const { user } = useUserStore();
+
   // Global states: useSettingStore
   const {
     timerOption,
@@ -83,6 +87,7 @@ export default function Timer() {
         (timerOption === "cycle" && timerOptionInCycle === "pomodoro")
       ) {
         updateTaskAfterSessionService(
+          user,
           taskSelectedForTimer,
           1,
           pomodoroTimerMinutes

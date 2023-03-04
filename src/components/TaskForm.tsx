@@ -3,7 +3,6 @@ import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import BaseButton from "./BaseButton";
-
 import {
   createNewTaskService,
   updateExistingTaskService,
@@ -17,12 +16,12 @@ export default function TaskForm() {
     useTaskStore();
 
   // Global states: useUserStore
-  const { user_id } = useUserStore();
-
+  const { user } = useUserStore();
   // Local states and variables
   const taskSelectedForEdit = tasks.filter((item) => {
     return item.isSelectedForEdit === true;
   })[0];
+  console.log(taskFormType, taskSelectedForEdit);
   const [taskNameInput, setTaskNameInput] = useState(
     taskFormType === "create" ? "" : taskSelectedForEdit.taskName
   );
@@ -50,61 +49,63 @@ export default function TaskForm() {
 
   // Function to create new task
   async function createNewTask() {
-    // Create unique key for new task
-    const uniqueId = uuid();
+    try {
+      //  Generate uuid
+      const uniqueId = uuid();
 
-    // Create add new task into useTaskStore
-    addTask({
-      uniqueId: uniqueId,
-      taskName: taskNameInput,
-      targetNumOfSessions: targetNumOfSessionsInput,
-      completedNumOfSessions: 0,
-      category_name: null,
-      category_colour: null,
-      isArchived: false,
-      isCompleted: false,
-      isSelectedForTimer: false,
-      isSelectedForEdit: false,
-    });
+      // POST request: Create new task in tasks table
+      await createNewTaskService(
+        user,
+        uniqueId,
+        taskNameInput,
+        targetNumOfSessionsInput
+      );
 
-    // POST request: Create new task in tasks table
-    createNewTaskService(user_id, taskNameInput, targetNumOfSessionsInput);
+      // Update Global State: Create add new task into useTaskStore
+      addTask({
+        uniqueId: uniqueId,
+        taskName: taskNameInput,
+        targetNumOfSessions: targetNumOfSessionsInput,
+        completedNumOfSessions: 0,
+        category_name: null,
+        category_colour: null,
+        isArchived: false,
+        isCompleted: false,
+        isSelectedForTimer: false,
+        isSelectedForEdit: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Function to edit existing task
-  function updateExistingTask() {
-    // Update global states
-    setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
-    unselectAllTasksForEdit();
+  async function updateExistingTask() {
+    try {
+      // PATCH request: Update existing task
+      await updateExistingTaskService(
+        user,
+        taskSelectedForEdit.uniqueId,
+        taskNameInput,
+        targetNumOfSessionsInput
+      );
 
-    // Calculate if the the task is completed after updating the targetNumOfSessions
-    let isCompleted;
-
-    if (
-      taskSelectedForEdit.completedNumOfSessions >= targetNumOfSessionsInput
-    ) {
-      isCompleted = true;
-    } else {
-      isCompleted = false;
+      // Update global states
+      setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
+    } catch (error) {
+      console.log(error);
     }
-    // PATCH request: Update existing task
-    updateExistingTaskService(
-      user_id,
-      taskSelectedForEdit.uniqueId,
-      taskNameInput,
-      targetNumOfSessionsInput
-    );
   }
 
   // Function to handle form submit
-  function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // Conditional: Create new task or Update existing task
     if (taskFormType === "create") {
-      createNewTask();
+      await createNewTask();
     } else if (taskFormType === "update") {
-      updateExistingTask();
+      await updateExistingTask();
     }
 
     // Close modal & reset states

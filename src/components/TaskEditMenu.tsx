@@ -1,4 +1,5 @@
 import useTaskStore from "@/stores/tasks";
+import useUserStore from "@/stores/user";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +11,9 @@ import {
 } from "@/services/tasks";
 
 export default function TaskEditMenu() {
+  // Global states: useUserStore
+  const { user } = useUserStore();
+
   // Global states: useTaskStore
   const {
     taskEditMenuId,
@@ -37,27 +41,35 @@ export default function TaskEditMenu() {
   }
 
   // Function to handle click on Archive Task option
-  function handleArchiveTaskClick() {
-    // Archive task in useTaskStore
-    archiveTask(taskEditMenuId);
+  async function handleArchiveTaskClick() {
+    try {
+      // PATCH request: Archive task in tasks table (toggle is_archived = true)
+      await archiveTaskService(user, taskEditMenuId);
 
-    // PATCH request: Archive task in tasks table (toggle is_archived = true)
-    archiveTaskService(taskEditMenuId);
+      // Archive task in useTaskStore
+      archiveTask(taskEditMenuId);
 
-    // Reset
-    setTaskEditMenuid("");
+      // Reset
+      setTaskEditMenuid("");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Function to handle click on Delete Task option
-  function handleDeleteTaskClick() {
-    // Delete task in useTaskStore
-    deleteTask(taskEditMenuId);
+  async function handleDeleteTaskClick() {
+    try {
+      // DELETE request: Delete task from tasks and tasks_session table
+      await deleteExistingTaskService(user, taskEditMenuId);
 
-    // DELETE request: Delete task from tasks and tasks_session table
-    deleteExistingTaskService(taskEditMenuId);
+      // Delete task in useTaskStore
+      deleteTask(taskEditMenuId);
 
-    // Reset
-    setTaskEditMenuid("");
+      // Reset
+      setTaskEditMenuid("");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //   Function to handle click on page to close the Task Edit Menu

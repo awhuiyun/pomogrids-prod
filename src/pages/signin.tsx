@@ -16,10 +16,6 @@ export default function Signin() {
   async function handleSignInWithGoogle() {
     try {
       const result = await signInWithGoogle();
-      console.log(result);
-      // Set useUserStore states
-      setEmail(result?.user.email ?? "");
-      setUserId(result?.user.uid ?? "");
 
       // Check if user exists in db; If no, create a new account
       if (result) {
