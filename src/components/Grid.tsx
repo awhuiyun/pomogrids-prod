@@ -38,25 +38,52 @@ function drawGrids(
   cellSize: number
 ) {
   // Calculate values
-  const X = d3.map(data, (d) => d.date); // Array of dates
-  const Y = d3.map(data, (d) => d.number_of_minutes); // Array of num_of_minutes
-  const I = d3.range(X.length);
+  const dates = d3.map(data, (d) => d.date); // Array of dates
+  const minutes = d3.map(data, (d) => d.number_of_minutes); // Array of num_of_minutes
+  const indexes = d3.range(dates.length);
 
   const dayOfWeek =
-    weekStartType === "sunday" ? (i: number) => i : (i: number) => (i + 6) % 7; // [0-7];
+    weekStartType === "sunday" ? (i: number) => i : (i: number) => (i + 6) % 7; // returns [0-6] to correspond to a day of week
   const startOfWeekDate =
     weekStartType === "sunday" ? d3.utcSunday : d3.utcMonday; //
   const numOfDaysInWeek = 7; // Number of days in week
-  const height = cellSize * (numOfDaysInWeek + 2);
+  const heightOfContainer = cellSize * (numOfDaysInWeek + 2);
+
+  // Clear previous svg
+  d3.select(reference.current).select("svg").remove();
+
+  // Create colour scale
+  const minutesWithoutZero = d3.map(data, (d) => d.number_of_minutes);
+  for (let i = 0; i < minutesWithoutZero.length; i++) {
+    if (minutesWithoutZero[i] === 0) {
+      minutesWithoutZero.splice(i, 1);
+    }
+  }
+  const q1 = d3.quantile(minutesWithoutZero, 0.25);
+  const q2 = d3.quantile(minutesWithoutZero, 0.5);
+  const q3 = d3.quantile(minutesWithoutZero, 0.75);
+  const q4 = d3.quantile(minutesWithoutZero, 1);
+
+  function calculateFillColour(value: number) {
+    if (q1 && q2 && q3 && q4)
+      if (value <= q1) {
+        return "#ADD3FF";
+      } else if (value > q1 && value <= q2) {
+        return "#7ABFFF";
+      } else if (value > q2 && value <= q3) {
+        return "#6993FF";
+      } else {
+        return "#3C6EEE";
+      }
+    return "white";
+  }
 
   // Create grid container
   const container = d3
     .select(reference.current)
     .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .style("background-color", "pink");
-
+    .attr("width", 52 * cellSize + 0.5)
+    .attr("height", heightOfContainer);
   // Create individual grid cells
   const cell = container
     .selectAll("rect")
@@ -67,10 +94,11 @@ function drawGrids(
     .attr("height", cellSize - 1)
     .attr(
       "x",
-      (d, i) => startOfWeekDate.count(d3.utcYear(X[i]), X[i]) * cellSize + 0.5
+      (d, i) =>
+        startOfWeekDate.count(d3.utcYear(dates[i]), dates[i]) * cellSize + 0.5
     )
-    .attr("y", (d, i) => dayOfWeek(X[i].getUTCDay()) * cellSize + 0.5)
-    .attr("fill", "white");
+    .attr("y", (d, i) => dayOfWeek(dates[i].getUTCDay()) * cellSize + 0.5)
+    .attr("fill", (d, i) => calculateFillColour(minutes[i]));
 }
 
 export default function Grid() {
@@ -80,7 +108,9 @@ export default function Grid() {
 
   useEffect(() => {
     drawGrids(gridRef, data, "monday", 1280, 25);
-  });
+  }, []);
 
-  return <div className="my-4" ref={gridRef}></div>;
+  return (
+    <div className="my-4 overflow-x-scroll no-scrollbar" ref={gridRef}></div>
+  );
 }

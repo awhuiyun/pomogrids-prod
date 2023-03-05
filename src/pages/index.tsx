@@ -11,8 +11,7 @@ import Grid from "@/components/Grid";
 
 export default function Home() {
   // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId, setTaskArray, clearAllTasks } =
-    useTaskStore();
+  const { taskFormType, taskEditMenuId } = useTaskStore();
 
   // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
