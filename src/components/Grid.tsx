@@ -76,7 +76,7 @@ function generateGridData(
   // hashMap["17/02/2023"] <- get the value
 }
 
-// Funtion that draws the grids using d3.js
+// Function that draws the grids using d3.js
 function drawGrids(
   reference: MutableRefObject<null>,
   data: IGridData[],
@@ -117,38 +117,28 @@ function drawGrids(
     { month: "Dec", date: new Date("12-01-" + year) },
   ];
 
-  for (let i = 0; i < monthLabels.length; i++) {
-    console.log(monthLabels[i].date);
-    console.log(d3.timeYear(monthLabels[i].date));
-    const x =
-      startOfWeekDate.count(
-        d3.timeYear(monthLabels[i].date),
-        monthLabels[i].date
-      ) *
-        (cellSize + spaceBetweenGrids) +
-      cellSize +
-      spaceBetweenGrids;
-    console.log(x);
-  }
-
   // Clear previous svg
   d3.select(reference.current).select("svg").remove();
 
   // Create colour scale
   const originalNumOfMinsArray = d3.map(data, (d) => d.number_of_minutes);
-  console.log(originalNumOfMinsArray);
-
   const editedNumOfMinsArray = originalNumOfMinsArray.filter((item) => {
     return item > 0;
   });
-
-  console.log(editedNumOfMinsArray);
   const q1 = d3.quantile(editedNumOfMinsArray, 0.25);
   const q2 = d3.quantile(editedNumOfMinsArray, 0.5);
   const q3 = d3.quantile(editedNumOfMinsArray, 0.75);
   const q4 = d3.quantile(editedNumOfMinsArray, 1);
 
-  function calculateFillColour(value: number) {
+  function calculateFillColour(date: Date, value: number) {
+    const today = formatDate(new Date());
+
+    // Today: yellow
+    if (formatDate(date) === today) {
+      return "#FCD34D";
+    }
+
+    // Other days: shades of blue, depending on num of minutes worked
     if (q1 && q2 && q3 && q4)
       if (value === 0) {
         return "#F1F5F9";
@@ -237,7 +227,7 @@ function drawGrids(
       (d, i) =>
         dayOfWeek(dates[i].getDay()) * (cellSize + spaceBetweenGrids) + cellSize
     )
-    .attr("fill", (d, i) => calculateFillColour(minutes[i]));
+    .attr("fill", (d, i) => calculateFillColour(d.date, minutes[i]));
 
   // Adding tooltips
   // const tooltip = d3

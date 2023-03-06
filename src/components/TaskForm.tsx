@@ -114,7 +114,7 @@ export default function TaskForm() {
 
   return (
     <div
-      className="backdrop-blur-sm inset-0 bg-slate-700/20 absolute fade-in z-50"
+      className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50"
       onClick={toggleTaskFormOpenFalse}
     >
       <form
