@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { timeFormat } from "d3";
 import useTimerStore from "@/stores/timer";
 import useSettingStore from "@/stores/settings";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
+import useGridStore from "@/stores/grid";
 import BaseButton from "./BaseButton";
-
 import { updateTaskAfterSessionService } from "@/services/tasks";
+
+const formatDate = timeFormat("%d/%m/%Y");
 
 export default function Timer() {
   // Global states: useUserStore
@@ -47,13 +50,21 @@ export default function Timer() {
 
   // Global states: useTaskStore
   const {
+    tasks,
     unselectAllTasksForTimer,
     taskSelectedForTimer,
     addSessionCountToTaskAndCheckCompletion,
   } = useTaskStore();
 
+  // Global states: useGridStore
+  const { addTask } = useGridStore();
+
   // Local states
   const [endTime, setEndTime] = useState(0);
+  const taskSelected = tasks.filter(
+    (item) => item.uniqueId === taskSelectedForTimer
+  );
+  console.log(taskSelected);
 
   // Function that runs the timer
   function updateTimer(interval?: NodeJS.Timer) {
@@ -86,12 +97,22 @@ export default function Timer() {
         timerOption === "pomodoro" ||
         (timerOption === "cycle" && timerOptionInCycle === "pomodoro")
       ) {
+        // PATCH request: Create new record in tasks_session table
         updateTaskAfterSessionService(
           user,
           taskSelectedForTimer,
           1,
           pomodoroTimerMinutes
         );
+
+        // Update useGridStore:
+        addTask({
+          taskName: taskSelected[0].taskName,
+          dateOfSession: formatDate(new Date()),
+          completedNumOfMinutes: pomodoroTimerMinutes,
+          category_name: taskSelected[0].category_name,
+          category_colour: taskSelected[0].category_colour,
+        });
       }
 
       // Updates specific to timer type

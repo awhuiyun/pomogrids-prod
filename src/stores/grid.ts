@@ -6,6 +6,7 @@ interface IUseGridStore {
   tasksInTheYear: ITaskInTheYear[];
   setYear: (year: number) => void;
   setTasksInTheYear: (tasks: ITaskInTheYear[]) => void;
+  addTask: (task: ITaskInTheYear) => void;
 }
 
 const useGridStore = create<IUseGridStore>((set) => ({
@@ -18,6 +19,10 @@ const useGridStore = create<IUseGridStore>((set) => ({
   setTasksInTheYear: (tasks: ITaskInTheYear[]) =>
     set(() => ({
       tasksInTheYear: tasks,
+    })),
+  addTask: (task: ITaskInTheYear) =>
+    set((state) => ({
+      tasksInTheYear: [...state.tasksInTheYear, task],
     })),
 }));
 

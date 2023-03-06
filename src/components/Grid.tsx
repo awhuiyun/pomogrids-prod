@@ -4,19 +4,23 @@ import useGridStore from "@/stores/grid";
 import { ITaskInTheYear, IGridData } from "@/types/interfaces";
 import { timeFormat } from "d3";
 
+// Function to formate Date
+const formatDate = timeFormat("%d/%m/%Y");
+
+// Function to calculate number of days in year
 function daysInYear(year: number) {
   return (year % 4 === 0 && year % 100 > 0) || year % 400 == 0 ? 366 : 365;
 }
 
-const formatDate = timeFormat("%d/%m/%Y");
-
+// Function to generate an array of objects for each date in the year
 function generateDatesInYear(year: number): IGridData[] {
   const numberOfDaysInYear = daysInYear(year);
 
   const data = [];
 
   for (let i = 0; i < numberOfDaysInYear; i++) {
-    const date = new Date("2023-01-01");
+    const date = new Date(year + "-01-01");
+
     date.setDate(date.getDate() + i);
     const day = {
       date: new Date(date),
@@ -28,6 +32,7 @@ function generateDatesInYear(year: number): IGridData[] {
   return data;
 }
 
+// Function to populate dates with user's actual numOfMinutess data
 function generateGridData(
   datesinYearArray: IGridData[],
   tasksInYearArray: ITaskInTheYear[]
@@ -71,6 +76,7 @@ function generateGridData(
   // hashMap["17/02/2023"] <- get the value
 }
 
+// Funtion that draws the grids using d3.js
 function drawGrids(
   reference: MutableRefObject<null>,
   data: IGridData[],

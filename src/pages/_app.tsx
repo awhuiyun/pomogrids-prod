@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setUserId(user.uid);
 
         // POST request: Retrieve user's tasks for the year
-        getTasksInYearService(user, 2023)
+        getTasksInYearService(user, new Date().getFullYear())
           .then((res) => {
             setTasksInTheYear(res);
             console.log(res);
