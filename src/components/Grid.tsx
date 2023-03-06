@@ -201,7 +201,7 @@ export default function Grid() {
 
   return (
     <div
-      className="w-[1280px] mb-20 overflow-x-scroll no-scrollbar"
+      className="w-[1280px] mb-16 overflow-x-scroll no-scrollbar"
       ref={gridRef}
     ></div>
   );
