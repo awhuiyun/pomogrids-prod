@@ -9,10 +9,10 @@ interface ILayout {
 
 export default function Layout({ children }: ILayout) {
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <Nav />
-      {children}
+      <div className="flex-grow">{children}</div>
       <Footer />
-    </>
+    </div>
   );
 }

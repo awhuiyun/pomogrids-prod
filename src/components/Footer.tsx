@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <div className="text-xs text-slate-400 py-16 absolute bottom-0 w-screen">
+    <div className="text-xs text-slate-400 py-16 flex">
       <p className="w-fit mx-auto">
         Made with &#128149; by{" "}
         <Link

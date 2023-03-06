@@ -1,7 +1,32 @@
-// require("dotenv").config();
 import axios from "axios";
-import { getCurrentUser } from "@/auth/functions";
 import { User } from "firebase/auth";
+import { ITaskInTheYear } from "@/types/interfaces";
+
+// Function to get all tasks in year
+export async function getTasksInYearService(user: User | null, year: number) {
+  try {
+    if (user) {
+      const firebaseUserIdToken = await user.getIdToken(true);
+
+      const result = await axios({
+        method: "post",
+        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/get-tasks-by-year",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + firebaseUserIdToken,
+        },
+        data: {
+          year,
+        },
+      });
+
+      return result.data;
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 // Function to create new task in tasks table
 export async function createNewTaskService(

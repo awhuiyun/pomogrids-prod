@@ -8,8 +8,12 @@ import useUserStore from "@/stores/user";
 import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
+import useGridStore from "@/stores/grid";
 import { getSettingsService } from "@/services/settings";
-import { getUnarchivedTasksService } from "@/services/tasks";
+import {
+  getUnarchivedTasksService,
+  getTasksInYearService,
+} from "@/services/tasks";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -24,15 +28,24 @@ export default function App({ Component, pageProps }: AppProps) {
   } = useSettingStore();
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
-  const { addTask, clearAllTasks, setTaskArray } = useTaskStore();
+  const { clearAllTasks, setTaskArray } = useTaskStore();
+  const { setTasksInTheYear } = useGridStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      // Set useUserStore
       if (user) {
+        // Set useUserStore
         setUser(user);
         setEmail(user.email ?? "");
         setUserId(user.uid);
+
+        // POST request: Retrieve user's tasks for the year
+        getTasksInYearService(user, 2023)
+          .then((res) => {
+            setTasksInTheYear(res);
+            // console.log(res);
+          })
+          .catch((error) => console.log(error));
 
         // POST request: Retrieve user's settings
         getSettingsService(user)

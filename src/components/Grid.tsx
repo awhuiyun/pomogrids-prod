@@ -1,15 +1,14 @@
 import { useRef, useEffect, MutableRefObject } from "react";
 import * as d3 from "d3";
-import { tokenToString } from "typescript";
-
-export interface IGridData {
-  date: Date;
-  number_of_minutes: number;
-}
+import useGridStore from "@/stores/grid";
+import { ITaskInTheYear, IGridData } from "@/types/interfaces";
+import { timeFormat } from "d3";
 
 function daysInYear(year: number) {
   return (year % 4 === 0 && year % 100 > 0) || year % 400 == 0 ? 366 : 365;
 }
+
+const formatDate = timeFormat("%d/%m/%Y");
 
 function generateDatesInYear(year: number): IGridData[] {
   const numberOfDaysInYear = daysInYear(year);
@@ -29,7 +28,35 @@ function generateDatesInYear(year: number): IGridData[] {
   return data;
 }
 
-function generateGridData() {}
+function generateGridData(
+  datesinYearArray: IGridData[],
+  tasksInYearArray: ITaskInTheYear[]
+) {
+  const baseArray = datesinYearArray;
+  const dataArray = tasksInYearArray;
+  const updatedArray = [];
+
+  console.log(baseArray);
+  console.log(dataArray);
+
+  // "dd/mm/yyyyy" === "dd/mm/yyyyy"
+
+  // Manipulate dataArray: {date:..., value:...}
+  // Compare with baseArray
+  // use hashmap for efficiency instead of looping:
+  const hashMap = {
+    "17/02/2023": 25,
+    "18/02/2023": 18,
+  };
+
+  // hashMap["17/02/2023"] <- get the value
+
+  for (let i = 0; i < baseArray.length; i++) {
+    const date = formatDate(baseArray[i].date);
+
+    for (let j = 0; j < dataArray.length; j++) {}
+  }
+}
 
 function drawGrids(
   reference: MutableRefObject<null>,
@@ -140,12 +167,14 @@ function drawGrids(
 }
 
 export default function Grid() {
+  // Global states: useGridStore
+  const { year, tasksInTheYear } = useGridStore();
+
   const gridRef = useRef(null);
-  const year = 2023;
-  const data = generateDatesInYear(year);
+  const data = generateGridData(generateDatesInYear(year), tasksInTheYear);
 
   useEffect(() => {
-    drawGrids(gridRef, data, "monday", 26);
+    // drawGrids(gridRef, data, "monday", 26);
   }, []);
 
   return (
