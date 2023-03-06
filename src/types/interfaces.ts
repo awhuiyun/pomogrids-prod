@@ -14,7 +14,7 @@ export interface ITaskItem {
 export interface ITaskInTheYear {
   taskName: string;
   dateOfSession: string;
-  completedNumberOfMinutes: number;
+  completedNumOfMinutes: number;
   category_name: string | null;
   category_colour: string | null;
 }

@@ -20,7 +20,7 @@ function generateDatesInYear(year: number): IGridData[] {
     date.setDate(date.getDate() + i);
     const day = {
       date: new Date(date),
-      number_of_minutes: i * 5,
+      number_of_minutes: 0,
     };
     data.push(day);
   }
@@ -36,26 +36,39 @@ function generateGridData(
   const dataArray = tasksInYearArray;
   const updatedArray = [];
 
-  console.log(baseArray);
-  console.log(dataArray);
-
   // "dd/mm/yyyyy" === "dd/mm/yyyyy"
 
   // Manipulate dataArray: {date:..., value:...}
-  // Compare with baseArray
-  // use hashmap for efficiency instead of looping:
-  const hashMap = {
-    "17/02/2023": 25,
-    "18/02/2023": 18,
-  };
-
-  // hashMap["17/02/2023"] <- get the value
-
+  // Update baseArray with data from dataArray:
   for (let i = 0; i < baseArray.length; i++) {
     const date = formatDate(baseArray[i].date);
+    let totalNumOfMinutes = 0;
 
-    for (let j = 0; j < dataArray.length; j++) {}
+    for (let j = 0; j < dataArray.length; j++) {
+      if (dataArray[j].dateOfSession === date) {
+        totalNumOfMinutes += dataArray[j].completedNumOfMinutes;
+      }
+    }
+
+    const item = {
+      date: baseArray[i].date,
+      number_of_minutes: totalNumOfMinutes,
+    };
+
+    updatedArray.push(item);
   }
+
+  // console.log(baseArray);
+  // console.log(updatedArray);
+
+  return updatedArray;
+
+  // Use hashmap for efficiency instead of looping?
+  // const hashMap = {
+  //   "17/02/2023": 25,
+  //   "18/02/2023": 18,
+  // };
+  // hashMap["17/02/2023"] <- get the value
 }
 
 function drawGrids(
@@ -81,16 +94,18 @@ function drawGrids(
   d3.select(reference.current).select("svg").remove();
 
   // Create colour scale
-  const minutesWithoutZero = d3.map(data, (d) => d.number_of_minutes);
-  for (let i = 0; i < minutesWithoutZero.length; i++) {
-    if (minutesWithoutZero[i] === 0) {
-      minutesWithoutZero.splice(i, 1);
-    }
-  }
-  const q1 = d3.quantile(minutesWithoutZero, 0.25);
-  const q2 = d3.quantile(minutesWithoutZero, 0.5);
-  const q3 = d3.quantile(minutesWithoutZero, 0.75);
-  const q4 = d3.quantile(minutesWithoutZero, 1);
+  const originalNumOfMinsArray = d3.map(data, (d) => d.number_of_minutes);
+  console.log(originalNumOfMinsArray);
+
+  const editedNumOfMinsArray = originalNumOfMinsArray.filter((item) => {
+    return item > 0;
+  });
+
+  console.log(editedNumOfMinsArray);
+  const q1 = d3.quantile(editedNumOfMinsArray, 0.25);
+  const q2 = d3.quantile(editedNumOfMinsArray, 0.5);
+  const q3 = d3.quantile(editedNumOfMinsArray, 0.75);
+  const q4 = d3.quantile(editedNumOfMinsArray, 1);
 
   function calculateFillColour(value: number) {
     if (q1 && q2 && q3 && q4)
@@ -171,10 +186,11 @@ export default function Grid() {
   const { year, tasksInTheYear } = useGridStore();
 
   const gridRef = useRef(null);
-  const data = generateGridData(generateDatesInYear(year), tasksInTheYear);
+  const daysInYear = generateDatesInYear(year);
+  const tasksInYear = generateGridData(daysInYear, tasksInTheYear);
 
   useEffect(() => {
-    // drawGrids(gridRef, data, "monday", 26);
+    drawGrids(gridRef, tasksInYear, "monday", 26);
   }, []);
 
   return (
