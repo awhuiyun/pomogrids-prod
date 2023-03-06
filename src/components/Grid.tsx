@@ -191,7 +191,7 @@ export default function Grid() {
 
   useEffect(() => {
     drawGrids(gridRef, tasksInYear, "monday", 26);
-  }, []);
+  }, [tasksInTheYear]);
 
   return (
     <div

@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
         getTasksInYearService(user, 2023)
           .then((res) => {
             setTasksInTheYear(res);
-            // console.log(res);
+            console.log(res);
           })
           .catch((error) => console.log(error));
 
@@ -80,6 +80,8 @@ export default function App({ Component, pageProps }: AppProps) {
         setUser(null);
         setEmail("");
         setUserId("");
+
+        setTasksInTheYear([]);
 
         setPomodoroTimerMinutes(25);
         setShortBreakTimerMinutes(5);
