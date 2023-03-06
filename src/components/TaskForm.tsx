@@ -118,56 +118,50 @@ export default function TaskForm() {
       onClick={toggleTaskFormOpenFalse}
     >
       <form
-        className="flex flex-col rounded-md sticky top-28 mx-auto bg-white w-[500px] text-slate-90 p-4 space-y-6"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
         {/* Form title */}
-        <p className="font-bold text-xl text-center">
-          {taskFormType === "create" ? "Create new task" : "Update task"}
-        </p>
+        <div className="mb-4">
+          <p className="font-bold text-2xl text-center mb-1.5">
+            {taskFormType === "create" ? "Add Task" : "Update Task"}
+          </p>
+          {/* Completed number of sessions */}
+          {taskFormType === "update" && (
+            <p className="text-slate-600 text-center text-sm">
+              {completedNumOfSessionsInput} sessions completed
+            </p>
+          )}
+        </div>
 
         {/* Task Name */}
-        <label>
-          Task name:
+        <div className="flex flex-col mb-6">
+          <label className="text-sm mb-1">Name:</label>
           <input
             type="text"
             id="taskName"
             placeholder="What are you working on today?"
             value={taskNameInput}
-            className="mx-2 focus:outline-0 w-[300px]"
+            className="focus:outline-0 border border-slate-900 rounded px-2 py-1"
             onChange={handleInputChange}
             required
           />
-        </label>
+        </div>
 
         {/* Target number of sessions */}
-        <label>
-          Target number of sessions:
+        <div className="flex flex-col mb-6">
+          <label className="text-sm mb-1">Number of sessions:</label>
           <input
             type="number"
             id="targetNumOfSessionsInput"
             value={targetNumOfSessionsInput}
             min={taskFormType === "create" ? 1 : completedNumOfSessionsInput}
-            className="mx-2 focus:outline-0 w-[60px]"
+            className="focus:outline-0 border border-slate-900 rounded px-2 py-1"
             onChange={handleInputChange}
             required
           />
-        </label>
-
-        {/* Completed number of sessions */}
-        {taskFormType === "update" && (
-          <label>
-            Completed number of sessions:
-            <input
-              type="number"
-              id="completedNumOfSessionsInput"
-              value={completedNumOfSessionsInput}
-              className="mx-2 focus:outline-0 w-[60px]"
-              disabled
-            />
-          </label>
-        )}
+        </div>
 
         {/* Button */}
         {taskFormType === "create" ? (
