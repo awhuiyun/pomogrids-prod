@@ -127,86 +127,87 @@ export default function SettingsForm() {
       onClick={toggleSettingsFormOpenFalse}
     >
       <form
-        className="flex flex-col rounded-md sticky top-28 mx-auto bg-white w-[500px] text-slate-90 p-4 space-y-6"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
         {/* Form Title */}
-        <p className="font-bold text-xl text-center">Settings</p>
+        <p className="font-bold text-2xl text-center">Settings</p>
 
         {/* Timer Section */}
         <section>
-          <p className="font-bold">Timer (minutes)</p>
-          <div className="flex flex-col">
-            <label>
-              Pomodoro
+          <p className="font-bold text-lg mb-2">Timer</p>
+          <div className="flex flex-row space-x-4">
+            <div className="flex flex-col">
+              <label className="text-sm mb-1">Pomodoro:</label>
               <input
                 type="number"
                 id="pomodoroTimerInput"
                 value={pomodoroTimerInput}
-                className="mx-2 focus:outline-0 w-fit"
+                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
                 onChange={handleInputChange}
                 required
               />
-            </label>
-            <label>
-              Short Break
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm mb-1">Short Break:</label>
               <input
                 type="number"
                 id="shortBreakTimerInput"
                 value={shortBreakTimerInput}
-                className="mx-2 focus:outline-0 w-fit"
+                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
                 onChange={handleInputChange}
                 required
               />
-            </label>
-            <label>
-              Long Break
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm mb-1">Long Break:</label>
               <input
                 type="number"
                 id="longBreakTimerInput"
                 value={longBreakTimerInput}
-                className="mx-2 focus:outline-0 w-fit"
+                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
                 onChange={handleInputChange}
                 required
               />
-            </label>
+            </div>
           </div>
         </section>
 
         {/* Cycle Section */}
-        <section>
-          <p className="font-bold">Cycle</p>
-          <label>
+        <section className="space-y-2">
+          <p className="font-bold text-lg">Cycle</p>
+          <p className="text-sm">
             Number of pomodoro sessions before a long break
-            <input
-              type="number"
-              id="numberOfPomodoroSessionsInCycleInput"
-              value={numberOfPomodoroSessionsInCycleInput}
-              className="mx-2 focus:outline-0 w-fit"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
+          </p>
+          <input
+            type="number"
+            id="numberOfPomodoroSessionsInCycleInput"
+            value={numberOfPomodoroSessionsInCycleInput}
+            className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
+            onChange={handleInputChange}
+            required
+          />
         </section>
 
         {/* Alarm Ringtone Section */}
         <section>
-          <p className="font-bold">Alarm Ringtone</p>
-          <div className="flex flex-col">
-            <label>
-              Sound
+          <p className="font-bold text-lg mb-2">Alarm Ringtone</p>
+          <div className="flex flex-row space-x-4">
+            <div className="flex flex-col">
+              <label className="text-sm mb-1">Sound</label>
               <select
                 id="alarmRingtoneInput"
                 value={alarmRingtoneInput}
                 onChange={handleInputChange}
+                className="focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px]"
               >
                 <option value="buzzer">Buzzer</option>
                 <option value="calm">Calm</option>
               </select>
-            </label>
-            <label>
-              Volume (0-1)
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm mb-1">Volume (0-1)</label>
               <input
                 type="number"
                 id="alarmVolumeInput"
@@ -214,19 +215,19 @@ export default function SettingsForm() {
                 min="0"
                 max="1"
                 step="0.1"
-                className="mx-2 focus:outline-0 w-fit"
+                className="focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px]"
                 onChange={handleInputChange}
                 required
               />
-            </label>
+            </div>
           </div>
         </section>
 
         {/* Button */}
         <BaseButton
           type="submit"
-          label="Update"
-          className="text-white bg-blue4 px-4 py-1 w-fit mx-auto"
+          label="Save settings"
+          className="text-white bg-blue4 px-4 py-2 w-fit mx-auto text-sm"
         />
       </form>
     </div>
