@@ -40,7 +40,7 @@ function generateGridData(
   const baseArray = datesinYearArray;
   const dataArray = tasksInYearArray;
   const updatedArray = [];
-
+  console.log(dataArray);
   // "dd/mm/yyyyy" === "dd/mm/yyyyy"
 
   // Manipulate dataArray: {date:..., value:...}

@@ -14,10 +14,11 @@ import {
   getUnarchivedTasksService,
   getTasksInYearService,
 } from "@/services/tasks";
+import { getUserTier } from "@/services/users";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { setUser, setEmail, setUserId, user } = useUserStore();
+  const { setUser, setEmail, setUserId, user, setTier } = useUserStore();
   const {
     setPomodoroTimerMinutes,
     setShortBreakTimerMinutes,
@@ -39,11 +40,17 @@ export default function App({ Component, pageProps }: AppProps) {
         setEmail(user.email ?? "");
         setUserId(user.uid);
 
+        // POST request: Retrieve user's tier
+        getUserTier(user)
+          .then((res) => {
+            setTier(res[0].tier);
+          })
+          .catch((error) => console.log(error));
+
         // POST request: Retrieve user's tasks for the year
         getTasksInYearService(user, new Date().getFullYear())
           .then((res) => {
             setTasksInTheYear(res);
-            console.log(res);
           })
           .catch((error) => console.log(error));
 
@@ -69,7 +76,6 @@ export default function App({ Component, pageProps }: AppProps) {
         clearAllTasks();
         getUnarchivedTasksService<ITaskItem>(user)
           .then((res) => {
-            console.log(res);
             if (res) {
               setTaskArray(res);
             }
@@ -80,6 +86,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setUser(null);
         setEmail("");
         setUserId("");
+        setTier("");
 
         setTasksInTheYear([]);
 
@@ -87,7 +94,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setShortBreakTimerMinutes(5);
         setLongBreakTimerMinutes(15);
         setNumberOfPomodoroSessionsInCycle(4);
-        setAlarmRingtone("default");
+        setAlarmRingtone("buzzer");
         setAlarmVolume(0.5);
         setTimerMinutes(25);
         setRemainingDurationInMilliseconds(25 * 1000 * 60);
@@ -97,7 +104,6 @@ export default function App({ Component, pageProps }: AppProps) {
     });
   }, []);
 
-  console.log(user);
   return (
     <Layout>
       <Component {...pageProps} />

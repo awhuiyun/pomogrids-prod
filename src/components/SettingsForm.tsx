@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
@@ -7,8 +8,9 @@ import { updateSettingsService } from "@/services/settings";
 
 export default function SettingsForm() {
   // Global states: useUserStore
-  const { user } = useUserStore();
+  const { user, tier } = useUserStore();
 
+  console.log(tier);
   // Global states: useSettingStore
   const {
     pomodoroTimerMinutes,
@@ -127,12 +129,35 @@ export default function SettingsForm() {
       onClick={toggleSettingsFormOpenFalse}
     >
       <form
-        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-20 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
         {/* Form Title */}
-        <p className="font-bold text-2xl text-center">Settings</p>
+        <div>
+          <p className="font-bold text-2xl text-center">Settings</p>
+
+          {/* Not signed in */}
+          {!user && (
+            <p className="text-sm text-center mt-2">
+              Please{" "}
+              <span className="text-blue4 hover:underline cursor-pointer">
+                sign in
+              </span>
+              . This is a premium feature.
+            </p>
+          )}
+
+          {/* Basic users */}
+          {tier === "basic" && (
+            <p className="text-sm text-center mt-2">
+              To customize, sign up for{" "}
+              <span className="text-blue4 hover:underline cursor-pointer">
+                premium.
+              </span>
+            </p>
+          )}
+        </div>
 
         {/* Timer Section */}
         <section>
@@ -144,9 +169,13 @@ export default function SettingsForm() {
                 type="number"
                 id="pomodoroTimerInput"
                 value={pomodoroTimerInput}
-                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
+                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                  (tier === "basic" || !user) &&
+                  " text-slate-400 cursor-not-allowed"
+                }`}
                 onChange={handleInputChange}
-                required
+                required={true}
+                disabled={tier === "basic" || !user ? true : false}
               />
             </div>
             <div className="flex flex-col">
@@ -155,9 +184,13 @@ export default function SettingsForm() {
                 type="number"
                 id="shortBreakTimerInput"
                 value={shortBreakTimerInput}
-                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
+                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                  (tier === "basic" || !user) &&
+                  " text-slate-400 cursor-not-allowed"
+                }`}
                 onChange={handleInputChange}
-                required
+                required={true}
+                disabled={tier === "basic" || !user ? true : false}
               />
             </div>
             <div className="flex flex-col">
@@ -166,9 +199,13 @@ export default function SettingsForm() {
                 type="number"
                 id="longBreakTimerInput"
                 value={longBreakTimerInput}
-                className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
+                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                  (tier === "basic" || !user) &&
+                  " text-slate-400 cursor-not-allowed"
+                }`}
                 onChange={handleInputChange}
-                required
+                required={true}
+                disabled={tier === "basic" || !user ? true : false}
               />
             </div>
           </div>
@@ -184,15 +221,19 @@ export default function SettingsForm() {
             type="number"
             id="numberOfPomodoroSessionsInCycleInput"
             value={numberOfPomodoroSessionsInCycleInput}
-            className="focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px]"
+            className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+              (tier === "basic" || !user) &&
+              " text-slate-400 cursor-not-allowed"
+            }`}
             onChange={handleInputChange}
-            required
+            required={true}
+            disabled={tier === "basic" || !user ? true : false}
           />
         </section>
 
         {/* Alarm Ringtone Section */}
         <section>
-          <p className="font-bold text-lg mb-2">Alarm Ringtone</p>
+          <p className="font-bold text-lg mb-2">Alarm</p>
           <div className="flex flex-row space-x-4">
             <div className="flex flex-col">
               <label className="text-sm mb-1">Sound</label>
@@ -200,7 +241,12 @@ export default function SettingsForm() {
                 id="alarmRingtoneInput"
                 value={alarmRingtoneInput}
                 onChange={handleInputChange}
-                className="focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px]"
+                className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                  (tier === "basic" || !user) &&
+                  " text-slate-400 cursor-not-allowed"
+                }`}
+                required={true}
+                disabled={tier === "basic" || !user ? true : false}
               >
                 <option value="buzzer">Buzzer</option>
                 <option value="calm">Calm</option>
@@ -215,20 +261,48 @@ export default function SettingsForm() {
                 min="0"
                 max="1"
                 step="0.1"
-                className="focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px]"
+                className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                  (tier === "basic" || !user) &&
+                  " text-slate-400 cursor-not-allowed"
+                }`}
                 onChange={handleInputChange}
-                required
+                required={true}
+                disabled={tier === "basic" || !user ? true : false}
               />
             </div>
           </div>
         </section>
 
         {/* Button */}
-        <BaseButton
-          type="submit"
-          label="Save settings"
-          className="text-white bg-blue4 px-4 py-2 w-fit mx-auto text-sm"
-        />
+        {!user && (
+          <Link
+            href="/signin"
+            className="mx-auto"
+            onClick={toggleSettingsFormOpenFalse}
+          >
+            <BaseButton
+              type="button"
+              label="Sign in"
+              className="text-white bg-blue4 px-4 py-2 w-fit text-sm"
+            />{" "}
+          </Link>
+        )}
+        {user && tier === "basic" && (
+          <div onClick={toggleSettingsFormOpenFalse} className="mx-auto">
+            <BaseButton
+              type="button"
+              label="Upgrade to premium"
+              className="text-white bg-blue4 px-4 py-2 w-fit text-sm"
+            />
+          </div>
+        )}
+        {user && tier === "premium" && (
+          <BaseButton
+            type="submit"
+            label="Save settings"
+            className="text-white bg-blue4 px-4 py-2 w-fit mx-auto text-sm"
+          />
+        )}
       </form>
     </div>
   );
