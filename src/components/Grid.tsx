@@ -80,6 +80,7 @@ function generateGridData(
 function drawGrids(
   reference: MutableRefObject<null>,
   data: IGridData[],
+  year: number,
   weekStartType: string, // "monday", "sunday"
   cellSize: number
 ) {
@@ -94,7 +95,41 @@ function drawGrids(
   const startOfWeekDate =
     weekStartType === "sunday" ? d3.utcSunday : d3.utcMonday; //
   const numOfDaysInWeek = 7; // Number of days in week
-  const heightOfContainer = (cellSize + spaceBetweenGrids) * numOfDaysInWeek;
+  const heightOfContainer =
+    (cellSize + spaceBetweenGrids) * numOfDaysInWeek + cellSize;
+
+  const daysOfWeekLabels =
+    weekStartType === "sunday"
+      ? ["", "Mon", "", "Wed", "", "Fri", ""]
+      : ["Mon", "", "Wed", "", "Fri", "", ""];
+  const monthLabels = [
+    { month: "Jan", date: new Date("01-01-" + year) },
+    { month: "Feb", date: new Date("02-01-" + year) },
+    { month: "Mar", date: new Date("03-01-" + year) },
+    { month: "Apr", date: new Date("04-01-" + year) },
+    { month: "May", date: new Date("05-01-" + year) },
+    { month: "Jun", date: new Date("06-01-" + year) },
+    { month: "Jul", date: new Date("07-01-" + year) },
+    { month: "Aug", date: new Date("08-01-" + year) },
+    { month: "Sep", date: new Date("09-01-" + year) },
+    { month: "Oct", date: new Date("10-01-" + year) },
+    { month: "Nov", date: new Date("11-01-" + year) },
+    { month: "Dec", date: new Date("12-01-" + year) },
+  ];
+
+  for (let i = 0; i < monthLabels.length; i++) {
+    console.log(monthLabels[i].date);
+    console.log(d3.timeYear(monthLabels[i].date));
+    const x =
+      startOfWeekDate.count(
+        d3.timeYear(monthLabels[i].date),
+        monthLabels[i].date
+      ) *
+        (cellSize + spaceBetweenGrids) +
+      cellSize +
+      spaceBetweenGrids;
+    console.log(x);
+  }
 
   // Clear previous svg
   d3.select(reference.current).select("svg").remove();
@@ -136,8 +171,53 @@ function drawGrids(
     .attr("width", 52 * (cellSize + spaceBetweenGrids))
     .attr("height", heightOfContainer);
 
+  // Create labels for y-axis (days of week)
+  const ylabel = container
+    .append("g")
+    .selectAll("text")
+    .data(daysOfWeekLabels)
+    .enter()
+    .append("text")
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1)
+    .attr("x", cellSize)
+    .attr(
+      "y",
+      (d, i) =>
+        (cellSize * 2) / 3 + i * (cellSize + spaceBetweenGrids) + cellSize
+    )
+    .attr("text-anchor", "end")
+    .text((d) => d)
+    .style("font-size", 12);
+
+  // Create labels for x-axis (months of year)
+  const xlabel = container
+    .append("g")
+    .selectAll("text")
+    .data(monthLabels)
+    .enter()
+    .append("text")
+    .attr("width", cellSize - 1)
+    .attr("height", cellSize - 1)
+    .attr(
+      "x",
+      (d, i) =>
+        startOfWeekDate.count(
+          d3.timeYear(monthLabels[i].date),
+          monthLabels[i].date
+        ) *
+          (cellSize + spaceBetweenGrids) +
+        cellSize +
+        spaceBetweenGrids +
+        2
+    )
+    .attr("y", cellSize / 2)
+    .text((d) => d.month)
+    .style("font-size", 12);
+
   // Create individual grid cells
   const cell = container
+    .append("g")
     .selectAll("rect")
     .data(data)
     .enter()
@@ -147,12 +227,15 @@ function drawGrids(
     .attr(
       "x",
       (d, i) =>
-        startOfWeekDate.count(d3.utcYear(dates[i]), dates[i]) *
-        (cellSize + spaceBetweenGrids)
+        startOfWeekDate.count(d3.timeYear(dates[i]), dates[i]) *
+          (cellSize + spaceBetweenGrids) +
+        cellSize +
+        spaceBetweenGrids
     )
     .attr(
       "y",
-      (d, i) => dayOfWeek(dates[i].getUTCDay()) * (cellSize + spaceBetweenGrids)
+      (d, i) =>
+        dayOfWeek(dates[i].getDay()) * (cellSize + spaceBetweenGrids) + cellSize
     )
     .attr("fill", (d, i) => calculateFillColour(minutes[i]));
 
@@ -196,7 +279,7 @@ export default function Grid() {
   const tasksInYear = generateGridData(daysInYear, tasksInTheYear);
 
   useEffect(() => {
-    drawGrids(gridRef, tasksInYear, "monday", 26);
+    drawGrids(gridRef, tasksInYear, year, "monday", 26);
   }, [tasksInTheYear]);
 
   return (
