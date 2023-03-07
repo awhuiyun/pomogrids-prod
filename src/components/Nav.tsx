@@ -17,8 +17,8 @@ export default function Nav() {
 
   return (
     <div className="flex items-center py-6 w-[1280px] mx-auto">
-      <Link href="/" className="flex-grow font-bold text-slate-900">
-        Pomogrids
+      <Link href="/" className="flex-grow font-bold text-slate-900 text-base">
+        Pomogrids <span className="text-xs ml-1 text-blue4">BETA</span>
       </Link>
       {user_id ? (
         <div onClick={handleUserSignOut}>

@@ -38,9 +38,6 @@ export default function Home() {
       {/* Grid section */}
       <Grid />
 
-      {/* Date section */}
-      <DateHeader />
-
       {/* Timer and Tasks section */}
       <div className="flex space-x-4">
         <TimerContainer />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { timeFormat } from "d3";
+const { Howl, Howler } = require("howler");
 import useTimerStore from "@/stores/timer";
 import useSettingStore from "@/stores/settings";
 import useTaskStore from "@/stores/tasks";
@@ -7,6 +8,9 @@ import useUserStore from "@/stores/user";
 import useGridStore from "@/stores/grid";
 import BaseButton from "./BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
+import buzzer from "public/assets/buzzer.mp3";
+import calm from "public/assets/calm.mp3";
+import { faHouseFloodWaterCircleArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 // Function to format date
 const formatDate = timeFormat("%d/%m/%Y");
@@ -62,10 +66,12 @@ export default function Timer() {
   const { addTask } = useGridStore();
 
   // Functions that plays different alarm sounds
-  // const audio = new Audio("public/audio/buzzer.mp3");
-  // function playAudio() {
-  //   audio.play();
-  // }
+  const calmSound = new Howl({
+    src: [calm],
+  });
+  const buzzerSound = new Howl({
+    src: [buzzer],
+  });
 
   // Local states
   const [endTime, setEndTime] = useState(0);
@@ -85,13 +91,12 @@ export default function Timer() {
     } // Timer reaches 0
     else if (isTimerOn && duration < 0) {
       // Play sound
-      //   if (ringtone === "buzzer") {
-      //     buzzerSound.play();
-      //   } else if (ringtone === "calm") {
-      //     calmSound.play();
-      //   }
-      // audio.play();
-      alert("Timer is up!");
+      if (ringtone === "buzzer") {
+        buzzerSound.play();
+      } else if (ringtone === "calm") {
+        calmSound.play();
+      }
+      // alert("Timer is up!");
 
       // Run regardless of timerOption
       clearInterval(interval);
@@ -300,7 +305,7 @@ export default function Timer() {
     }
   }
 
-  // useEffect hook
+  // useEffect: Timer
   useEffect(() => {
     updateTimer();
     const interval = setInterval(() => {
@@ -311,6 +316,23 @@ export default function Timer() {
       clearInterval(interval);
     };
   }, [isTimerOn, endTime, timerMinutes, timerSeconds]);
+
+  // useEffect: Stop audio on mouseclick
+  useEffect(() => {
+    function stopAudio() {
+      if (ringtone === "buzzer") {
+        Howler.stop();
+      } else if (ringtone === "calm") {
+        Howler.stop();
+      }
+    }
+
+    window.addEventListener("click", stopAudio);
+
+    return () => {
+      window.addEventListener("click", stopAudio);
+    };
+  }, []);
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+const { Howler } = require("howler");
 import { auth } from "@/auth/functions";
 import { onAuthStateChanged } from "firebase/auth";
 import Layout from "@/components/Layout";
@@ -71,6 +72,7 @@ export default function App({ Component, pageProps }: AppProps) {
             setRemainingDurationInMilliseconds(
               res.pomodoro_minutes * 1000 * 60
             );
+            Howler.volume(res.alarm_volume);
           })
           .catch((error) => console.log(error));
 

@@ -62,7 +62,6 @@ function generateGridData(
   const baseArray = datesinYearArray;
   const dataArray = tasksInYearArray;
   const updatedArray = [];
-  console.log(dataArray);
   // "dd/mm/yyyyy" === "dd/mm/yyyyy"
 
   // Manipulate dataArray: {date:..., value:...}
@@ -314,8 +313,6 @@ export default function Grid() {
     top: mousePosLocal.y + 10,
     left: mousePosLocal.x + 20,
   };
-
-  // console.log(position);
 
   return (
     <div className="w-[1280px] mb-16">

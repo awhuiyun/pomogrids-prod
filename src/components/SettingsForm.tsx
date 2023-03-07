@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+const { Howler } = require("howler");
 import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
@@ -104,7 +105,7 @@ export default function SettingsForm() {
       setNumberOfPomodoroSessionsInCycle(numberOfPomodoroSessionsInCycleInput);
       setAlarmRingtone(alarmRingtoneInput);
       setAlarmVolume(alarmVolumeInput);
-      // Howler.volume(alarmVolumeInput);
+      Howler.volume(alarmVolumeInput);
       setWeekStart(weekStartInput);
 
       // Save settings for timer display (dependent on timerOption)
@@ -135,7 +136,7 @@ export default function SettingsForm() {
       onClick={toggleSettingsFormOpenFalse}
     >
       <form
-        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-20 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-16 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
