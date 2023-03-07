@@ -30,7 +30,8 @@ export async function updateSettingsService(
   long_break_minutes: number,
   number_of_sessions_in_a_cycle: number,
   alarm_ringtone: string,
-  alarm_volume: number
+  alarm_volume: number,
+  week_start: string
 ) {
   try {
     if (user) {
@@ -49,6 +50,7 @@ export async function updateSettingsService(
           number_of_sessions_in_a_cycle,
           alarm_ringtone,
           alarm_volume,
+          week_start,
         },
       });
       console.log(result.data);

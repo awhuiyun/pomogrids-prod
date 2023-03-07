@@ -18,7 +18,7 @@ import { getUserTier } from "@/services/users";
 import { ITaskItem } from "@/types/interfaces";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { setUser, setEmail, setUserId, user, setTier } = useUserStore();
+  const { setUser, setEmail, setUserId, setTier } = useUserStore();
   const {
     setPomodoroTimerMinutes,
     setShortBreakTimerMinutes,
@@ -26,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
     setNumberOfPomodoroSessionsInCycle,
     setAlarmRingtone,
     setAlarmVolume,
+    setWeekStart,
   } = useSettingStore();
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
@@ -65,6 +66,7 @@ export default function App({ Component, pageProps }: AppProps) {
             );
             setAlarmRingtone(res.alarm_ringtone);
             setAlarmVolume(res.alarm_volume);
+            setWeekStart(res.week_start);
             setTimerMinutes(res.pomodoro_minutes);
             setRemainingDurationInMilliseconds(
               res.pomodoro_minutes * 1000 * 60

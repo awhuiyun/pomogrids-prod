@@ -10,7 +10,6 @@ export default function SettingsForm() {
   // Global states: useUserStore
   const { user, tier } = useUserStore();
 
-  console.log(tier);
   // Global states: useSettingStore
   const {
     pomodoroTimerMinutes,
@@ -19,6 +18,7 @@ export default function SettingsForm() {
     numberOfPomodoroSessionsInCycle,
     alarmRingtone,
     alarmVolume,
+    weekStart,
     timerOption,
     toggleIsSettingOpen,
     setPomodoroTimerMinutes,
@@ -27,6 +27,7 @@ export default function SettingsForm() {
     setNumberOfPomodoroSessionsInCycle,
     setAlarmRingtone,
     setAlarmVolume,
+    setWeekStart,
   } = useSettingStore();
 
   // Global states: useTimerStore
@@ -48,6 +49,7 @@ export default function SettingsForm() {
   ] = useState(numberOfPomodoroSessionsInCycle);
   const [alarmRingtoneInput, setAlarmRingtoneInput] = useState(alarmRingtone);
   const [alarmVolumeInput, setAlarmVolumeInput] = useState(alarmVolume);
+  const [weekStartInput, setWeekStartInput] = useState(weekStart);
 
   // Function to toggle isSettingsFormOpen=False
   function toggleSettingsFormOpenFalse() {
@@ -73,6 +75,8 @@ export default function SettingsForm() {
       setAlarmRingtoneInput(e.target.value);
     } else if (e.target.id === "alarmVolumeInput") {
       setAlarmVolumeInput(parseFloat(e.target.value));
+    } else if (e.target.id === "weekStartInput") {
+      setWeekStartInput(e.target.value);
     }
   }
 
@@ -89,7 +93,8 @@ export default function SettingsForm() {
         longBreakTimerInput,
         numberOfPomodoroSessionsInCycleInput,
         alarmRingtoneInput,
-        alarmVolumeInput
+        alarmVolumeInput,
+        weekStartInput
       );
 
       // Save settings in useSettingsStore:
@@ -100,6 +105,7 @@ export default function SettingsForm() {
       setAlarmRingtone(alarmRingtoneInput);
       setAlarmVolume(alarmVolumeInput);
       // Howler.volume(alarmVolumeInput);
+      setWeekStart(weekStartInput);
 
       // Save settings for timer display (dependent on timerOption)
       if (timerOption === "pomodoro") {
@@ -270,6 +276,28 @@ export default function SettingsForm() {
                 disabled={tier === "basic" || !user ? true : false}
               />
             </div>
+          </div>
+        </section>
+
+        {/* Grid Section */}
+        <section>
+          <p className="font-bold text-lg mb-2">Grid</p>
+          <div className="flex flex-col">
+            <label className="text-sm mb-1">Start of week:</label>
+            <select
+              id="weekStartInput"
+              value={weekStartInput}
+              onChange={handleInputChange}
+              className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+            >
+              <option value="monday">Monday</option>
+              <option value="sunday">Sunday</option>
+            </select>
           </div>
         </section>
 

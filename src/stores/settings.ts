@@ -8,6 +8,7 @@ interface IUseSettingStore {
   numberOfPomodoroSessionsInCycle: number;
   alarmRingtone: string;
   alarmVolume: number;
+  weekStart: string;
   isSettingOpen: boolean;
   setPomodoroTimerMinutes: (minutes: number) => void;
   setShortBreakTimerMinutes: (minutes: number) => void;
@@ -16,6 +17,7 @@ interface IUseSettingStore {
   setNumberOfPomodoroSessionsInCycle: (num: number) => void;
   setAlarmRingtone: (selection: string) => void;
   setAlarmVolume: (num: number) => void;
+  setWeekStart: (selection: string) => void;
   toggleIsSettingOpen: (status: boolean) => void;
 }
 
@@ -27,6 +29,7 @@ const useSettingStore = create<IUseSettingStore>((set) => ({
   numberOfPomodoroSessionsInCycle: 4,
   alarmRingtone: "buzzer",
   alarmVolume: 0.5,
+  weekStart: "monday",
   isSettingOpen: false,
   setPomodoroTimerMinutes: (minutes: number) =>
     set(() => ({
@@ -55,6 +58,10 @@ const useSettingStore = create<IUseSettingStore>((set) => ({
   setAlarmVolume: (num: number) =>
     set(() => ({
       alarmVolume: num,
+    })),
+  setWeekStart: (selection: string) =>
+    set(() => ({
+      weekStart: selection,
     })),
   toggleIsSettingOpen: (status: boolean) =>
     set(() => ({

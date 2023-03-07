@@ -8,6 +8,7 @@ import {
 } from "react";
 import * as d3 from "d3";
 import useGridStore from "@/stores/grid";
+import useSettingStore from "@/stores/settings";
 import { ITaskInTheYear, IGridData } from "@/types/interfaces";
 import { timeFormat } from "d3";
 
@@ -118,7 +119,7 @@ function drawGrids(
   const dayOfWeek =
     weekStartType === "sunday" ? (i: number) => i : (i: number) => (i + 6) % 7; // returns [0-6] to correspond to a day of week
   const startOfWeekDate =
-    weekStartType === "sunday" ? d3.utcSunday : d3.utcMonday; //
+    weekStartType === "sunday" ? d3.timeSunday : d3.timeMonday; //
   const numOfDaysInWeek = 7; // Number of days in week
   const heightOfContainer =
     (cellSize + spaceBetweenGrids) * numOfDaysInWeek + cellSize;
@@ -183,7 +184,7 @@ function drawGrids(
   const container = d3
     .select(reference.current)
     .append("svg")
-    .attr("width", 52 * (cellSize + spaceBetweenGrids))
+    .attr("width", 54 * (cellSize + spaceBetweenGrids))
     .attr("height", heightOfContainer);
 
   // Create labels for y-axis (days of week)
@@ -286,6 +287,7 @@ function drawGrids(
 export default function Grid() {
   // Global states: useGridStore
   const { year, tasksInTheYear } = useGridStore();
+  const { weekStart } = useSettingStore();
 
   const gridRef = useRef(null);
   const tooltipRef = useRef(null);
@@ -301,12 +303,12 @@ export default function Grid() {
       gridRef,
       tasksInYear,
       year,
-      "monday",
+      weekStart,
       26,
       tooltipRef,
       setMousePosLocal
     );
-  }, [tasksInTheYear]);
+  }, [tasksInTheYear, weekStart]);
 
   const position = {
     top: mousePosLocal.y + 10,
