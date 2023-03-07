@@ -1,12 +1,32 @@
-import { useRef, useEffect, MutableRefObject, useState } from "react";
+import {
+  useRef,
+  useEffect,
+  MutableRefObject,
+  useState,
+  SetStateAction,
+  Dispatch,
+} from "react";
 import * as d3 from "d3";
 import useGridStore from "@/stores/grid";
-import useTaskStore from "@/stores/tasks";
 import { ITaskInTheYear, IGridData } from "@/types/interfaces";
 import { timeFormat } from "d3";
 
 // Function to formate Date
 const formatDate = timeFormat("%d/%m/%Y");
+const formatDateTooltip = timeFormat("%a %b %d %Y");
+const convertMinsToHours = (minutes: number) => {
+  let num;
+  let type;
+  if (minutes < 60) {
+    num = minutes;
+    type = "minutes";
+  } else {
+    num = (minutes / 60).toFixed(1);
+    type = "hours";
+  }
+
+  return num + " " + type;
+};
 
 // Function to calculate number of days in year
 function daysInYear(year: number) {
@@ -64,9 +84,6 @@ function generateGridData(
     updatedArray.push(item);
   }
 
-  // console.log(baseArray);
-  // console.log(updatedArray);
-
   return updatedArray;
 
   // Use hashmap for efficiency instead of looping?
@@ -85,9 +102,12 @@ function drawGrids(
   weekStartType: string, // "monday", "sunday"
   cellSize: number,
   tooltipRef: MutableRefObject<null>,
-  // mousePosX: number,
-  // mousePosY: number,
-  setMousePos: (x: number, y: number) => void
+  setMousePos: Dispatch<
+    SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  >
 ) {
   // Calculate values
   const dates = d3.map(data, (d) => d.date); // Array of dates
@@ -211,21 +231,30 @@ function drawGrids(
     .style("font-size", 12);
 
   // Adding tooltips
-  const tooltip = d3.select(tooltipRef.current).style("opacity", 0);
-  const mouseover: { (event: MouseEvent): void } = (e) => {
+  const tooltip = d3
+    .select(tooltipRef.current)
+    .style("opacity", 0)
+    .style("visibility", "hidden");
+
+  const mouseover: { (e: MouseEvent, d: IGridData): void } = (e, d) => {
     // Capture position
-    const [x, y] = d3.pointer(e);
-    // console.log(x, y);
-    setMousePos(x, y);
+    setMousePos({ x: e.clientX, y: e.clientY });
+
+    // Set text in tooltip
+    tooltip.html(
+      `${convertMinsToHours(d.number_of_minutes)} <br/>${formatDateTooltip(
+        d.date
+      )}`
+    );
 
     // Make div appear
-    tooltip.style("opacity", 1);
-    // setMousePos(mousePosX, mousePosY);
+    tooltip.style("opacity", 1).style("visibility", "visible");
   };
+
   const mouseleave = () => {
-    tooltip.style("opacity", 0);
+    tooltip.style("opacity", 0).style("visibility", "hidden");
   };
-  // console.log(mousePosX, mousePosY);
+
   // Create individual grid cells
   const cell = container
     .append("g")
@@ -249,6 +278,7 @@ function drawGrids(
         dayOfWeek(dates[i].getDay()) * (cellSize + spaceBetweenGrids) + cellSize
     )
     .attr("fill", (d, i) => calculateFillColour(d.date, minutes[i]))
+    .style("cursor", "pointer")
     .on("mouseover", mouseover)
     .on("mouseleave", mouseleave);
 }
@@ -256,25 +286,14 @@ function drawGrids(
 export default function Grid() {
   // Global states: useGridStore
   const { year, tasksInTheYear } = useGridStore();
-  const { mousePos, setMousePos } = useTaskStore();
-
-  // const [mousePosLocal, setMousePosLocal] = useState({ x: 0, y: 0 });
 
   const gridRef = useRef(null);
   const tooltipRef = useRef(null);
   const daysInYear = generateDatesInYear(year);
   const tasksInYear = generateGridData(daysInYear, tasksInTheYear);
 
-  // Tracks mouse position
-  // useEffect(() => {
-  //   const handleMouseMove = (e: MouseEvent) =>
-  //     setMousePosLocal({ x: e.clientX, y: e.clientY });
-  //   window.addEventListener("mousemove", handleMouseMove);
-
-  //   return () => {
-  //     window.removeEventListener("mousemove", handleMouseMove);
-  //   };
-  // }, []);
+  // State to track mouse position
+  const [mousePosLocal, setMousePosLocal] = useState({ x: 0, y: 0 });
 
   // Draw grids
   useEffect(() => {
@@ -285,15 +304,13 @@ export default function Grid() {
       "monday",
       26,
       tooltipRef,
-      // mousePosLocal.x,
-      // mousePosLocal.y,
-      setMousePos
+      setMousePosLocal
     );
   }, [tasksInTheYear]);
 
   const position = {
-    top: mousePos.y + 80,
-    left: mousePos.x + 20,
+    top: mousePosLocal.y + 10,
+    left: mousePosLocal.x + 20,
   };
 
   // console.log(position);
@@ -302,12 +319,10 @@ export default function Grid() {
     <div className="w-[1280px] mb-16">
       <div className="overflow-x-scroll no-scrollbar" ref={gridRef}></div>
       <div
-        className="tooltip bg-slate-900 w-20 h-10 rounded text-white fixed"
+        className="tooltip bg-slate-900 rounded text-white fixed text-xs p-3"
         style={position}
         ref={tooltipRef}
-      >
-        Hello
-      </div>
+      ></div>
     </div>
   );
 }
