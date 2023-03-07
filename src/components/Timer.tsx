@@ -8,6 +8,7 @@ import useGridStore from "@/stores/grid";
 import BaseButton from "./BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
 
+// Function to format date
 const formatDate = timeFormat("%d/%m/%Y");
 
 export default function Timer() {
@@ -22,6 +23,7 @@ export default function Timer() {
     longBreakTimerMinutes,
     numberOfPomodoroSessionsInCycle,
     alarmRingtone: ringtone,
+    alarmVolume,
     setTimerOption,
   } = useSettingStore();
 
@@ -59,12 +61,17 @@ export default function Timer() {
   // Global states: useGridStore
   const { addTask } = useGridStore();
 
+  // Functions that plays different alarm sounds
+  // const audio = new Audio("public/audio/buzzer.mp3");
+  // function playAudio() {
+  //   audio.play();
+  // }
+
   // Local states
   const [endTime, setEndTime] = useState(0);
   const taskSelected = tasks.filter(
     (item) => item.uniqueId === taskSelectedForTimer
   );
-  console.log(taskSelected);
 
   // Function that runs the timer
   function updateTimer(interval?: NodeJS.Timer) {
@@ -83,6 +90,7 @@ export default function Timer() {
       //   } else if (ringtone === "calm") {
       //     calmSound.play();
       //   }
+      // audio.play();
       alert("Timer is up!");
 
       // Run regardless of timerOption

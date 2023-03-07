@@ -1,6 +1,7 @@
-import { useRef, useEffect, MutableRefObject } from "react";
+import { useRef, useEffect, MutableRefObject, useState } from "react";
 import * as d3 from "d3";
 import useGridStore from "@/stores/grid";
+import useTaskStore from "@/stores/tasks";
 import { ITaskInTheYear, IGridData } from "@/types/interfaces";
 import { timeFormat } from "d3";
 
@@ -82,7 +83,11 @@ function drawGrids(
   data: IGridData[],
   year: number,
   weekStartType: string, // "monday", "sunday"
-  cellSize: number
+  cellSize: number,
+  tooltipRef: MutableRefObject<null>,
+  // mousePosX: number,
+  // mousePosY: number,
+  setMousePos: (x: number, y: number) => void
 ) {
   // Calculate values
   const dates = d3.map(data, (d) => d.date); // Array of dates
@@ -205,6 +210,22 @@ function drawGrids(
     .text((d) => d.month)
     .style("font-size", 12);
 
+  // Adding tooltips
+  const tooltip = d3.select(tooltipRef.current).style("opacity", 0);
+  const mouseover: { (event: MouseEvent): void } = (e) => {
+    // Capture position
+    const [x, y] = d3.pointer(e);
+    // console.log(x, y);
+    setMousePos(x, y);
+
+    // Make div appear
+    tooltip.style("opacity", 1);
+    // setMousePos(mousePosX, mousePosY);
+  };
+  const mouseleave = () => {
+    tooltip.style("opacity", 0);
+  };
+  // console.log(mousePosX, mousePosY);
   // Create individual grid cells
   const cell = container
     .append("g")
@@ -227,55 +248,66 @@ function drawGrids(
       (d, i) =>
         dayOfWeek(dates[i].getDay()) * (cellSize + spaceBetweenGrids) + cellSize
     )
-    .attr("fill", (d, i) => calculateFillColour(d.date, minutes[i]));
-
-  // Adding tooltips
-  // const tooltip = d3
-  //   .select("body")
-  //   .append("div")
-  //   .style("position", "absolute")
-  //   .style("z-index", "10")
-  //   .style("visibility", "hidden")
-  //   .style("background", "#000")
-  //   .text("a simple tooltip");
-
-  // container
-  //   .selectAll("div")
-  //   .data(data)
-  //   .enter()
-  //   .append("div")
-  //   .attr("width", 150)
-  //   .attr("height", 150)
-  //   .attr("fill", "black")
-  //   .text((d) => d.number_of_minutes)
-  //   .on("mouseover", function (d) {
-  //     tooltip.text(d);
-  //     tooltip
-  //       .style("top", d3.event.pageY - 10 + "px")
-  //       .style("left", d3.event.pageX + 10 + "px");
-  //     return tooltip.style("visbility", "visible");
-  //   })
-  //   .on("mouseout", function (d) {
-  //     tooltip.style("visbility", "hidden");
-  //   });
+    .attr("fill", (d, i) => calculateFillColour(d.date, minutes[i]))
+    .on("mouseover", mouseover)
+    .on("mouseleave", mouseleave);
 }
 
 export default function Grid() {
   // Global states: useGridStore
   const { year, tasksInTheYear } = useGridStore();
+  const { mousePos, setMousePos } = useTaskStore();
+
+  // const [mousePosLocal, setMousePosLocal] = useState({ x: 0, y: 0 });
 
   const gridRef = useRef(null);
+  const tooltipRef = useRef(null);
   const daysInYear = generateDatesInYear(year);
   const tasksInYear = generateGridData(daysInYear, tasksInTheYear);
 
+  // Tracks mouse position
+  // useEffect(() => {
+  //   const handleMouseMove = (e: MouseEvent) =>
+  //     setMousePosLocal({ x: e.clientX, y: e.clientY });
+  //   window.addEventListener("mousemove", handleMouseMove);
+
+  //   return () => {
+  //     window.removeEventListener("mousemove", handleMouseMove);
+  //   };
+  // }, []);
+
+  // Draw grids
   useEffect(() => {
-    drawGrids(gridRef, tasksInYear, year, "monday", 26);
+    drawGrids(
+      gridRef,
+      tasksInYear,
+      year,
+      "monday",
+      26,
+      tooltipRef,
+      // mousePosLocal.x,
+      // mousePosLocal.y,
+      setMousePos
+    );
   }, [tasksInTheYear]);
 
+  const position = {
+    top: mousePos.y + 80,
+    left: mousePos.x + 20,
+  };
+
+  // console.log(position);
+
   return (
-    <div
-      className="w-[1280px] mb-16 overflow-x-scroll no-scrollbar"
-      ref={gridRef}
-    ></div>
+    <div className="w-[1280px] mb-16">
+      <div className="overflow-x-scroll no-scrollbar" ref={gridRef}></div>
+      <div
+        className="tooltip bg-slate-900 w-20 h-10 rounded text-white fixed"
+        style={position}
+        ref={tooltipRef}
+      >
+        Hello
+      </div>
+    </div>
   );
 }

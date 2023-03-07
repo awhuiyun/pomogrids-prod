@@ -1,5 +1,6 @@
 import useTaskStore from "@/stores/tasks";
 import TaskItem from "./TaskItem";
+// import buzzer from "../../public/audio/buzzer.mp3";
 
 export default function TaskContainer() {
   // Global states: useTaskStore
@@ -29,6 +30,7 @@ export default function TaskContainer() {
       <div
         className="text-slate-400 cursor-pointer p-1 pt-4"
         onClick={toggleTaskFormOpenTrue}
+        // onClick={playAudio}
       >
         + Add task
       </div>
