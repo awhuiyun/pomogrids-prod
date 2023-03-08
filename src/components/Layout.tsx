@@ -9,9 +9,9 @@ interface ILayout {
 
 export default function Layout({ children }: ILayout) {
   return (
-    <div className="flex flex-col h-full lg:h-screen">
+    <div className="max-w-[1280px] mx-auto px-4 py-2 flex flex-col min-h-screen text-slate-900">
       <Nav />
-      <div className="flex-grow">{children}</div>
+      <div className="flex-grow pt-4">{children}</div>
       <Footer />
     </div>
   );

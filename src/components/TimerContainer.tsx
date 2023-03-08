@@ -13,7 +13,7 @@ export default function TimerContainer() {
   }
 
   return (
-    <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded p-4 w-full h-fit">
+    <div className="border border-slate-900 shadow-custom rounded p-4 h-fit w-full">
       {/* Title and Settings Icon */}
       <div className="flex flex-row text-slate-400">
         <p className="flex-grow text-xs">Timer:</p>

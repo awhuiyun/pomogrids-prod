@@ -16,16 +16,17 @@ export default function Nav() {
   }
 
   return (
-    <div className="flex items-center py-6 w-[1280px] mx-auto">
-      <Link href="/" className="flex-grow font-bold text-slate-900 text-base">
+    <div className="flex items-center py-4 space-x-6 sm:space-x-4">
+      <Link href="/" className="font-bold text-base">
         Pomogrids <span className="text-xs ml-1 text-blue4">BETA</span>
       </Link>
+      <div className="flex-grow"></div>
       {user_id ? (
         <div onClick={handleUserSignOut}>
           <BaseButton
             type="button"
             label="Sign Out"
-            className="text-red-500 hover:underline underline-offset-2 mr-10"
+            className="text-red-500 hover:underline underline-offset-2"
           />
         </div>
       ) : (
@@ -33,7 +34,7 @@ export default function Nav() {
           <BaseButton
             type="button"
             label="Sign In"
-            className="text-blue4 hover:underline underline-offset-2 mr-10"
+            className="text-blue4 hover:underline underline-offset-2"
           />
         </Link>
       )}
@@ -43,7 +44,7 @@ export default function Nav() {
         <BaseButton
           type="button"
           label="How to ->"
-          className="text-white bg-blue4 px-4 py-2"
+          className="text-white bg-blue4 px-4 py-2 ml-4"
         />
       </Link>
     </div>

@@ -17,7 +17,7 @@ export default function TaskContainer() {
   }
 
   return (
-    <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded p-4 pb-8 w-full h-fit space-y-2">
+    <div className="border border-slate-900 shadow-custom rounded p-4 pb-8 h-fit w-full space-y-2">
       {/* Title */}
       <p className="text-slate-400 text-xs">Tasks:</p>
 

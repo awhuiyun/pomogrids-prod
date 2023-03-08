@@ -315,7 +315,7 @@ export default function Grid() {
   };
 
   return (
-    <div className="w-[1280px] mb-16">
+    <div className="mb-16">
       <div className="overflow-x-scroll no-scrollbar" ref={gridRef}></div>
       <div
         className="tooltip bg-slate-900 rounded text-white fixed text-xs p-3"

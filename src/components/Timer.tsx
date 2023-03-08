@@ -10,7 +10,6 @@ import BaseButton from "./BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
 import buzzer from "public/assets/buzzer.mp3";
 import calm from "public/assets/calm.mp3";
-import { faHouseFloodWaterCircleArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 // Function to format date
 const formatDate = timeFormat("%d/%m/%Y");
@@ -395,12 +394,12 @@ export default function Timer() {
       </div>
 
       {/* Timer Display */}
-      <div className="flex flex-row text-8xl font-bold mt-8 mb-10 mx-auto w-fit">
-        <div className="w-52 text-end">
+      <div className="flex flex-row font-bold mt-8 mb-10 mx-auto w-fit text-8xl">
+        <div className="w-30 md:w-52 text-end">
           {timerMinutes > 9 ? timerMinutes : "0" + timerMinutes}
         </div>
         <div className="w-10 text-center">:</div>
-        <div className="w-52 text-start">
+        <div className="w-30 md:w-52 text-start">
           {timerSeconds > 9 ? timerSeconds : "0" + timerSeconds}
         </div>
       </div>
