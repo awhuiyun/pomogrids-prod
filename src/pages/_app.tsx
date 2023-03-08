@@ -45,40 +45,47 @@ export default function App({ Component, pageProps }: AppProps) {
         // POST request: Retrieve user's tier
         getUserTier(user)
           .then((res) => {
-            setTier(res[0].tier);
+            if (res) {
+              setTier(res[0].tier);
+            }
           })
           .catch((error) => console.log(error));
 
         // POST request: Retrieve user's tasks for the year
         getTasksInYearService(user, new Date().getFullYear())
           .then((res) => {
-            setTasksInTheYear(res);
+            if (res) {
+              setTasksInTheYear(res);
+            }
           })
           .catch((error) => console.log(error));
 
         // POST request: Retrieve user's settings
         getSettingsService(user)
           .then((res) => {
-            setPomodoroTimerMinutes(res.pomodoro_minutes);
-            setShortBreakTimerMinutes(res.short_break_minutes);
-            setLongBreakTimerMinutes(res.long_break_minutes);
-            setNumberOfPomodoroSessionsInCycle(
-              res.number_of_sessions_in_a_cycle
-            );
-            setAlarmRingtone(res.alarm_ringtone);
-            setAlarmVolume(res.alarm_volume);
-            setWeekStart(res.week_start);
-            setTimerMinutes(res.pomodoro_minutes);
-            setRemainingDurationInMilliseconds(
-              res.pomodoro_minutes * 1000 * 60
-            );
-            Howler.volume(res.alarm_volume);
+            if (res) {
+              // defensive
+              setPomodoroTimerMinutes(res.pomodoro_minutes);
+              setShortBreakTimerMinutes(res.short_break_minutes);
+              setLongBreakTimerMinutes(res.long_break_minutes);
+              setNumberOfPomodoroSessionsInCycle(
+                res.number_of_sessions_in_a_cycle
+              );
+              setAlarmRingtone(res.alarm_ringtone);
+              setAlarmVolume(res.alarm_volume);
+              setWeekStart(res.week_start);
+              setTimerMinutes(res.pomodoro_minutes);
+              setRemainingDurationInMilliseconds(
+                res.pomodoro_minutes * 1000 * 60
+              );
+              Howler.volume(res.alarm_volume);
+            }
           })
           .catch((error) => console.log(error));
 
         // POST request: Retrieve user's unarchived tasks
         clearAllTasks();
-        getUnarchivedTasksService<ITaskItem>(user)
+        getUnarchivedTasksService(user)
           .then((res) => {
             if (res) {
               setTaskArray(res);

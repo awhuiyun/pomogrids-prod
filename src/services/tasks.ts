@@ -1,14 +1,17 @@
 import axios from "axios";
 import { User } from "firebase/auth";
-import { ITaskInTheYear } from "@/types/interfaces";
+import { ITaskInTheYear, ITaskItem } from "@/types/interfaces";
 
 // Function to get all tasks in year
-export async function getTasksInYearService(user: User | null, year: number) {
+export async function getTasksInYearService(
+  user: User | null,
+  year: number
+): Promise<ITaskInTheYear[] | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
 
-      const result = await axios({
+      const { data: tasks } = await axios<ITaskInTheYear[]>({
         method: "post",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/get-tasks-by-year",
         headers: {
@@ -20,7 +23,7 @@ export async function getTasksInYearService(user: User | null, year: number) {
         },
       });
 
-      return result.data;
+      return tasks;
     }
   } catch (error) {
     console.log(error);
@@ -36,12 +39,12 @@ export async function createNewTaskService(
   target_num_of_sessions: number,
   category_name?: string,
   category_colour?: string
-) {
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
 
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "post",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/create",
         headers: {
@@ -57,7 +60,7 @@ export async function createNewTaskService(
         },
       });
 
-      console.log(result.data);
+      return response;
     }
   } catch (error) {
     console.log(error);
@@ -73,11 +76,11 @@ export async function updateExistingTaskService(
   target_num_of_sessions: number,
   category_name?: string,
   category_colour?: string
-) {
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "patch",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/update",
         headers: {
@@ -92,7 +95,8 @@ export async function updateExistingTaskService(
           category_colour,
         },
       });
-      console.log(result.data);
+
+      return response;
     }
   } catch (error) {
     console.log(error);
@@ -104,11 +108,11 @@ export async function updateExistingTaskService(
 export async function deleteExistingTaskService(
   user: User | null,
   task_id: string
-) {
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "delete",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/delete",
         headers: {
@@ -119,7 +123,8 @@ export async function deleteExistingTaskService(
           task_id,
         },
       });
-      console.log(result.data);
+
+      return response;
     }
   } catch (error) {
     console.log(error);
@@ -133,11 +138,11 @@ export async function updateTaskAfterSessionService(
   task_id: string,
   number_of_sessions: number,
   number_of_minutes: number
-) {
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "patch",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/session-complete",
         headers: {
@@ -150,7 +155,8 @@ export async function updateTaskAfterSessionService(
           number_of_minutes,
         },
       });
-      console.log(result.data);
+
+      return response;
     }
   } catch (error) {
     console.log(error);
@@ -159,11 +165,14 @@ export async function updateTaskAfterSessionService(
 }
 
 // Function to archive task
-export async function archiveTaskService(user: User | null, task_id: string) {
+export async function archiveTaskService(
+  user: User | null,
+  task_id: string
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "patch",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/archive-task",
         headers: {
@@ -174,7 +183,8 @@ export async function archiveTaskService(user: User | null, task_id: string) {
           task_id,
         },
       });
-      console.log(result.data);
+
+      return response;
     }
   } catch (error) {
     console.log(error);
@@ -183,11 +193,13 @@ export async function archiveTaskService(user: User | null, task_id: string) {
 }
 
 // Function to retrieve all unarchived tasks to populate TaskContainer
-export async function getUnarchivedTasksService<T>(user: User | null) {
+export async function getUnarchivedTasksService(
+  user: User | null
+): Promise<ITaskItem[] | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios<T[]>({
+      const { data: tasks } = await axios<ITaskItem[]>({
         method: "post",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/unarchived-tasks",
         headers: {
@@ -195,8 +207,8 @@ export async function getUnarchivedTasksService<T>(user: User | null) {
           Authorization: "Bearer " + firebaseUserIdToken,
         },
       });
-      console.log("working");
-      return result.data;
+
+      return tasks;
     }
   } catch (error) {
     console.log(error);

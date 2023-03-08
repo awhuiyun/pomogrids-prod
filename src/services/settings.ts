@@ -2,11 +2,25 @@ import axios from "axios";
 import { User } from "firebase/auth";
 
 // Function to retrieve settings for user
-export async function getSettingsService(user: User | null) {
+interface ISettings {
+  user_id: string;
+  pomodoro_minutes: number;
+  short_break_minutes: number;
+  long_break_minutes: number;
+  number_of_sessions_in_a_cycle: number;
+  alarm_ringtone: string;
+  alarm_volume: number;
+  week_start: string;
+}
+
+export async function getSettingsService(
+  user: User | null
+): Promise<ISettings | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+
+      const { data: settings } = await axios<ISettings[]>({
         method: "post",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/settings/get",
         headers: {
@@ -14,7 +28,8 @@ export async function getSettingsService(user: User | null) {
           Authorization: "Bearer " + firebaseUserIdToken,
         },
       });
-      return result.data[0];
+
+      return settings[0];
     }
   } catch (error) {
     console.log(error);
@@ -32,11 +47,11 @@ export async function updateSettingsService(
   alarm_ringtone: string,
   alarm_volume: number,
   week_start: string
-) {
+): Promise<string | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
-      const result = await axios({
+      const { data: response } = await axios<string>({
         method: "patch",
         url: process.env.NEXT_PUBLIC_SERVER_URL + "/settings/update",
         headers: {
@@ -53,7 +68,7 @@ export async function updateSettingsService(
           week_start,
         },
       });
-      console.log(result.data);
+      return response;
     }
   } catch (error) {
     console.log(error);
