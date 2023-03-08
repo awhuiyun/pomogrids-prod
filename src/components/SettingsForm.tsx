@@ -6,10 +6,11 @@ import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import BaseButton from "./BaseButton";
 import { updateSettingsService } from "@/services/settings";
+import { upgradeUserTier } from "@/services/users";
 
 export default function SettingsForm() {
   // Global states: useUserStore
-  const { user, tier } = useUserStore();
+  const { user, tier, setTier } = useUserStore();
 
   // Global states: useSettingStore
   const {
@@ -79,6 +80,22 @@ export default function SettingsForm() {
     } else if (e.target.id === "weekStartInput") {
       setWeekStartInput(e.target.value);
     }
+  }
+
+  // Function to upgrade user tier
+  async function handleUpgradeButtonClick() {
+    try {
+      // PATCH request: Upgrade user's tier from basic to premium
+      await upgradeUserTier(user);
+
+      // Save tier change in useUserStore
+      setTier("premium");
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Close Settings Form modal
+    toggleIsSettingOpen(false);
   }
 
   // Function to handle form submit
@@ -317,7 +334,7 @@ export default function SettingsForm() {
           </Link>
         )}
         {user && tier === "basic" && (
-          <div onClick={toggleSettingsFormOpenFalse} className="mx-auto">
+          <div onClick={handleUpgradeButtonClick} className="mx-auto">
             <BaseButton
               type="button"
               label="Upgrade to premium"
