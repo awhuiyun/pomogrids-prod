@@ -6,9 +6,8 @@ import TaskContainer from "@/components/TaskContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
-import DateHeader from "@/components/DateHeader";
-
 import Grid from "@/components/Grid";
+import UnderConstruction from "@/components/UnderConstruction";
 
 export default function Home() {
   // Global states: useTaskStore
@@ -25,6 +24,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {/************ Modals *************/}
+      {/* Under Construction */}
+      <UnderConstruction />
+
       {/* Settings Form */}
       {isSettingOpen && <SettingsForm />}
 
