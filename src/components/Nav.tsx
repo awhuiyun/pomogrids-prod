@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { signOutwithGoogle } from "@/auth/functions";
+import { signOutwithGoogle } from "@/firebase/functions";
 import BaseButton from "./BaseButton";
 import useUserStore from "@/stores/user";
 
