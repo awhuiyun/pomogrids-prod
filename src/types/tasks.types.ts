@@ -18,8 +18,3 @@ export interface ITaskInTheYear {
   category_name: string | null;
   category_colour: string | null;
 }
-
-export interface IGridData {
-  date: Date;
-  number_of_minutes: number;
-}

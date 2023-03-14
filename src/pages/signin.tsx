@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { signInWithGoogle } from "@/firebase/functions";
+import { signInWithGoogle } from "@/firebase/auth";
 import useUserStore from "@/stores/user";
 
 export default function Signin() {

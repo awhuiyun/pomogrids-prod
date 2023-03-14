@@ -1,6 +1,6 @@
 import axios from "axios";
 import { User } from "firebase/auth";
-import { ITaskInTheYear, ITaskItem } from "@/types/interfaces";
+import { ITaskInTheYear, ITaskItem } from "@/types/";
 
 // Function to get all tasks in year
 export async function getTasksInYearService(

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 const { Howler } = require("howler");
-import { auth } from "@/firebase/functions";
+import { auth } from "@/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import Layout from "@/components/Layout";
 import useUserStore from "@/stores/user";
