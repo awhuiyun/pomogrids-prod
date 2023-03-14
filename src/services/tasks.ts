@@ -144,7 +144,7 @@ export async function updateTaskAfterSessionService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/session-complete",
+        url: "/api/tasks/update-task-after-session",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

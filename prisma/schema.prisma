@@ -40,7 +40,8 @@ model Tasks_session {
   month_of_session Int
   day_of_session Int
   task Task @relation(fields: [task_id], references: [id])
-
+  
+  @@unique([task_id, year_of_session, month_of_session, day_of_session])
   @@index([task_id])
 }
 
