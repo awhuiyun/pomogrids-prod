@@ -42,7 +42,7 @@ export async function updateSettingsService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/settings/update",
+        url: "/api/settings/update-settings",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
