@@ -1,8 +1,13 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
+import { Settings } from "@prisma/client";
+import { ApiResponseError } from "@/types";
 
-export default async function getSettingsHandler(req: Request, res: Response) {
+export default async function getSettingsHandler(
+  req: Request,
+  res: Response<Settings | ApiResponseError>
+) {
   try {
     // Authenticate jwt
     const decodedToken = await authenticateJWT(req.headers.authorization);
@@ -16,6 +21,10 @@ export default async function getSettingsHandler(req: Request, res: Response) {
         user_id: uid,
       },
     });
+
+    if (!settings) {
+      throw new Error("User does not have settings");
+    }
 
     return res.send(settings);
   } catch (error) {

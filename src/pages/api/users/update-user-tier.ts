@@ -1,11 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-import { IUserTier } from "@/types";
+import { ApiResponseError, IUserTier } from "@/types";
 
 export default async function updateUserTierHandler(
   req: Request,
-  res: Response
+  res: Response<String | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

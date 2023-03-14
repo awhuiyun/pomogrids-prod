@@ -1,12 +1,12 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
+import { ApiResponseError, ArchiveTaskPayload } from "@/types";
 
-interface ArchiveTaskPayload {
-  task_id: string;
-}
-
-export default async function archiveTaskHandler(req: Request, res: Response) {
+export default async function archiveTaskHandler(
+  req: Request,
+  res: Response<string | ApiResponseError>
+) {
   try {
     // Authenticate jwt
     await authenticateJWT(req.headers.authorization);

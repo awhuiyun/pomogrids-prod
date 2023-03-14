@@ -1,6 +1,14 @@
 import axios from "axios";
 import { User } from "firebase/auth";
-import { ITaskInTheYear, ITaskItem } from "@/types/";
+import {
+  ArchiveTaskPayload,
+  CreateNewTaskPayload,
+  DeleteExistingTaskPayload,
+  ITaskInTheYear,
+  ITaskItem,
+  UpdateExistingTaskPayload,
+  UpdateTaskAfterSessioPayload,
+} from "@/types/";
 
 // Function to get all tasks in year
 export async function getTasksInYearService(
@@ -34,11 +42,7 @@ export async function getTasksInYearService(
 // Function to create new task in tasks table
 export async function createNewTaskService(
   user: User | null,
-  task_id: string,
-  task_name: string,
-  target_num_of_sessions: number,
-  category_name?: string,
-  category_colour?: string
+  payload: CreateNewTaskPayload
 ): Promise<string | void> {
   try {
     if (user) {
@@ -51,13 +55,7 @@ export async function createNewTaskService(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          task_id,
-          task_name,
-          target_num_of_sessions,
-          category_name,
-          category_colour,
-        },
+        data: payload,
       });
 
       return response;
@@ -71,11 +69,7 @@ export async function createNewTaskService(
 // Function to update existing task in tasks table
 export async function updateExistingTaskService(
   user: User | null,
-  task_id: string,
-  task_name: string,
-  target_num_of_sessions: number,
-  category_name?: string,
-  category_colour?: string
+  payload: UpdateExistingTaskPayload
 ): Promise<string | void> {
   try {
     if (user) {
@@ -87,13 +81,7 @@ export async function updateExistingTaskService(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          task_id,
-          task_name,
-          target_num_of_sessions,
-          category_name,
-          category_colour,
-        },
+        data: payload,
       });
 
       return response;
@@ -107,7 +95,7 @@ export async function updateExistingTaskService(
 // Function to delete existing task
 export async function deleteExistingTaskService(
   user: User | null,
-  task_id: string
+  payload: DeleteExistingTaskPayload
 ): Promise<string | void> {
   try {
     if (user) {
@@ -119,9 +107,7 @@ export async function deleteExistingTaskService(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          task_id,
-        },
+        data: payload,
       });
 
       return response;
@@ -135,9 +121,7 @@ export async function deleteExistingTaskService(
 // Function to update task after session completes
 export async function updateTaskAfterSessionService(
   user: User | null,
-  task_id: string,
-  number_of_sessions: number,
-  number_of_minutes: number
+  payload: UpdateTaskAfterSessioPayload
 ): Promise<string | void> {
   try {
     if (user) {
@@ -149,11 +133,7 @@ export async function updateTaskAfterSessionService(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          task_id,
-          number_of_sessions,
-          number_of_minutes,
-        },
+        data: payload,
       });
 
       return response;
@@ -167,7 +147,7 @@ export async function updateTaskAfterSessionService(
 // Function to archive task
 export async function archiveTaskService(
   user: User | null,
-  task_id: string
+  payload: ArchiveTaskPayload
 ): Promise<string | void> {
   try {
     if (user) {
@@ -179,9 +159,7 @@ export async function archiveTaskService(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          task_id,
-        },
+        data: payload,
       });
 
       return response;

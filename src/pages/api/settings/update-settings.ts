@@ -1,20 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-
-type UpdateSettingsPayload = {
-  pomodoro_minutes: number;
-  short_break_minutes: number;
-  long_break_minutes: number;
-  number_of_sessions_in_a_cycle: number;
-  alarm_ringtone: string;
-  alarm_volume: number;
-  week_start: string;
-};
+import { ApiResponseError, UpdateSettingsPayload } from "@/types";
 
 export default async function updateSettingsHandler(
   req: Request,
-  res: Response
+  res: Response<string | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

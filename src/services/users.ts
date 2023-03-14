@@ -30,7 +30,7 @@ export async function getUserTier(
 // Function to upgrade user tier from basic to premium
 export async function updateUserTier(
   user: User | null,
-  tier: IUserTier
+  payload: IUserTier
 ): Promise<string | void> {
   try {
     if (user) {
@@ -43,7 +43,7 @@ export async function updateUserTier(
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: tier,
+        data: payload,
       });
 
       return response;

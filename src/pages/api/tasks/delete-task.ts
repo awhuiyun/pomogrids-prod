@@ -1,14 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-
-type DeleteExistingTaskPayload = {
-  task_id: string;
-};
+import { ApiResponseError, DeleteExistingTaskPayload } from "@/types";
 
 export default async function deleteExistingTaskHandler(
   req: Request,
-  res: Response
+  res: Response<string | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

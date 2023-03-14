@@ -1,16 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-
-interface UpdateTaskAfterSessioPayload {
-  task_id: string;
-  number_of_sessions: number;
-  number_of_minutes: number;
-}
+import { UpdateTaskAfterSessioPayload, ApiResponseError } from "@/types";
 
 export default async function updateTaskAfterSessionHandler(
   req: Request,
-  res: Response
+  res: Response<string | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

@@ -1,18 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-
-type UpdateExistingTaskPayload = {
-  task_id: string;
-  task_name: string;
-  target_num_of_sessions: number;
-  category_name?: string;
-  category_colour?: string;
-};
+import { ApiResponseError, UpdateExistingTaskPayload } from "@/types";
 
 export default async function updateExistingTaskHandler(
   req: Request,
-  res: Response
+  res: Response<string | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

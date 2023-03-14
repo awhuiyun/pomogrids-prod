@@ -1,10 +1,11 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
+import { ApiResponseError } from "@/types";
 
 export default async function createNewUserHandler(
   req: Request,
-  res: Response
+  res: Response<string | ApiResponseError>
 ) {
   try {
     // Authenticate jwt

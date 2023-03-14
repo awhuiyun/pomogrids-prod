@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-import { IUserTier } from "@/types";
+import { ApiResponseError, IUserTier } from "@/types";
 
 export default async function getUserTierHandler(req: Request, res: Response) {
   try {
@@ -20,6 +20,10 @@ export default async function getUserTierHandler(req: Request, res: Response) {
         tier: true,
       },
     });
+
+    if (!tier) {
+      throw new Error();
+    }
 
     return res.send(tier);
   } catch (error) {
