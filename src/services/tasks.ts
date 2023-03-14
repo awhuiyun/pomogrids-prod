@@ -114,7 +114,7 @@ export async function deleteExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "delete",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/delete",
+        url: "api/tasks/delete",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

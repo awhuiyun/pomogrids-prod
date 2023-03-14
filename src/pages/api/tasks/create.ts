@@ -41,7 +41,6 @@ export default async function createNewTaskHandler(
       },
     });
 
-    console.log(task);
     return res.send("New task successfully created!");
   } catch (error) {
     console.error(" POST /tasks/create", error);
