@@ -2,9 +2,9 @@ import { Response, Request } from "express";
 import { prisma } from "@/server/prisma/prismaClient";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 
-type ArchiveTaskPayload = {
+interface ArchiveTaskPayload {
   task_id: string;
-};
+}
 
 export default async function archiveTaskHandler(req: Request, res: Response) {
   try {

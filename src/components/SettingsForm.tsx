@@ -6,7 +6,7 @@ import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import BaseButton from "./BaseButton";
 import { updateSettingsService } from "@/services/settings";
-import { upgradeUserTier } from "@/services/users";
+import { updateUserTier } from "@/services/users";
 
 export default function SettingsForm() {
   // Global states: useUserStore
@@ -86,7 +86,7 @@ export default function SettingsForm() {
   async function handleUpgradeButtonClick() {
     try {
       // PATCH request: Upgrade user's tier from basic to premium
-      await upgradeUserTier(user);
+      await updateUserTier(user, { tier: "premium" });
 
       // Save tier change in useUserStore
       setTier("premium");

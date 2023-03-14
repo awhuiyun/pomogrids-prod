@@ -1,3 +1,3 @@
 export interface IUserTier {
-  tier: "premiun" | "basic";
+  tier: "premium" | "basic";
 }

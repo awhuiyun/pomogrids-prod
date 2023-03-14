@@ -28,8 +28,9 @@ export async function getUserTier(
 }
 
 // Function to upgrade user tier from basic to premium
-export async function upgradeUserTier(
-  user: User | null
+export async function updateUserTier(
+  user: User | null,
+  tier: IUserTier
 ): Promise<string | void> {
   try {
     if (user) {
@@ -37,11 +38,12 @@ export async function upgradeUserTier(
 
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/upgrade-user-tier",
+        url: "/api/users/update-user-tier",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
+        data: tier,
       });
 
       return response;
