@@ -26,7 +26,7 @@ export default async function deleteExistingTaskHandler(
 
     return res.send("Task successfully deleted!");
   } catch (error) {
-    console.error(" DELETE /tasks/update", error);
+    console.error(" DELETE /tasks/delete-task", error);
     return res.status(400).json({
       status: "error",
       message: "request to get delete task failed",

@@ -46,7 +46,7 @@ export async function createNewTaskService(
 
       const { data: response } = await axios<string>({
         method: "post",
-        url: "/api/tasks/create",
+        url: "/api/tasks/create-task",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -82,7 +82,7 @@ export async function updateExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "patch",
-        url: "/api/tasks/update",
+        url: "/api/tasks/update-task",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -114,7 +114,7 @@ export async function deleteExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "delete",
-        url: "/api/tasks/delete",
+        url: "/api/tasks/delete-task",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

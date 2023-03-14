@@ -42,7 +42,7 @@ export default async function updateExistingTaskHandler(
 
     return res.send("Existing task successfully updated!");
   } catch (error) {
-    console.error(" PATCH /tasks/update", error);
+    console.error(" PATCH /tasks/update-task", error);
     return res.status(400).json({
       status: "error",
       message: "request to get update existing task failed",

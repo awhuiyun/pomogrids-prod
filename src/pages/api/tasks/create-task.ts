@@ -43,7 +43,7 @@ export default async function createNewTaskHandler(
 
     return res.send("New task successfully created!");
   } catch (error) {
-    console.error(" POST /tasks/create", error);
+    console.error(" POST /tasks/create-task", error);
     return res.status(400).json({
       status: "error",
       message: "request to get create new task failed",
