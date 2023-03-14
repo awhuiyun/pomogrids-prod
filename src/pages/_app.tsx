@@ -16,7 +16,6 @@ import {
   getTasksInYearService,
 } from "@/services/tasks";
 import { getUserTier } from "@/services/users";
-import { ITaskItem } from "@/types/interfaces";
 
 export default function App({ Component, pageProps }: AppProps) {
   const { setUser, setEmail, setUserId, setTier } = useUserStore();
