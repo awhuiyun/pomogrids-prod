@@ -82,7 +82,7 @@ export async function updateExistingTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/update",
+        url: "/api/tasks/update",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
