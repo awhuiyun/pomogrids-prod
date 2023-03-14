@@ -1,21 +1,18 @@
 import axios from "axios";
 import { User } from "firebase/auth";
+import { IUserTier } from "@/types";
 
 // Function to get user tiers
-interface IUserTier {
-  tier: "premiun" | "basic";
-}
-
 export async function getUserTier(
   user: User | null
-): Promise<IUserTier[] | void> {
+): Promise<IUserTier | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
 
-      const { data: tier } = await axios<IUserTier[]>({
+      const { data: tier } = await axios<IUserTier>({
         method: "get",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/get-user-tier",
+        url: "/api/users/get-user-tier",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

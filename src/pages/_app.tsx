@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
         getUserTier(user)
           .then((res) => {
             if (res) {
-              setTier(res[0].tier);
+              setTier(res.tier);
             }
           })
           .catch((error) => console.log(error));
