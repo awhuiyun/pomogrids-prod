@@ -1,16 +1,15 @@
 // import * as admin from "firebase-admin";
-import initializeAdmin from "../firebase_admin";
+import { app } from "../firebase_admin";
 
 export async function authenticateJWT(authorizationHeader: string | undefined) {
   // Initialise firebase admin
-  const admin = await initializeAdmin();
 
   const authHeader = authorizationHeader;
 
   if (authHeader) {
     try {
       const idToken = authHeader.split(" ")[1];
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const decodedToken = await app.auth().verifyIdToken(idToken);
       return decodedToken;
     } catch (error) {
       console.log(error);
