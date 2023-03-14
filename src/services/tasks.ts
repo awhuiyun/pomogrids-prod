@@ -46,7 +46,7 @@ export async function createNewTaskService(
 
       const { data: response } = await axios<string>({
         method: "post",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/create",
+        url: "/api/tasks/create",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -174,7 +174,7 @@ export async function archiveTaskService(
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/archive-task",
+        url: "/api/tasks/archive-task",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
