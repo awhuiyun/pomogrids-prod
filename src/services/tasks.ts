@@ -177,8 +177,8 @@ export async function getUnarchivedTasksService(
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
       const { data: tasks } = await axios<ITaskItem[]>({
-        method: "post",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/unarchived-tasks",
+        method: "get",
+        url: "/api/tasks/get-unarchived-tasks",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
