@@ -48,3 +48,7 @@ export interface UpdateExistingTaskPayload {
   category_name?: string;
   category_colour?: string;
 }
+
+export interface GetTaskInYearPayload {
+  year: number;
+}

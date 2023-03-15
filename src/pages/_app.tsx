@@ -51,10 +51,30 @@ export default function App({ Component, pageProps }: AppProps) {
           .catch((error) => console.log(error));
 
         // POST request: Retrieve user's tasks for the year
-        getTasksInYearService(user, new Date().getFullYear())
+        getTasksInYearService(user, {
+          year: Number(new Date().getFullYear()),
+        })
           .then((res) => {
             if (res) {
-              setTasksInTheYear(res);
+              // Manipulate result: Change date to local time
+              let edited_res = [];
+              for (let i = 0; i < res.length; i++) {
+                const task = res[i];
+                const edited = {
+                  dateOfSession: new Date(task.dateOfSession)
+                    .toLocaleString()
+                    .split(",")[0],
+                  completedNumOfMinutes: task.completedNumOfMinutes,
+                  taskName: task.taskName,
+                  category_name: task.category_name,
+                  category_colour: task.category_colour,
+                };
+
+                edited_res.push(edited);
+              }
+
+              // Set state
+              setTasksInTheYear(edited_res);
             }
           })
           .catch((error) => console.log(error));

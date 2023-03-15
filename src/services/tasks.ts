@@ -4,6 +4,7 @@ import {
   ArchiveTaskPayload,
   CreateNewTaskPayload,
   DeleteExistingTaskPayload,
+  GetTaskInYearPayload,
   ITaskInTheYear,
   ITaskItem,
   UpdateExistingTaskPayload,
@@ -13,7 +14,7 @@ import {
 // Function to get all tasks in year
 export async function getTasksInYearService(
   user: User | null,
-  year: number
+  payload: GetTaskInYearPayload
 ): Promise<ITaskInTheYear[] | void> {
   try {
     if (user) {
@@ -21,14 +22,12 @@ export async function getTasksInYearService(
 
       const { data: tasks } = await axios<ITaskInTheYear[]>({
         method: "post",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/tasks/get-tasks-by-year",
+        url: "/api/tasks/get-tasks-in-year",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
         },
-        data: {
-          year,
-        },
+        data: payload,
       });
 
       return tasks;
