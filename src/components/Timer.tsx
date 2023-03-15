@@ -110,12 +110,11 @@ export default function Timer() {
         (timerOption === "cycle" && timerOptionInCycle === "pomodoro")
       ) {
         // PATCH request: Create new record in tasks_session table
-        updateTaskAfterSessionService(
-          user,
-          taskSelectedForTimer,
-          1,
-          pomodoroTimerMinutes
-        );
+        updateTaskAfterSessionService(user, {
+          task_id: taskSelectedForTimer,
+          number_of_sessions: 1,
+          number_of_minutes: pomodoroTimerMinutes,
+        });
 
         // Update useGridStore:
         addTask({

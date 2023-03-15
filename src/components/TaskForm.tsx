@@ -54,12 +54,11 @@ export default function TaskForm() {
       const uniqueId = uuid();
 
       // POST request: Create new task in tasks table
-      await createNewTaskService(
-        user,
-        uniqueId,
-        taskNameInput,
-        targetNumOfSessionsInput
-      );
+      await createNewTaskService(user, {
+        task_id: uniqueId,
+        task_name: taskNameInput,
+        target_num_of_sessions: targetNumOfSessionsInput,
+      });
 
       // Update Global State: Create add new task into useTaskStore
       addTask({
@@ -83,12 +82,11 @@ export default function TaskForm() {
   async function updateExistingTask() {
     try {
       // PATCH request: Update existing task
-      await updateExistingTaskService(
-        user,
-        taskSelectedForEdit.uniqueId,
-        taskNameInput,
-        targetNumOfSessionsInput
-      );
+      await updateExistingTaskService(user, {
+        task_id: taskSelectedForEdit.uniqueId,
+        task_name: taskNameInput,
+        target_num_of_sessions: targetNumOfSessionsInput,
+      });
 
       // Update global states
       setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);

@@ -104,16 +104,15 @@ export default function SettingsForm() {
 
     try {
       // PATCH request: Update user settings
-      await updateSettingsService(
-        user,
-        pomodoroTimerInput,
-        shortBreakTimerInput,
-        longBreakTimerInput,
-        numberOfPomodoroSessionsInCycleInput,
-        alarmRingtoneInput,
-        alarmVolumeInput,
-        weekStartInput
-      );
+      await updateSettingsService(user, {
+        pomodoro_minutes: pomodoroTimerInput,
+        short_break_minutes: shortBreakTimerInput,
+        long_break_minutes: longBreakTimerInput,
+        number_of_sessions_in_a_cycle: numberOfPomodoroSessionsInCycleInput,
+        alarm_ringtone: alarmRingtoneInput,
+        alarm_volume: alarmVolumeInput,
+        week_start: weekStartInput,
+      });
 
       // Save settings in useSettingsStore:
       setPomodoroTimerMinutes(pomodoroTimerInput);

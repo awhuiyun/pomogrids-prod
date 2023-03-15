@@ -25,7 +25,7 @@ export default function Home() {
       </Head>
       {/************ Modals *************/}
       {/* Under Construction */}
-      <UnderConstruction />
+      {/* <UnderConstruction /> */}
 
       {/* Settings Form */}
       {isSettingOpen && <SettingsForm />}

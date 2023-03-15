@@ -14,8 +14,15 @@ export default async function deleteExistingTaskHandler(
     // User successfully authenticated
     const { task_id } = req.body as DeleteExistingTaskPayload;
 
-    // Prisma query
-    const task = await prisma.task.delete({
+    // Prisma query: Delete task from tasks_session table
+    const deleteSessions = await prisma.tasks_session.deleteMany({
+      where: {
+        task_id: task_id,
+      },
+    });
+
+    //  Prisma query: Delete task from task table
+    const deleteTask = await prisma.task.delete({
       where: {
         id: task_id,
       },

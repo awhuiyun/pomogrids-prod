@@ -44,7 +44,7 @@ export default function TaskEditMenu() {
   async function handleArchiveTaskClick() {
     try {
       // PATCH request: Archive task in tasks table (toggle is_archived = true)
-      await archiveTaskService(user, taskEditMenuId);
+      await archiveTaskService(user, { task_id: taskEditMenuId });
 
       // Archive task in useTaskStore
       archiveTask(taskEditMenuId);
@@ -60,7 +60,7 @@ export default function TaskEditMenu() {
   async function handleDeleteTaskClick() {
     try {
       // DELETE request: Delete task from tasks and tasks_session table
-      await deleteExistingTaskService(user, taskEditMenuId);
+      await deleteExistingTaskService(user, { task_id: taskEditMenuId });
 
       // Delete task in useTaskStore
       deleteTask(taskEditMenuId);
