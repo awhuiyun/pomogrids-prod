@@ -36,6 +36,15 @@ export default function SettingsForm() {
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
 
+  // Variables to store original values
+  const origPomodoroTimer = pomodoroTimerMinutes;
+  const origShortBreakTimer = shortBreakTimerMinutes;
+  const origLongBreakTimer = longBreakTimerMinutes;
+  const origNumberOfPomodoroSessionsInCycle = numberOfPomodoroSessionsInCycle;
+  const origAlarmRingtone = alarmRingtone;
+  const origAlarmVolume = alarmVolume;
+  const origWeekStart = weekStart;
+
   // Local States
   const [pomodoroTimerInput, setPomodoroTimerInput] =
     useState(pomodoroTimerMinutes);
@@ -103,18 +112,7 @@ export default function SettingsForm() {
     e.preventDefault();
 
     try {
-      // PATCH request: Update user settings
-      await updateSettingsService(user, {
-        pomodoro_minutes: pomodoroTimerInput,
-        short_break_minutes: shortBreakTimerInput,
-        long_break_minutes: longBreakTimerInput,
-        number_of_sessions_in_a_cycle: numberOfPomodoroSessionsInCycleInput,
-        alarm_ringtone: alarmRingtoneInput,
-        alarm_volume: alarmVolumeInput,
-        week_start: weekStartInput,
-      });
-
-      // Save settings in useSettingsStore:
+      // Optimistic loading: Save settings in useSettingsStore
       setPomodoroTimerMinutes(pomodoroTimerInput);
       setShortBreakTimerMinutes(shortBreakTimerInput);
       setLongBreakTimerMinutes(longBreakTimerInput);
@@ -124,7 +122,7 @@ export default function SettingsForm() {
       Howler.volume(alarmVolumeInput);
       setWeekStart(weekStartInput);
 
-      // Save settings for timer display (dependent on timerOption)
+      // Optimistic loading: Save settings in useTimerStore for timer display
       if (timerOption === "pomodoro") {
         setTimerMinutes(pomodoroTimerInput);
         setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
@@ -138,12 +136,49 @@ export default function SettingsForm() {
         setTimerMinutes(pomodoroTimerInput);
         setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
       }
-    } catch (error) {
-      console.log(error);
-    }
 
-    // Close Settings Form modal
-    toggleIsSettingOpen(false);
+      // Close Settings Form modal
+      toggleIsSettingOpen(false);
+
+      // PATCH request: Update user settings
+      await updateSettingsService(user, {
+        pomodoro_minutes: pomodoroTimerInput,
+        short_break_minutes: shortBreakTimerInput,
+        long_break_minutes: longBreakTimerInput,
+        number_of_sessions_in_a_cycle: numberOfPomodoroSessionsInCycleInput,
+        alarm_ringtone: alarmRingtoneInput,
+        alarm_volume: alarmVolumeInput,
+        week_start: weekStartInput,
+      });
+    } catch (error) {
+      // Rollback changes in useSettingsStore
+      setPomodoroTimerMinutes(origPomodoroTimer);
+      setShortBreakTimerMinutes(origShortBreakTimer);
+      setLongBreakTimerMinutes(origLongBreakTimer);
+      setNumberOfPomodoroSessionsInCycle(origNumberOfPomodoroSessionsInCycle);
+      setAlarmRingtone(origAlarmRingtone);
+      setAlarmVolume(origAlarmVolume);
+      Howler.volume(origAlarmVolume);
+      setWeekStart(origWeekStart);
+
+      // Rollback changes in useTimerStore
+      if (timerOption === "pomodoro") {
+        setTimerMinutes(origPomodoroTimer);
+        setRemainingDurationInMilliseconds(origPomodoroTimer * 1000 * 60);
+      } else if (timerOption === "shortBreak") {
+        setTimerMinutes(origShortBreakTimer);
+        setRemainingDurationInMilliseconds(origShortBreakTimer * 1000 * 60);
+      } else if (timerOption === "longBreak") {
+        setTimerMinutes(origLongBreakTimer);
+        setRemainingDurationInMilliseconds(origLongBreakTimer * 1000 * 60);
+      } else if (timerOption === "cycle") {
+        setTimerMinutes(origPomodoroTimer);
+        setRemainingDurationInMilliseconds(origPomodoroTimer * 1000 * 60);
+      }
+
+      // Send error message to user
+      console.log("Error in saving settings changes");
+    }
   }
 
   return (
