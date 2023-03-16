@@ -43,16 +43,23 @@ export default function TaskEditMenu() {
   // Function to handle click on Archive Task option
   async function handleArchiveTaskClick() {
     try {
+      // Optimistic UI: Archive task in useTaskStore first
+      archiveTask(taskEditMenuId, true);
+
       // PATCH request: Archive task in tasks table (toggle is_archived = true)
       await archiveTaskService(user, { task_id: taskEditMenuId });
-
-      // Archive task in useTaskStore
-      archiveTask(taskEditMenuId);
 
       // Reset
       setTaskEditMenuid("");
     } catch (error) {
-      console.log(error);
+      // Rollback changes in useTaskStore
+      archiveTask(taskEditMenuId, false);
+
+      // Send error message to user
+      console.log("Error in archiving " + taskEditMenuId);
+
+      // Reset
+      setTaskEditMenuid("");
     }
   }
 

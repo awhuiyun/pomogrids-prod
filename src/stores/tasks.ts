@@ -9,7 +9,7 @@ interface IUseTaskStore {
   taskSelectedForTimer: string;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
-  archiveTask: (id: string) => void;
+  archiveTask: (id: string, status: boolean) => void;
   clearAllTasks: () => void;
   setTaskArray: (type: ITaskItem[]) => void;
   toggleTaskFormOpen: (type: string) => void;
@@ -39,11 +39,11 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         return item.uniqueId !== id;
       }),
     })),
-  archiveTask: (id: string) =>
+  archiveTask: (id: string, status: boolean) =>
     set((state) => ({
       tasks: state.tasks.map((item) => {
         if (item.uniqueId === id) {
-          return { ...item, isArchived: true };
+          return { ...item, isArchived: status };
         }
         return item;
       }),

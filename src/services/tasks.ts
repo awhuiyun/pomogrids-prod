@@ -161,6 +161,8 @@ export async function archiveTaskService(
         data: payload,
       });
 
+      // Testing optimistic loading
+      // throw new Error();
       return response;
     }
   } catch (error) {
