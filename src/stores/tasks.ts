@@ -3,7 +3,7 @@ import { ITaskItem } from "../types/";
 
 interface IUseTaskStore {
   tasks: ITaskItem[];
-  taskFormType: string;
+  taskFormType: "" | "create" | "update";
   taskEditMenuId: string;
   mousePos: { x: number; y: number };
   taskSelectedForTimer: string;
@@ -13,7 +13,7 @@ interface IUseTaskStore {
   archiveTask: (id: string, status: boolean) => void;
   clearAllTasks: () => void;
   setTaskArray: (type: ITaskItem[]) => void;
-  toggleTaskFormOpen: (type: string) => void;
+  toggleTaskFormOpen: (type: "" | "create" | "update") => void;
   setTaskEditMenuid: (id: string) => void;
   setMousePos: (x: number, y: number) => void;
   unselectAllTasksForTimer: () => void;
@@ -59,7 +59,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
     set(() => ({
       tasks: tasks,
     })),
-  toggleTaskFormOpen: (type: string) =>
+  toggleTaskFormOpen: (type: "" | "create" | "update") =>
     set(() => ({
       taskFormType: type,
     })),
