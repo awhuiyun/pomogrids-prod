@@ -16,13 +16,16 @@ export default function TaskEditMenu() {
 
   // Global states: useTaskStore
   const {
+    tasks,
     taskEditMenuId,
     setTaskEditMenuid,
     toggleTaskFormOpen,
     setSelectedTaskForEdit,
     deleteTask,
+    addTask,
     mousePos,
     archiveTask,
+    toggleIsTaskEditMenuOpen,
   } = useTaskStore();
 
   // Variable to store the position of the menu
@@ -36,8 +39,9 @@ export default function TaskEditMenu() {
     toggleTaskFormOpen("update");
     setSelectedTaskForEdit(taskEditMenuId);
 
-    // Reset
+    // Reset state and close menu
     setTaskEditMenuid("");
+    toggleIsTaskEditMenuOpen(false);
   }
 
   // Function to handle click on Archive Task option
@@ -45,6 +49,9 @@ export default function TaskEditMenu() {
     try {
       // Optimistic loading: Archive task in useTaskStore first
       archiveTask(taskEditMenuId, true);
+
+      // Close menu
+      toggleIsTaskEditMenuOpen(false);
 
       // PATCH request: Archive task in tasks table (toggle is_archived = true)
       await archiveTaskService(user, { task_id: taskEditMenuId });
@@ -66,16 +73,41 @@ export default function TaskEditMenu() {
   // Function to handle click on Delete Task option
   async function handleDeleteTaskClick() {
     try {
+      // Optimistic loading: Delete task in useTaskStore first
+      deleteTask(taskEditMenuId);
+
+      // Close menu
+      toggleIsTaskEditMenuOpen(false);
+
       // DELETE request: Delete task from tasks and tasks_session table
       await deleteExistingTaskService(user, { task_id: taskEditMenuId });
-
-      // Delete task in useTaskStore
-      deleteTask(taskEditMenuId);
 
       // Reset
       setTaskEditMenuid("");
     } catch (error) {
-      console.log(error);
+      // Rollback changes in useTaskStore
+      const taskDeleted = tasks.filter((item) => {
+        return item.uniqueId === taskEditMenuId;
+      })[0];
+
+      addTask({
+        uniqueId: taskDeleted.uniqueId,
+        taskName: taskDeleted.taskName,
+        targetNumOfSessions: taskDeleted.targetNumOfSessions,
+        completedNumOfSessions: taskDeleted.completedNumOfSessions,
+        category_name: taskDeleted.category_name,
+        category_colour: taskDeleted.category_colour,
+        isArchived: taskDeleted.isArchived,
+        isCompleted: taskDeleted.isCompleted,
+        isSelectedForTimer: taskDeleted.isSelectedForTimer,
+        isSelectedForEdit: taskDeleted.isSelectedForEdit,
+      });
+
+      // Send error message to user
+      console.log("Error in deleting " + taskEditMenuId);
+
+      // Reset
+      setTaskEditMenuid("");
     }
   }
 

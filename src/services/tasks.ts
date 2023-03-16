@@ -113,6 +113,8 @@ export async function deleteExistingTaskService(
         data: payload,
       });
 
+      // Testing optimistic loading
+      // throw new Error();
       return response;
     }
   } catch (error) {

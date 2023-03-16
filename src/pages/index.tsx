@@ -11,7 +11,7 @@ import UnderConstruction from "@/components/UnderConstruction";
 
 export default function Home() {
   // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId } = useTaskStore();
+  const { taskFormType, isTaskEditMenuOpen } = useTaskStore();
 
   // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
@@ -34,7 +34,7 @@ export default function Home() {
       {taskFormType && <TaskForm />}
 
       {/* Task Edit Menu */}
-      {taskEditMenuId && <TaskEditMenu />}
+      {isTaskEditMenuOpen && <TaskEditMenu />}
 
       {/************ Non-Modals *************/}
       {/* Grid section */}

@@ -18,6 +18,7 @@ export default function TaskItem({
     setMousePos,
     setSelectedTaskForTimer,
     unselectAllTasksForTimer,
+    toggleIsTaskEditMenuOpen,
   } = useTaskStore();
 
   // Local states
@@ -36,6 +37,7 @@ export default function TaskItem({
 
   // Function to handle click on Grip Icon
   function handleGripIconClick() {
+    toggleIsTaskEditMenuOpen(true);
     setTaskEditMenuid(uniqueId);
     setMousePos(mousePosLocal.x, mousePosLocal.y);
   }

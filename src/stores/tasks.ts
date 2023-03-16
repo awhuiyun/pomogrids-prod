@@ -7,6 +7,7 @@ interface IUseTaskStore {
   taskEditMenuId: string;
   mousePos: { x: number; y: number };
   taskSelectedForTimer: string;
+  isTaskEditMenuOpen: boolean;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
   archiveTask: (id: string, status: boolean) => void;
@@ -21,6 +22,7 @@ interface IUseTaskStore {
   setSelectedTaskForEdit: (id: string) => void;
   addSessionCountToTaskAndCheckCompletion: (id: string) => void;
   setEditsToSelectedTaskForEdit: (name: string, sessionNum: number) => void;
+  toggleIsTaskEditMenuOpen: (status: boolean) => void;
 }
 
 const useTaskStore = create<IUseTaskStore>((set) => ({
@@ -29,6 +31,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   taskEditMenuId: "", // uniqueId, ""; Menu is closed on ""
   mousePos: { x: 0, y: 0 },
   taskSelectedForTimer: "",
+  isTaskEditMenuOpen: false,
   addTask: (task: ITaskItem) =>
     set((state) => ({
       tasks: [...state.tasks, task],
@@ -147,6 +150,10 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         }
         return item;
       }),
+    })),
+  toggleIsTaskEditMenuOpen: (status: boolean) =>
+    set(() => ({
+      isTaskEditMenuOpen: status,
     })),
 }));
 
