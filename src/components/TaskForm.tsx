@@ -21,6 +21,8 @@ export default function TaskForm() {
   const taskSelectedForEdit = tasks.filter((item) => {
     return item.isSelectedForEdit === true;
   })[0];
+  const originalTaskName = taskSelectedForEdit.taskName;
+  const originalTargetNumOfSessions = taskSelectedForEdit.targetNumOfSessions;
 
   const [taskNameInput, setTaskNameInput] = useState(
     taskFormType === "create" ? "" : taskSelectedForEdit.taskName
@@ -67,16 +69,12 @@ export default function TaskForm() {
       // Close modal
       toggleTaskFormOpen("");
 
-      console.log(taskNameInput, 1);
-
       // POST request: Create new task in tasks table
       await createNewTaskService(user, {
         task_id: uniqueId,
         task_name: taskNameInput,
         target_num_of_sessions: targetNumOfSessionsInput,
       });
-
-      console.log(taskNameInput, 2);
     } catch (error) {
       // Rollback changes in useTaskStore
       deleteTask(uniqueId);
@@ -89,17 +87,27 @@ export default function TaskForm() {
   // Function to edit existing task
   async function updateExistingTask() {
     try {
+      // Optimistic loading: Update task in useTaskStore first
+      setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
+
+      // Close modal
+      toggleTaskFormOpen("");
+
       // PATCH request: Update existing task
       await updateExistingTaskService(user, {
         task_id: taskSelectedForEdit.uniqueId,
         task_name: taskNameInput,
         target_num_of_sessions: targetNumOfSessionsInput,
       });
-
-      // Update global states
-      setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
     } catch (error) {
-      console.log(error);
+      // Rollback changes in useTaskStore
+      setEditsToSelectedTaskForEdit(
+        originalTaskName,
+        originalTargetNumOfSessions
+      );
+
+      // Send error message to user
+      console.log("Error in updating task: ", taskNameInput);
     }
   }
 
