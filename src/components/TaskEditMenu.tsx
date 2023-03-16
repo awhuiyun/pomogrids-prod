@@ -43,7 +43,7 @@ export default function TaskEditMenu() {
   // Function to handle click on Archive Task option
   async function handleArchiveTaskClick() {
     try {
-      // Optimistic UI: Archive task in useTaskStore first
+      // Optimistic loading: Archive task in useTaskStore first
       archiveTask(taskEditMenuId, true);
 
       // PATCH request: Archive task in tasks table (toggle is_archived = true)
