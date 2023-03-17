@@ -82,12 +82,6 @@ export default function HowTo() {
           <br />
           Please note that both are irreversible so please be careful!
         </BaseAccordian>
-        <BaseAccordian isOpenOnMount={false} label="Is Pomogrids free?">
-          {" "}
-        </BaseAccordian>
-        <BaseAccordian isOpenOnMount={false} label="Is Pomogrids free?">
-          {" "}
-        </BaseAccordian>
       </div>
     </div>
   );
