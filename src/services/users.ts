@@ -53,3 +53,28 @@ export async function updateUserTier(
     throw error;
   }
 }
+
+// Function to create new account for new users
+export async function createNewAccount(
+  user: User | null
+): Promise<string | void> {
+  try {
+    if (user) {
+      const firebaseUserIdToken = await user.getIdToken(true);
+
+      const { data: response } = await axios<string>({
+        method: "patch",
+        url: "/api/users/create-new-account",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + firebaseUserIdToken,
+        },
+      });
+
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

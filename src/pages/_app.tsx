@@ -1,5 +1,6 @@
-import { useEffect } from "react";
 import "@/styles/globals.css";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import type { AppProps } from "next/app";
 const { Howler } = require("howler");
 import { auth } from "@/firebase/auth";
@@ -15,9 +16,13 @@ import {
   getUnarchivedTasksService,
   getTasksInYearService,
 } from "@/services/tasks";
-import { getUserTier } from "@/services/users";
+import { getUserTier, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {
+  // Router
+  let router = useRouter();
+
+  // Global states
   const { setUser, setEmail, setUserId, setTier } = useUserStore();
   const {
     setPomodoroTimerMinutes,
@@ -34,102 +39,115 @@ export default function App({ Component, pageProps }: AppProps) {
   const { setTasksInTheYear } = useGridStore();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Set useUserStore
-        setUser(user);
-        setEmail(user.email ?? "");
-        setUserId(user.uid);
+    onAuthStateChanged(auth, async (user) => {
+      try {
+        // User logged in
+        if (user) {
+          // Show landing page
+          router.push("/prepping-user-data");
 
-        // POST request: Retrieve user's tier
-        getUserTier(user)
-          .then((res) => {
-            if (res) {
-              setTier(res.tier);
+          // Set useUserStore
+          setUser(user);
+          setEmail(user.email ?? "");
+          setUserId(user.uid);
+
+          // POST request: Create new account if user is new
+          const newUser = await createNewAccount(user);
+          console.log(newUser);
+
+          // POST request: Retrieve user's tier
+          const tier = await getUserTier(user);
+          console.log(tier);
+
+          if (tier) {
+            setTier(tier.tier);
+          }
+
+          // POST request: Retrieve user's tasks for the year
+          const tasksInTheYear = await getTasksInYearService(user, {
+            year: Number(new Date().getFullYear()),
+          });
+          console.log(tasksInTheYear);
+
+          if (tasksInTheYear) {
+            // Manipulate result: Change date to local time
+            let edited_tasksInTheYear = [];
+
+            for (let i = 0; i < tasksInTheYear.length; i++) {
+              const task = tasksInTheYear[i];
+
+              const edited = {
+                dateOfSession: new Date(task.dateOfSession)
+                  .toLocaleString()
+                  .split(",")[0],
+                completedNumOfMinutes: task.completedNumOfMinutes,
+                taskName: task.taskName,
+                category_name: task.category_name,
+                category_colour: task.category_colour,
+              };
+
+              edited_tasksInTheYear.push(edited);
             }
-          })
-          .catch((error) => console.log(error));
 
-        // POST request: Retrieve user's tasks for the year
-        getTasksInYearService(user, {
-          year: Number(new Date().getFullYear()),
-        })
-          .then((res) => {
-            if (res) {
-              // Manipulate result: Change date to local time
-              let edited_res = [];
-              for (let i = 0; i < res.length; i++) {
-                const task = res[i];
-                const edited = {
-                  dateOfSession: new Date(task.dateOfSession)
-                    .toLocaleString()
-                    .split(",")[0],
-                  completedNumOfMinutes: task.completedNumOfMinutes,
-                  taskName: task.taskName,
-                  category_name: task.category_name,
-                  category_colour: task.category_colour,
-                };
+            // Set state
+            setTasksInTheYear(edited_tasksInTheYear);
+          }
 
-                edited_res.push(edited);
-              }
+          // POST request: Retrieve user's settings
+          const settings = await getSettingsService(user);
+          console.log(settings);
 
-              // Set state
-              setTasksInTheYear(edited_res);
-            }
-          })
-          .catch((error) => console.log(error));
+          if (settings) {
+            setPomodoroTimerMinutes(settings.pomodoro_minutes);
+            setShortBreakTimerMinutes(settings.short_break_minutes);
+            setLongBreakTimerMinutes(settings.long_break_minutes);
+            setNumberOfPomodoroSessionsInCycle(
+              settings.number_of_sessions_in_a_cycle
+            );
+            setAlarmRingtone(settings.alarm_ringtone);
+            setAlarmVolume(settings.alarm_volume);
+            setWeekStart(settings.week_start);
+            setTimerMinutes(settings.pomodoro_minutes);
+            setRemainingDurationInMilliseconds(
+              settings.pomodoro_minutes * 1000 * 60
+            );
+            Howler.volume(settings.alarm_volume);
+          }
 
-        // POST request: Retrieve user's settings
-        getSettingsService(user)
-          .then((res) => {
-            if (res) {
-              // defensive
-              setPomodoroTimerMinutes(res.pomodoro_minutes);
-              setShortBreakTimerMinutes(res.short_break_minutes);
-              setLongBreakTimerMinutes(res.long_break_minutes);
-              setNumberOfPomodoroSessionsInCycle(
-                res.number_of_sessions_in_a_cycle
-              );
-              setAlarmRingtone(res.alarm_ringtone);
-              setAlarmVolume(res.alarm_volume);
-              setWeekStart(res.week_start);
-              setTimerMinutes(res.pomodoro_minutes);
-              setRemainingDurationInMilliseconds(
-                res.pomodoro_minutes * 1000 * 60
-              );
-              Howler.volume(res.alarm_volume);
-            }
-          })
-          .catch((error) => console.log(error));
+          // POST request: Retrieve user's unarchived tasks
+          const unarchivedTasks = await getUnarchivedTasksService(user);
+          console.log(unarchivedTasks);
 
-        // POST request: Retrieve user's unarchived tasks
-        clearAllTasks();
-        getUnarchivedTasksService(user)
-          .then((res) => {
-            if (res) {
-              setTaskArray(res);
-            }
-          })
-          .catch((error) => console.log(error));
-      } else {
-        // Set all states to default
-        setUser(null);
-        setEmail("");
-        setUserId("");
-        setTier("");
+          if (unarchivedTasks) {
+            clearAllTasks();
+            setTaskArray(unarchivedTasks);
+          }
 
-        setTasksInTheYear([]);
+          // Hide landing page
+          router.push("/");
+        } // User logged out
+        else {
+          // Set all states to default
+          setUser(null);
+          setEmail("");
+          setUserId("");
+          setTier("");
 
-        setPomodoroTimerMinutes(25);
-        setShortBreakTimerMinutes(5);
-        setLongBreakTimerMinutes(15);
-        setNumberOfPomodoroSessionsInCycle(4);
-        setAlarmRingtone("buzzer");
-        setAlarmVolume(0.5);
-        setTimerMinutes(25);
-        setRemainingDurationInMilliseconds(25 * 1000 * 60);
+          setTasksInTheYear([]);
 
-        clearAllTasks();
+          setPomodoroTimerMinutes(25);
+          setShortBreakTimerMinutes(5);
+          setLongBreakTimerMinutes(15);
+          setNumberOfPomodoroSessionsInCycle(4);
+          setAlarmRingtone("buzzer");
+          setAlarmVolume(0.5);
+          setTimerMinutes(25);
+          setRemainingDurationInMilliseconds(25 * 1000 * 60);
+
+          clearAllTasks();
+        }
+      } catch (error) {
+        console.log(error);
       }
     });
   }, []);
