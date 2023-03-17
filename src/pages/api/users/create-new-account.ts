@@ -33,7 +33,7 @@ export default async function createNewUserHandler(
       data: {
         id: uid,
         email: email,
-        tier: "basic",
+        tier: "premium",
         settings: {
           create: {
             pomodoro_minutes: 25,
