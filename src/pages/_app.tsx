@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import uuid from "react-uuid";
 import type { AppProps } from "next/app";
 const { Howler } = require("howler");
 import { auth } from "@/firebase/auth";
@@ -11,6 +12,7 @@ import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import useGridStore from "@/stores/grid";
+import useToastStore from "@/stores/toast";
 import { getSettingsService } from "@/services/settings";
 import {
   getUnarchivedTasksService,
@@ -37,13 +39,14 @@ export default function App({ Component, pageProps }: AppProps) {
     useTimerStore();
   const { clearAllTasks, setTaskArray } = useTaskStore();
   const { setTasksInTheYear } = useGridStore();
+  const { addToast } = useToastStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       try {
         // User logged in
         if (user) {
-          // Show landing page
+          // Route to landing page
           router.push("/setup");
 
           // Set useUserStore
@@ -123,8 +126,15 @@ export default function App({ Component, pageProps }: AppProps) {
             setTaskArray(unarchivedTasks);
           }
 
-          // Hide landing page
+          // Reroute back to home
           router.push("/");
+
+          // Add toast notification
+          addToast({
+            uniqueId: uuid(),
+            className: "bg-green-50 text-green-700",
+            content: "🎉 Successfully logged in!",
+          });
         } // User logged out
         else {
           // Set all states to default
@@ -148,6 +158,16 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       } catch (error) {
         console.log(error);
+
+        // Reroute back to home
+        router.push("/");
+
+        // Add toast notification
+        addToast({
+          uniqueId: uuid(),
+          className: "bg-red-50 text-red-700",
+          content: "Something went wrong. Please try again! 😫",
+        });
       }
     });
   }, []);

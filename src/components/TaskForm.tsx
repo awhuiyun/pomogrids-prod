@@ -2,6 +2,7 @@ import { useState } from "react";
 import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
+import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
 import {
   createNewTaskService,
@@ -14,6 +15,7 @@ export default function TaskForm() {
   const { addTask, deleteTask } = useTaskStore();
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
+  const { addToast } = useToastStore();
 
   // Global states: useUserStore
   const { user } = useUserStore();
@@ -81,8 +83,13 @@ export default function TaskForm() {
       // Rollback changes in useTaskStore
       deleteTask(uniqueId);
 
-      // Send error message to user
-      console.log("Error in creating new task: ", taskNameInput);
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with creating task. Please try again! 😫",
+      });
     }
   }
 
@@ -108,8 +115,13 @@ export default function TaskForm() {
         originalTargetNumOfSessions
       );
 
-      // Send error message to user
-      console.log("Error in updating task: ", taskNameInput);
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with updating task. Please try again! 😫",
+      });
     }
   }
 

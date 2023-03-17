@@ -1,5 +1,7 @@
+import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
+import useToastStore from "@/stores/toast";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +29,7 @@ export default function TaskEditMenu() {
     archiveTask,
     toggleIsTaskEditMenuOpen,
   } = useTaskStore();
+  const { addToast } = useToastStore();
 
   // Variable to store the position of the menu
   const position = {
@@ -62,8 +65,13 @@ export default function TaskEditMenu() {
       // Rollback changes in useTaskStore
       archiveTask(taskEditMenuId, false);
 
-      // Send error message to user
-      console.log("Error in archiving " + taskEditMenuId);
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with archiving task. Please try again! 😫",
+      });
 
       // Reset
       setTaskEditMenuid("");
@@ -103,8 +111,13 @@ export default function TaskEditMenu() {
         isSelectedForEdit: taskDeleted.isSelectedForEdit,
       });
 
-      // Send error message to user
-      console.log("Error in deleting " + taskEditMenuId);
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with deleting task. Please try again! 😫",
+      });
 
       // Reset
       setTaskEditMenuid("");

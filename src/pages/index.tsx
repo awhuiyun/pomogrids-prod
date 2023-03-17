@@ -1,8 +1,10 @@
 import Head from "next/head";
 import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
+import useToastStore from "@/stores/toast";
 import TimerContainer from "@/components/TimerContainer";
 import TaskContainer from "@/components/TaskContainer";
+import ToastContainer from "@/components/ToastContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
@@ -10,11 +12,10 @@ import Grid from "@/components/Grid";
 import UnderConstruction from "@/components/UnderConstruction";
 
 export default function Home() {
-  // Global states: useTaskStore
+  // Global states
   const { taskFormType, isTaskEditMenuOpen } = useTaskStore();
-
-  // Global states: useSettingsStore
   const { isSettingOpen } = useSettingStore();
+  const { toasts } = useToastStore();
 
   return (
     <div>
@@ -32,6 +33,9 @@ export default function Home() {
 
       {/* Task Form */}
       {taskFormType && <TaskForm />}
+
+      {/* Toast container */}
+      {toasts.length > 0 && <ToastContainer />}
 
       {/* Task Edit Menu */}
       {isTaskEditMenuOpen && <TaskEditMenu />}

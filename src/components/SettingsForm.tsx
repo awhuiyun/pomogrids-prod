@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Link from "next/link";
 const { Howler } = require("howler");
+import uuid from "react-uuid";
 import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
+import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
 import { updateSettingsService } from "@/services/settings";
 import { updateUserTier } from "@/services/users";
@@ -31,10 +33,9 @@ export default function SettingsForm() {
     setAlarmVolume,
     setWeekStart,
   } = useSettingStore();
-
-  // Global states: useTimerStore
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
+  const { addToast } = useToastStore();
 
   // Variables to store original values
   const origPomodoroTimer = pomodoroTimerMinutes;
@@ -176,8 +177,13 @@ export default function SettingsForm() {
         setRemainingDurationInMilliseconds(origPomodoroTimer * 1000 * 60);
       }
 
-      // Send error message to user
-      console.log("Error in saving settings changes");
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with updating settings. Please try again! 😫",
+      });
     }
   }
 
