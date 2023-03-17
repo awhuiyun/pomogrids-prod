@@ -9,7 +9,7 @@ import {
 import * as d3 from "d3";
 import useGridStore from "@/stores/grid";
 import useSettingStore from "@/stores/settings";
-import { ITaskInTheYear, IGridData } from "@/types/interfaces";
+import { ITaskInTheYear, IGridData } from "@/types/";
 import { timeFormat } from "d3";
 
 // Function to formate Date

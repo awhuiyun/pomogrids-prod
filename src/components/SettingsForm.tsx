@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Link from "next/link";
 const { Howler } = require("howler");
+import uuid from "react-uuid";
 import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
+import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
 import { updateSettingsService } from "@/services/settings";
-import { upgradeUserTier } from "@/services/users";
+import { updateUserTier } from "@/services/users";
 
 export default function SettingsForm() {
   // Global states: useUserStore
@@ -31,10 +33,18 @@ export default function SettingsForm() {
     setAlarmVolume,
     setWeekStart,
   } = useSettingStore();
-
-  // Global states: useTimerStore
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
+  const { addToast } = useToastStore();
+
+  // Variables to store original values
+  const origPomodoroTimer = pomodoroTimerMinutes;
+  const origShortBreakTimer = shortBreakTimerMinutes;
+  const origLongBreakTimer = longBreakTimerMinutes;
+  const origNumberOfPomodoroSessionsInCycle = numberOfPomodoroSessionsInCycle;
+  const origAlarmRingtone = alarmRingtone;
+  const origAlarmVolume = alarmVolume;
+  const origWeekStart = weekStart;
 
   // Local States
   const [pomodoroTimerInput, setPomodoroTimerInput] =
@@ -86,7 +96,7 @@ export default function SettingsForm() {
   async function handleUpgradeButtonClick() {
     try {
       // PATCH request: Upgrade user's tier from basic to premium
-      await upgradeUserTier(user);
+      await updateUserTier(user, { tier: "premium" });
 
       // Save tier change in useUserStore
       setTier("premium");
@@ -103,19 +113,7 @@ export default function SettingsForm() {
     e.preventDefault();
 
     try {
-      // PATCH request: Update user settings
-      await updateSettingsService(
-        user,
-        pomodoroTimerInput,
-        shortBreakTimerInput,
-        longBreakTimerInput,
-        numberOfPomodoroSessionsInCycleInput,
-        alarmRingtoneInput,
-        alarmVolumeInput,
-        weekStartInput
-      );
-
-      // Save settings in useSettingsStore:
+      // Optimistic loading: Save settings in useSettingsStore
       setPomodoroTimerMinutes(pomodoroTimerInput);
       setShortBreakTimerMinutes(shortBreakTimerInput);
       setLongBreakTimerMinutes(longBreakTimerInput);
@@ -125,7 +123,7 @@ export default function SettingsForm() {
       Howler.volume(alarmVolumeInput);
       setWeekStart(weekStartInput);
 
-      // Save settings for timer display (dependent on timerOption)
+      // Optimistic loading: Save settings in useTimerStore for timer display
       if (timerOption === "pomodoro") {
         setTimerMinutes(pomodoroTimerInput);
         setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
@@ -139,12 +137,54 @@ export default function SettingsForm() {
         setTimerMinutes(pomodoroTimerInput);
         setRemainingDurationInMilliseconds(pomodoroTimerInput * 1000 * 60);
       }
-    } catch (error) {
-      console.log(error);
-    }
 
-    // Close Settings Form modal
-    toggleIsSettingOpen(false);
+      // Close Settings Form modal
+      toggleIsSettingOpen(false);
+
+      // PATCH request: Update user settings
+      await updateSettingsService(user, {
+        pomodoro_minutes: pomodoroTimerInput,
+        short_break_minutes: shortBreakTimerInput,
+        long_break_minutes: longBreakTimerInput,
+        number_of_sessions_in_a_cycle: numberOfPomodoroSessionsInCycleInput,
+        alarm_ringtone: alarmRingtoneInput,
+        alarm_volume: alarmVolumeInput,
+        week_start: weekStartInput,
+      });
+    } catch (error) {
+      // Rollback changes in useSettingsStore
+      setPomodoroTimerMinutes(origPomodoroTimer);
+      setShortBreakTimerMinutes(origShortBreakTimer);
+      setLongBreakTimerMinutes(origLongBreakTimer);
+      setNumberOfPomodoroSessionsInCycle(origNumberOfPomodoroSessionsInCycle);
+      setAlarmRingtone(origAlarmRingtone);
+      setAlarmVolume(origAlarmVolume);
+      Howler.volume(origAlarmVolume);
+      setWeekStart(origWeekStart);
+
+      // Rollback changes in useTimerStore
+      if (timerOption === "pomodoro") {
+        setTimerMinutes(origPomodoroTimer);
+        setRemainingDurationInMilliseconds(origPomodoroTimer * 1000 * 60);
+      } else if (timerOption === "shortBreak") {
+        setTimerMinutes(origShortBreakTimer);
+        setRemainingDurationInMilliseconds(origShortBreakTimer * 1000 * 60);
+      } else if (timerOption === "longBreak") {
+        setTimerMinutes(origLongBreakTimer);
+        setRemainingDurationInMilliseconds(origLongBreakTimer * 1000 * 60);
+      } else if (timerOption === "cycle") {
+        setTimerMinutes(origPomodoroTimer);
+        setRemainingDurationInMilliseconds(origPomodoroTimer * 1000 * 60);
+      }
+
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with updating settings. Please try again! 😫",
+      });
+    }
   }
 
   return (

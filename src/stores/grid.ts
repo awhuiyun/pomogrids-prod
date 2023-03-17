@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ITaskInTheYear } from "@/types/interfaces";
+import { ITaskInTheYear } from "@/types/";
 
 interface IUseGridStore {
   year: number;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import uuid from "react-uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
+import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
 import {
   createNewTaskService,
@@ -11,9 +12,10 @@ import {
 export default function TaskForm() {
   // Global states: useTaskStore
   const { taskFormType, toggleTaskFormOpen } = useTaskStore();
-  const { addTask } = useTaskStore();
+  const { addTask, deleteTask } = useTaskStore();
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
+  const { addToast } = useToastStore();
 
   // Global states: useUserStore
   const { user } = useUserStore();
@@ -21,6 +23,10 @@ export default function TaskForm() {
   const taskSelectedForEdit = tasks.filter((item) => {
     return item.isSelectedForEdit === true;
   })[0];
+  const originalTaskName =
+    taskFormType === "create" ? "" : taskSelectedForEdit.taskName;
+  const originalTargetNumOfSessions =
+    taskFormType === "create" ? 1 : taskSelectedForEdit.targetNumOfSessions;
 
   const [taskNameInput, setTaskNameInput] = useState(
     taskFormType === "create" ? "" : taskSelectedForEdit.taskName
@@ -48,20 +54,9 @@ export default function TaskForm() {
   }
 
   // Function to create new task
-  async function createNewTask() {
+  async function createNewTask(uniqueId: string) {
     try {
-      //  Generate uuid
-      const uniqueId = uuid();
-
-      // POST request: Create new task in tasks table
-      await createNewTaskService(
-        user,
-        uniqueId,
-        taskNameInput,
-        targetNumOfSessionsInput
-      );
-
-      // Update Global State: Create add new task into useTaskStore
+      // Optimistic loading: Create add new task in useTaskStore first
       addTask({
         uniqueId: uniqueId,
         taskName: taskNameInput,
@@ -74,26 +69,59 @@ export default function TaskForm() {
         isSelectedForTimer: false,
         isSelectedForEdit: false,
       });
+
+      // Close modal
+      toggleTaskFormOpen("");
+
+      // POST request: Create new task in tasks table
+      await createNewTaskService(user, {
+        task_id: uniqueId,
+        task_name: taskNameInput,
+        target_num_of_sessions: targetNumOfSessionsInput,
+      });
     } catch (error) {
-      console.log(error);
+      // Rollback changes in useTaskStore
+      deleteTask(uniqueId);
+
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with creating task. Please try again! 😫",
+      });
     }
   }
 
   // Function to edit existing task
   async function updateExistingTask() {
     try {
+      // Optimistic loading: Update task in useTaskStore first
+      setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
+
+      // Close modal
+      toggleTaskFormOpen("");
+
       // PATCH request: Update existing task
-      await updateExistingTaskService(
-        user,
-        taskSelectedForEdit.uniqueId,
-        taskNameInput,
-        targetNumOfSessionsInput
+      await updateExistingTaskService(user, {
+        task_id: taskSelectedForEdit.uniqueId,
+        task_name: taskNameInput,
+        target_num_of_sessions: targetNumOfSessionsInput,
+      });
+    } catch (error) {
+      // Rollback changes in useTaskStore
+      setEditsToSelectedTaskForEdit(
+        originalTaskName,
+        originalTargetNumOfSessions
       );
 
-      // Update global states
-      setEditsToSelectedTaskForEdit(taskNameInput, targetNumOfSessionsInput);
-    } catch (error) {
-      console.log(error);
+      // Add toast notification
+      addToast({
+        uniqueId: uuid(),
+        className: "bg-red-50 text-red-700",
+        content:
+          "Something went wrong with updating task. Please try again! 😫",
+      });
     }
   }
 
@@ -103,13 +131,16 @@ export default function TaskForm() {
 
     // Conditional: Create new task or Update existing task
     if (taskFormType === "create") {
-      await createNewTask();
+      //  Generate uuid
+      const uniqueId = uuid();
+
+      await createNewTask(uniqueId);
     } else if (taskFormType === "update") {
       await updateExistingTask();
     }
 
-    // Close modal & reset states
-    toggleTaskFormOpenFalse();
+    // Reset states
+    unselectAllTasksForEdit();
   }
 
   return (

@@ -1,21 +1,18 @@
 import axios from "axios";
 import { User } from "firebase/auth";
+import { IUserTier } from "@/types";
 
 // Function to get user tiers
-interface IUserTier {
-  tier: "premiun" | "basic";
-}
-
 export async function getUserTier(
   user: User | null
-): Promise<IUserTier[] | void> {
+): Promise<IUserTier | void> {
   try {
     if (user) {
       const firebaseUserIdToken = await user.getIdToken(true);
 
-      const { data: tier } = await axios<IUserTier[]>({
+      const { data: tier } = await axios<IUserTier>({
         method: "get",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/get-user-tier",
+        url: "/api/users/get-user-tier",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,
@@ -31,7 +28,34 @@ export async function getUserTier(
 }
 
 // Function to upgrade user tier from basic to premium
-export async function upgradeUserTier(
+export async function updateUserTier(
+  user: User | null,
+  payload: IUserTier
+): Promise<string | void> {
+  try {
+    if (user) {
+      const firebaseUserIdToken = await user.getIdToken(true);
+
+      const { data: response } = await axios<string>({
+        method: "patch",
+        url: "/api/users/update-user-tier",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + firebaseUserIdToken,
+        },
+        data: payload,
+      });
+
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Function to create new account for new users
+export async function createNewAccount(
   user: User | null
 ): Promise<string | void> {
   try {
@@ -40,7 +64,7 @@ export async function upgradeUserTier(
 
       const { data: response } = await axios<string>({
         method: "patch",
-        url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/upgrade-user-tier",
+        url: "/api/users/create-new-account",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + firebaseUserIdToken,

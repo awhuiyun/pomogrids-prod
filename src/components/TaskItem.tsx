@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
-import { ITaskItem } from "@/types/interfaces";
+import { ITaskItem } from "@/types/";
 import useTaskStore from "@/stores/tasks";
 
 export default function TaskItem({
@@ -18,6 +18,7 @@ export default function TaskItem({
     setMousePos,
     setSelectedTaskForTimer,
     unselectAllTasksForTimer,
+    toggleIsTaskEditMenuOpen,
   } = useTaskStore();
 
   // Local states
@@ -36,6 +37,7 @@ export default function TaskItem({
 
   // Function to handle click on Grip Icon
   function handleGripIconClick() {
+    toggleIsTaskEditMenuOpen(true);
     setTaskEditMenuid(uniqueId);
     setMousePos(mousePosLocal.x, mousePosLocal.y);
   }

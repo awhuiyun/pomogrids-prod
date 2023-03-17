@@ -1,18 +1,19 @@
 import { create } from "zustand";
-import { ITaskItem } from "../types/interfaces";
+import { ITaskItem } from "../types/";
 
 interface IUseTaskStore {
   tasks: ITaskItem[];
-  taskFormType: string;
+  taskFormType: "" | "create" | "update";
   taskEditMenuId: string;
   mousePos: { x: number; y: number };
   taskSelectedForTimer: string;
+  isTaskEditMenuOpen: boolean;
   addTask: (task: ITaskItem) => void;
   deleteTask: (id: string) => void;
-  archiveTask: (id: string) => void;
+  archiveTask: (id: string, status: boolean) => void;
   clearAllTasks: () => void;
   setTaskArray: (type: ITaskItem[]) => void;
-  toggleTaskFormOpen: (type: string) => void;
+  toggleTaskFormOpen: (type: "" | "create" | "update") => void;
   setTaskEditMenuid: (id: string) => void;
   setMousePos: (x: number, y: number) => void;
   unselectAllTasksForTimer: () => void;
@@ -21,6 +22,7 @@ interface IUseTaskStore {
   setSelectedTaskForEdit: (id: string) => void;
   addSessionCountToTaskAndCheckCompletion: (id: string) => void;
   setEditsToSelectedTaskForEdit: (name: string, sessionNum: number) => void;
+  toggleIsTaskEditMenuOpen: (status: boolean) => void;
 }
 
 const useTaskStore = create<IUseTaskStore>((set) => ({
@@ -29,6 +31,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
   taskEditMenuId: "", // uniqueId, ""; Menu is closed on ""
   mousePos: { x: 0, y: 0 },
   taskSelectedForTimer: "",
+  isTaskEditMenuOpen: false,
   addTask: (task: ITaskItem) =>
     set((state) => ({
       tasks: [...state.tasks, task],
@@ -39,11 +42,11 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         return item.uniqueId !== id;
       }),
     })),
-  archiveTask: (id: string) =>
+  archiveTask: (id: string, status: boolean) =>
     set((state) => ({
       tasks: state.tasks.map((item) => {
         if (item.uniqueId === id) {
-          return { ...item, isArchived: true };
+          return { ...item, isArchived: status };
         }
         return item;
       }),
@@ -56,7 +59,7 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
     set(() => ({
       tasks: tasks,
     })),
-  toggleTaskFormOpen: (type: string) =>
+  toggleTaskFormOpen: (type: "" | "create" | "update") =>
     set(() => ({
       taskFormType: type,
     })),
@@ -147,6 +150,10 @@ const useTaskStore = create<IUseTaskStore>((set) => ({
         }
         return item;
       }),
+    })),
+  toggleIsTaskEditMenuOpen: (status: boolean) =>
+    set(() => ({
+      isTaskEditMenuOpen: status,
     })),
 }));
 

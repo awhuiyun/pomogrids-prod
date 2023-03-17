@@ -1,20 +1,38 @@
 import Head from "next/head";
 import useTaskStore from "@/stores/tasks";
 import useSettingStore from "@/stores/settings";
+import useToastStore from "@/stores/toast";
+import useGridStore from "@/stores/grid";
 import TimerContainer from "@/components/TimerContainer";
 import TaskContainer from "@/components/TaskContainer";
+import ToastContainer from "@/components/ToastContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
 import Grid from "@/components/Grid";
 import UnderConstruction from "@/components/UnderConstruction";
+import IntroModal from "@/components/IntroModal";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  // Global states: useTaskStore
-  const { taskFormType, taskEditMenuId } = useTaskStore();
-
-  // Global states: useSettingsStore
+  // Global states
+  const { tasks, taskFormType, isTaskEditMenuOpen } = useTaskStore();
+  const { tasksInTheYear } = useGridStore();
   const { isSettingOpen } = useSettingStore();
+  const { toasts } = useToastStore();
+
+  // Local state for Intro modal
+  const [isIntroModalOpen, setIsIntroModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (tasks.length === 0 && tasksInTheYear.length === 0) {
+      setIsIntroModalOpen(true);
+    }
+  }, []);
+
+  function toggleIntroModalFalse() {
+    setIsIntroModalOpen(false);
+  }
 
   return (
     <div>
@@ -24,8 +42,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {/************ Modals *************/}
-      {/* Under Construction */}
-      <UnderConstruction />
+      {/* Intro modal */}
+      {isIntroModalOpen && (
+        <IntroModal toggleIntroModalFalse={toggleIntroModalFalse} />
+      )}
 
       {/* Settings Form */}
       {isSettingOpen && <SettingsForm />}
@@ -33,8 +53,11 @@ export default function Home() {
       {/* Task Form */}
       {taskFormType && <TaskForm />}
 
+      {/* Toast container */}
+      {toasts.length > 0 && <ToastContainer />}
+
       {/* Task Edit Menu */}
-      {taskEditMenuId && <TaskEditMenu />}
+      {isTaskEditMenuOpen && <TaskEditMenu />}
 
       {/************ Non-Modals *************/}
       {/* Grid section */}

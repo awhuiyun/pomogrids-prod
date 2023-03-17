@@ -1,38 +1,12 @@
-import axios from "axios";
-import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { signInWithGoogle } from "@/firebase/functions";
-import useUserStore from "@/stores/user";
+import { signInWithGoogle } from "@/firebase/auth";
 
 export default function Signin() {
-  // Router
-  let router = useRouter();
-
-  // Global states: useUserStore
-  const { setUserId, setEmail } = useUserStore();
-
   // Function to sign in with google
   async function handleSignInWithGoogle() {
     try {
-      const result = await signInWithGoogle();
-
-      // Check if user exists in db; If no, create a new account
-      if (result) {
-        const firebaseUserIdToken = await result.user.getIdToken(true);
-        const response = await axios({
-          method: "patch",
-          url: process.env.NEXT_PUBLIC_SERVER_URL + "/users/create-new-account",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + firebaseUserIdToken,
-          },
-        });
-        console.log(response.data);
-      }
-
-      // Route to home page
-      router.push("/");
+      await signInWithGoogle();
     } catch (error) {
       console.log(error);
     }
