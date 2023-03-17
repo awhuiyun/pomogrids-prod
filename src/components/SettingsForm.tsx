@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 const { Howler } = require("howler");
-import uuid from "react-uuid";
+import { v4 as uuidv4 } from "uuid";
 import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
@@ -179,7 +179,7 @@ export default function SettingsForm() {
 
       // Add toast notification
       addToast({
-        uniqueId: uuid(),
+        uniqueId: uuidv4(),
         className: "bg-red-50 text-red-700",
         content:
           "Something went wrong with updating settings. Please try again! 😫",

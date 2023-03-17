@@ -1,5 +1,5 @@
 import { useState } from "react";
-import uuid from "react-uuid";
+import { v4 as uuidv4 } from "uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
@@ -85,7 +85,7 @@ export default function TaskForm() {
 
       // Add toast notification
       addToast({
-        uniqueId: uuid(),
+        uniqueId: uuidv4(),
         className: "bg-red-50 text-red-700",
         content:
           "Something went wrong with creating task. Please try again! 😫",
@@ -117,7 +117,7 @@ export default function TaskForm() {
 
       // Add toast notification
       addToast({
-        uniqueId: uuid(),
+        uniqueId: uuidv4(),
         className: "bg-red-50 text-red-700",
         content:
           "Something went wrong with updating task. Please try again! 😫",
@@ -132,7 +132,7 @@ export default function TaskForm() {
     // Conditional: Create new task or Update existing task
     if (taskFormType === "create") {
       //  Generate uuid
-      const uniqueId = uuid();
+      const uniqueId = uuidv4();
 
       await createNewTask(uniqueId);
     } else if (taskFormType === "update") {

@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import uuid from "react-uuid";
+import { v4 as uuidv4 } from "uuid";
 import type { AppProps } from "next/app";
 const { Howler } = require("howler");
 import { auth } from "@/firebase/auth";
@@ -131,7 +131,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
           // Add toast notification
           addToast({
-            uniqueId: uuid(),
+            uniqueId: uuidv4(),
             className: "bg-green-50 text-green-700",
             content: "🎉 Successfully logged in!",
           });
@@ -164,7 +164,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
         // Add toast notification
         addToast({
-          uniqueId: uuid(),
+          uniqueId: uuidv4(),
           className: "bg-red-50 text-red-700",
           content: "Something went wrong. Please try again! 😫",
         });
