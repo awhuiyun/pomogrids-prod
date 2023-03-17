@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
         // User logged in
         if (user) {
           // Show landing page
-          router.push("/prepping-user-data");
+          router.push("/setup");
 
           // Set useUserStore
           setUser(user);
