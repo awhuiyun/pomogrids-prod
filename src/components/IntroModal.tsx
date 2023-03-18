@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import BaseButton from "./BaseButton";
 
 export default function IntroModal({
   toggleIntroModalFalse,
@@ -9,7 +8,7 @@ export default function IntroModal({
 }) {
   return (
     <div className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50">
-      <div className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[600px] text-slate-900 py-12 px-12">
+      <div className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-14 md:top-28 mx-auto bg-white w-[600px] text-slate-900 py-12 px-12">
         <h1 className="text-2xl text-center font-bold">
           Pomogrids is a pomodoro timer
           <br /> with a calendar heatmap
