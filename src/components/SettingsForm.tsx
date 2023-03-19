@@ -101,7 +101,7 @@ export default function SettingsForm() {
       // Save tier change in useUserStore
       setTier("premium");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
 
     // Close Settings Form modal

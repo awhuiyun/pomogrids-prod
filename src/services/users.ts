@@ -22,7 +22,7 @@ export async function getUserTier(
       return tier;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -49,7 +49,7 @@ export async function updateUserTier(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -74,7 +74,7 @@ export async function createNewAccount(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }

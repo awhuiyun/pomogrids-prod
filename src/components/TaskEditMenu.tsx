@@ -127,6 +127,7 @@ export default function TaskEditMenu() {
   //   Function to handle click on page to close the Task Edit Menu
   function handleClickToCloseEditMenu() {
     setTaskEditMenuid("");
+    toggleIsTaskEditMenuOpen(false);
   }
 
   return (

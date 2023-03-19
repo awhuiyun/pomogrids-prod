@@ -8,7 +8,7 @@ export default function Signin() {
     try {
       await signInWithGoogle();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

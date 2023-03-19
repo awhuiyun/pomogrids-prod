@@ -56,11 +56,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
           // POST request: Create new account if user is new
           const newUser = await createNewAccount(user);
-          console.log(newUser);
+          // console.log(newUser);
 
           // POST request: Retrieve user's tier
           const tier = await getUserTier(user);
-          console.log(tier);
+          // console.log(tier);
 
           if (tier) {
             setTier(tier.tier);
@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
           const tasksInTheYear = await getTasksInYearService(user, {
             year: Number(new Date().getFullYear()),
           });
-          console.log(tasksInTheYear);
+          // console.log(tasksInTheYear);
 
           if (tasksInTheYear) {
             // Manipulate result: Change date to local time
@@ -98,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
           // POST request: Retrieve user's settings
           const settings = await getSettingsService(user);
-          console.log(settings);
+          // console.log(settings);
 
           if (settings) {
             setPomodoroTimerMinutes(settings.pomodoro_minutes);
@@ -119,7 +119,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
           // POST request: Retrieve user's unarchived tasks
           const unarchivedTasks = await getUnarchivedTasksService(user);
-          console.log(unarchivedTasks);
+          // console.log(unarchivedTasks);
 
           if (unarchivedTasks) {
             clearAllTasks();
@@ -157,7 +157,7 @@ export default function App({ Component, pageProps }: AppProps) {
           clearAllTasks();
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
 
         // Reroute back to home
         router.push("/");

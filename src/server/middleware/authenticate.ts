@@ -12,7 +12,7 @@ export async function authenticateJWT(authorizationHeader: string | undefined) {
       const decodedToken = await app.auth().verifyIdToken(idToken);
       return decodedToken;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new Error("unauthorized");
     }
   } else {
