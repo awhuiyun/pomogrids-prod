@@ -22,7 +22,7 @@ export async function getSettingsService(
       return settings;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -49,7 +49,7 @@ export async function updateSettingsService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }

@@ -33,7 +33,7 @@ export async function getTasksInYearService(
       return tasks;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -62,7 +62,7 @@ export async function createNewTaskService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -90,7 +90,7 @@ export async function updateExistingTaskService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -118,7 +118,7 @@ export async function deleteExistingTaskService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -144,7 +144,7 @@ export async function updateTaskAfterSessionService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -172,7 +172,7 @@ export async function archiveTaskService(
       return response;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
@@ -196,7 +196,7 @@ export async function getUnarchivedTasksService(
       return tasks;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     throw error;
   }
 }
