@@ -39,6 +39,15 @@ export default function Nav() {
         </Link>
       )}
 
+      {/* Premium page */}
+      <Link href="/get-premium">
+        <BaseButton
+          type="button"
+          label="Premium"
+          className="text-blue4 hover:underline underline-offset-2 ml-4"
+        />
+      </Link>
+
       {/* How-to button */}
       <Link href="/how-to">
         <BaseButton
