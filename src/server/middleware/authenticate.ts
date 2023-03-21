@@ -1,9 +1,6 @@
-// import * as admin from "firebase-admin";
 import { app } from "../firebase_admin";
 
 export async function authenticateJWT(authorizationHeader: string | undefined) {
-  // Initialise firebase admin
-
   const authHeader = authorizationHeader;
 
   if (authHeader) {
