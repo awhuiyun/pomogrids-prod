@@ -1,5 +1,4 @@
 import { prisma } from "@/server/prisma/prismaClient";
-import { User } from "@prisma/client";
 import { stripe } from "../stripe";
 
 export async function createOrRetrieveCustomer(profileId: string) {

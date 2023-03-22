@@ -5,7 +5,6 @@ import useToastStore from "@/stores/toast";
 import useGridStore from "@/stores/grid";
 import TimerContainer from "@/components/TimerContainer";
 import TaskContainer from "@/components/TaskContainer";
-import ToastContainer from "@/components/ToastContainer";
 import SettingsForm from "@/components/SettingsForm";
 import TaskForm from "@/components/TaskForm";
 import TaskEditMenu from "@/components/TaskEditMenu";
@@ -19,7 +18,6 @@ export default function Home() {
   const { tasks, taskFormType, isTaskEditMenuOpen } = useTaskStore();
   const { tasksInTheYear } = useGridStore();
   const { isSettingOpen } = useSettingStore();
-  const { toasts } = useToastStore();
 
   // Local state for Intro modal
   const [isIntroModalOpen, setIsIntroModalOpen] = useState(false);
@@ -52,9 +50,6 @@ export default function Home() {
 
       {/* Task Form */}
       {taskFormType && <TaskForm />}
-
-      {/* Toast container */}
-      {toasts.length > 0 && <ToastContainer />}
 
       {/* Task Edit Menu */}
       {isTaskEditMenuOpen && <TaskEditMenu />}

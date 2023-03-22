@@ -13,6 +13,7 @@ import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import useGridStore from "@/stores/grid";
 import useToastStore from "@/stores/toast";
+import ToastContainer from "@/components/ToastContainer";
 import { getSettingsService } from "@/services/settings";
 import {
   getUnarchivedTasksService,
@@ -39,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
     useTimerStore();
   const { clearAllTasks, setTaskArray } = useTaskStore();
   const { setTasksInTheYear } = useGridStore();
-  const { addToast } = useToastStore();
+  const { addToast, toasts } = useToastStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -174,6 +175,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <Layout>
+      {/* Toast container */}
+      {toasts.length > 0 && <ToastContainer />}
+
       <Component {...pageProps} />
     </Layout>
   );
