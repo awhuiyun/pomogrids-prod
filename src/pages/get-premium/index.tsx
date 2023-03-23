@@ -36,8 +36,8 @@ export default function GetPremiumPage() {
     // Create checkout session
     const priceId =
       type === "monthly"
-        ? "price_1Mna2rBPflnCFSFpJxagAxdG" // monthly
-        : "price_1Mna2rBPflnCFSFpT2vaHP4s"; // yearly
+        ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY as string) // monthly
+        : (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY as string); // yearly
 
     try {
       setIsLoading(true);

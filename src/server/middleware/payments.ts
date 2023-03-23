@@ -39,7 +39,7 @@ export async function createOrRetrieveCustomer(profileId: string) {
   });
 
   return {
-    currentSubscriptionStatus: profile?.stripeSubscriptionStatus,
+    currentSubscriptionStatus: profile?.stripeSubscriptionStatus, // always null
     customerId: customer.id,
   };
 }
