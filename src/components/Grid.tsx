@@ -85,13 +85,6 @@ function generateGridData(
   }
 
   return updatedArray;
-
-  // Use hashmap for efficiency instead of looping?
-  // const hashMap = {
-  //   "17/02/2023": 25,
-  //   "18/02/2023": 18,
-  // };
-  // hashMap["17/02/2023"] <- get the value
 }
 
 // Function that draws the grids using d3.js

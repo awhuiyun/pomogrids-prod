@@ -7,6 +7,9 @@ import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
+import BaseInput from "./BaseInput";
+import BaseDropdown from "./BaseDropdown";
+import BaseFormTitle from "./BaseFormTitle";
 import { updateSettingsService } from "@/services/settings";
 import { updateUserTier } from "@/services/users";
 
@@ -197,10 +200,11 @@ export default function SettingsForm() {
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
-        {/* Form Title */}
-        <div>
-          <p className="font-bold text-2xl text-center">Settings</p>
+        {/* Title */}
+        <section>
+          <BaseFormTitle title="Settings" />
 
+          {/* Sub-title */}
           {/* Not signed in */}
           {!user && (
             <p className="text-sm text-center mt-2">
@@ -221,71 +225,65 @@ export default function SettingsForm() {
               </span>
             </p>
           )}
-        </div>
+        </section>
 
         {/* Timer Section */}
         <section>
           <p className="font-bold text-lg mb-2">Timer</p>
           <div className="flex flex-row space-x-4">
-            <div className="flex flex-col">
-              <label className="text-sm mb-1">Pomodoro:</label>
-              <input
-                type="number"
-                id="pomodoroTimerInput"
-                value={pomodoroTimerInput}
-                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                  (tier === "basic" || !user) &&
-                  " text-slate-400 cursor-not-allowed"
-                }`}
-                onChange={handleInputChange}
-                required={true}
-                disabled={tier === "basic" || !user ? true : false}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm mb-1">Short Break:</label>
-              <input
-                type="number"
-                id="shortBreakTimerInput"
-                value={shortBreakTimerInput}
-                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                  (tier === "basic" || !user) &&
-                  " text-slate-400 cursor-not-allowed"
-                }`}
-                onChange={handleInputChange}
-                required={true}
-                disabled={tier === "basic" || !user ? true : false}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm mb-1">Long Break:</label>
-              <input
-                type="number"
-                id="longBreakTimerInput"
-                value={longBreakTimerInput}
-                className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                  (tier === "basic" || !user) &&
-                  " text-slate-400 cursor-not-allowed"
-                }`}
-                onChange={handleInputChange}
-                required={true}
-                disabled={tier === "basic" || !user ? true : false}
-              />
-            </div>
+            <BaseInput
+              label="Pomodoro:"
+              type="number"
+              id="pomodoroTimerInput"
+              value={pomodoroTimerInput}
+              className={`w-20 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              onChange={handleInputChange}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+            />
+
+            <BaseInput
+              label="Short Break:"
+              type="number"
+              id="shortBreakTimerInput"
+              value={shortBreakTimerInput}
+              className={`w-20 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              onChange={handleInputChange}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+            />
+
+            <BaseInput
+              label="Long Break:"
+              type="number"
+              id="longBreakTimerInput"
+              value={longBreakTimerInput}
+              className={`w-20 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              onChange={handleInputChange}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+            />
           </div>
         </section>
 
         {/* Cycle Section */}
         <section className="space-y-2">
           <p className="font-bold text-lg">Cycle</p>
-          <p className="text-sm">
-            Number of pomodoro sessions before a long break
-          </p>
-          <input
+          <BaseInput
+            label="Number of pomodoro sessions before a long break"
             type="number"
             id="numberOfPomodoroSessionsInCycleInput"
             value={numberOfPomodoroSessionsInCycleInput}
-            className={`focus:outline-0 w-20 border rounded border-slate-900 px-2 py-1 h-[34px] ${
+            className={`w-20 h-[34px] ${
               (tier === "basic" || !user) &&
               " text-slate-400 cursor-not-allowed"
             }`}
@@ -299,64 +297,73 @@ export default function SettingsForm() {
         <section>
           <p className="font-bold text-lg mb-2">Alarm</p>
           <div className="flex flex-row space-x-4">
-            <div className="flex flex-col">
-              <label className="text-sm mb-1">Sound</label>
-              <select
-                id="alarmRingtoneInput"
-                value={alarmRingtoneInput}
-                onChange={handleInputChange}
-                className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                  (tier === "basic" || !user) &&
-                  " text-slate-400 cursor-not-allowed"
-                }`}
-                required={true}
-                disabled={tier === "basic" || !user ? true : false}
-              >
-                <option value="buzzer">Buzzer</option>
-                <option value="calm">Calm</option>
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm mb-1">Volume (0-1)</label>
-              <input
-                type="number"
-                id="alarmVolumeInput"
-                value={alarmVolumeInput}
-                min="0"
-                max="1"
-                step="0.1"
-                className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                  (tier === "basic" || !user) &&
-                  " text-slate-400 cursor-not-allowed"
-                }`}
-                onChange={handleInputChange}
-                required={true}
-                disabled={tier === "basic" || !user ? true : false}
-              />
-            </div>
+            <BaseDropdown
+              label="Sound"
+              id="alarmRingtoneInput"
+              value={alarmRingtoneInput}
+              className={`w-32 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              onChange={handleInputChange}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+              options={[
+                {
+                  label: "Buzzer",
+                  value: "buzzer",
+                },
+                {
+                  label: "Calm",
+                  value: "calm",
+                },
+              ]}
+            />
+
+            <BaseInput
+              label="Volume (0-1)"
+              type="number"
+              id="alarmVolumeInput"
+              value={alarmVolumeInput}
+              className={`w-32 h-[34px] ${
+                (tier === "basic" || !user) &&
+                " text-slate-400 cursor-not-allowed"
+              }`}
+              onChange={handleInputChange}
+              required={true}
+              disabled={tier === "basic" || !user ? true : false}
+              min="0"
+              max="1"
+              step="0.1"
+            />
           </div>
         </section>
 
         {/* Grid Section */}
         <section>
           <p className="font-bold text-lg mb-2">Grid</p>
-          <div className="flex flex-col">
-            <label className="text-sm mb-1">Start of week:</label>
-            <select
-              id="weekStartInput"
-              value={weekStartInput}
-              onChange={handleInputChange}
-              className={`focus:outline-0 w-32 border rounded border-slate-900 px-2 py-1 h-[34px] ${
-                (tier === "basic" || !user) &&
-                " text-slate-400 cursor-not-allowed"
-              }`}
-              required={true}
-              disabled={tier === "basic" || !user ? true : false}
-            >
-              <option value="monday">Monday</option>
-              <option value="sunday">Sunday</option>
-            </select>
-          </div>
+          <BaseDropdown
+            label="Start of week:"
+            id="weekStartInput"
+            value={weekStartInput}
+            className={`w-32 h-[34px] ${
+              (tier === "basic" || !user) &&
+              " text-slate-400 cursor-not-allowed"
+            }`}
+            onChange={handleInputChange}
+            required={true}
+            disabled={tier === "basic" || !user ? true : false}
+            options={[
+              {
+                label: "Monday",
+                value: "monday",
+              },
+              {
+                label: "Sunday",
+                value: "sunday",
+              },
+            ]}
+          />
         </section>
 
         {/* Button */}

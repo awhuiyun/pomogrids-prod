@@ -4,10 +4,12 @@ import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
 import BaseButton from "./BaseButton";
+import BaseInput from "./BaseInput";
 import {
   createNewTaskService,
   updateExistingTaskService,
 } from "@/services/tasks";
+import BaseFormTitle from "./BaseFormTitle";
 
 export default function TaskForm() {
   // Global states: useTaskStore
@@ -149,50 +151,59 @@ export default function TaskForm() {
       onClick={toggleTaskFormOpenFalse}
     >
       <form
-        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
         {/* Form title */}
-        <div className="mb-4">
-          <p className="font-bold text-2xl text-center mb-1.5">
-            {taskFormType === "create" ? "Add Task" : "Update Task"}
-          </p>
+        <section>
+          <BaseFormTitle
+            title={taskFormType === "create" ? "Add Task" : "Update Task"}
+          />
+
+          {/* Sub-title */}
           {/* Completed number of sessions */}
           {taskFormType === "update" && (
-            <p className="text-slate-600 text-center text-sm">
+            <p className="text-slate-600 text-center text-sm mt-2">
               {completedNumOfSessionsInput} sessions completed
             </p>
           )}
-        </div>
+        </section>
 
-        {/* Task Name */}
-        <div className="flex flex-col mb-6">
-          <label className="text-sm mb-1">Name:</label>
-          <input
+        {/* Task fields */}
+        <section className="space-y-6">
+          <BaseInput
+            label="Name:"
+            placeholder="What are you working on today?"
             type="text"
             id="taskName"
-            placeholder="What are you working on today?"
             value={taskNameInput}
-            className="focus:outline-0 border border-slate-900 rounded px-2 py-1"
-            onChange={handleInputChange}
-            required
+            onChange={
+              handleInputChange as (
+                e:
+                  | React.ChangeEvent<HTMLInputElement>
+                  | React.ChangeEvent<HTMLSelectElement>
+              ) => void
+            }
+            required={true}
           />
-        </div>
 
-        {/* Target number of sessions */}
-        <div className="flex flex-col mb-6">
-          <label className="text-sm mb-1">Number of sessions:</label>
-          <input
+          <BaseInput
+            label="Number of sessions:"
             type="number"
             id="targetNumOfSessionsInput"
             value={targetNumOfSessionsInput}
+            onChange={
+              handleInputChange as (
+                e:
+                  | React.ChangeEvent<HTMLInputElement>
+                  | React.ChangeEvent<HTMLSelectElement>
+              ) => void
+            }
+            required={true}
             min={taskFormType === "create" ? 1 : completedNumOfSessionsInput}
-            className="focus:outline-0 border border-slate-900 rounded px-2 py-1"
-            onChange={handleInputChange}
-            required
           />
-        </div>
+        </section>
 
         {/* Button */}
         {taskFormType === "create" ? (
