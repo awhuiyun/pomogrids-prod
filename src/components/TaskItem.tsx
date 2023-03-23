@@ -76,21 +76,6 @@ export default function TaskItem({
       >
         {completedNumOfSessions}/{targetNumOfSessions}
       </p>
-
-      {/* Checkbox Icon */}
-      {/* {isCompleted ? (
-        <FontAwesomeIcon
-          icon={faSquareCheck}
-          className="text-emerald-400"
-          onClick={handleTaskClick}
-        />
-      ) : (
-        <FontAwesomeIcon
-          icon={faSquare}
-          className="text-slate-400"
-          onClick={handleTaskClick}
-        />
-      )} */}
     </div>
   );
 }

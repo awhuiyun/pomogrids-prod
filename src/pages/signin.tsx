@@ -1,12 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { signInWithGoogle } from "@/firebase/auth";
+import { useRouter } from "next/router";
 
 export default function Signin() {
+  let router = useRouter();
+
   // Function to sign in with google
   async function handleSignInWithGoogle() {
     try {
       await signInWithGoogle();
+
+      router.push("/");
     } catch (error) {
       // console.log(error);
     }
