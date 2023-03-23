@@ -6,10 +6,10 @@ import useUserStore from "@/stores/user";
 import useSettingStore from "@/stores/settings";
 import useTimerStore from "@/stores/timer";
 import useToastStore from "@/stores/toast";
-import BaseButton from "./BaseButton";
-import BaseInput from "./BaseInput";
-import BaseDropdown from "./BaseDropdown";
-import BaseFormTitle from "./BaseFormTitle";
+import BaseButton from "../base/BaseButton";
+import BaseInput from "../base/BaseInput";
+import BaseDropdown from "../base/BaseDropdown";
+import BaseFormTitle from "../base/BaseFormTitle";
 import { updateSettingsService } from "@/services/settings";
 import { updateUserTier } from "@/services/users";
 

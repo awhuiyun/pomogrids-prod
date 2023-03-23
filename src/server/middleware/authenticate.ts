@@ -1,4 +1,4 @@
-import { app } from "../firebase_admin";
+import { app } from "../utils/firebase-admin";
 
 export async function authenticateJWT(authorizationHeader: string | undefined) {
   const authHeader = authorizationHeader;

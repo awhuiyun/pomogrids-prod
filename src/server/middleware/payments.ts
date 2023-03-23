@@ -1,5 +1,5 @@
-import { prisma } from "@/server/prisma/prismaClient";
-import { stripe } from "../stripe";
+import { prisma } from "@/server/utils/prisma";
+import { stripe } from "../utils/stripe";
 
 export async function createOrRetrieveCustomer(profileId: string) {
   const profile = await prisma.user.findUnique({

@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import type { AppProps } from "next/app";
-import { auth } from "@/firebase/auth";
+import { auth } from "@/utils/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import Layout from "@/components/Layout";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
-import ToastContainer from "@/components/ToastContainer";
+import ToastContainer from "@/components/toasts/ToastContainer";
 import { getUserTier, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {

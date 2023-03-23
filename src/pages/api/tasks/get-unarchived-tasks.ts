@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, ITaskItem } from "@/types";
 

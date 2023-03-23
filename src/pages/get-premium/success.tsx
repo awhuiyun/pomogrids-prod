@@ -1,4 +1,4 @@
-import BaseButton from "@/components/BaseButton";
+import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import useUserStore from "@/stores/user";
 import { faStar } from "@fortawesome/free-solid-svg-icons";

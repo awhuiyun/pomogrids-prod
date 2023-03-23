@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from "uuid";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
-import BaseButton from "./BaseButton";
-import BaseInput from "./BaseInput";
+import BaseButton from "../base/BaseButton";
+import BaseInput from "../base/BaseInput";
 import {
   createNewTaskService,
   updateExistingTaskService,
 } from "@/services/tasks";
-import BaseFormTitle from "./BaseFormTitle";
+import BaseFormTitle from "../base/BaseFormTitle";
 
 export default function TaskForm() {
   // Global states: useTaskStore

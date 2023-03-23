@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BaseAccordian from "@/components/BaseAccordian";
+import BaseAccordian from "@/components/base/BaseAccordian";
 
 export default function HowTo() {
   return (

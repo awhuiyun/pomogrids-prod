@@ -6,7 +6,7 @@ import useSettingStore from "@/stores/settings";
 import useTaskStore from "@/stores/tasks";
 import useUserStore from "@/stores/user";
 import useGridStore from "@/stores/grid";
-import BaseButton from "./BaseButton";
+import BaseButton from "../base/BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
 import buzzer from "public/assets/buzzer.mp3";
 import calm from "public/assets/calm.mp3";

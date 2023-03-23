@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { signInWithGoogle } from "@/firebase/auth";
+import { signInWithGoogle } from "@/utils/firebase/auth";
 import { useRouter } from "next/router";
 
 export default function Signin() {

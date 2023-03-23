@@ -1,4 +1,4 @@
-import { stripe } from "@/server/stripe";
+import { stripe } from "@/server/utils/stripe";
 import { createOrRetrieveCustomer } from "@/server/middleware/payments";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {

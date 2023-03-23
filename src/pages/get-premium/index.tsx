@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
-import BaseButton from "@/components/BaseButton";
+import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { createCheckOutSessionService } from "@/services/payments";
 
