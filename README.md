@@ -1,5 +1,7 @@
 # &#x1f680; Road to production reflections
 
+Hoping to officially launch this real soon! Github repo for the very first beta version [HERE](https://github.com/awhuiyun/pomogrids). Built it for my capstone project for General Assembly.
+
 ## Final technologies used
 
 1. Typescript
