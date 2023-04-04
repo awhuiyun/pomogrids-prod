@@ -5,14 +5,14 @@ import useUserStore from "@/stores/user";
 
 export default function Nav() {
   // Global states: useUserStore
-  const { setUserId, setEmail, user_id } = useUserStore();
+  const { profile, setProfile, setUser } = useUserStore();
 
   function handleUserSignOut() {
     signOutwithGoogle();
 
     // Reset global states
-    setUserId("");
-    setEmail("");
+    setUser(null);
+    setProfile(null);
   }
 
   return (
@@ -21,7 +21,7 @@ export default function Nav() {
         Pomogrids <span className="text-xs ml-1 text-blue4">BETA</span>
       </Link>
       <div className="flex-grow"></div>
-      {user_id ? (
+      {profile ? (
         <div onClick={handleUserSignOut}>
           <BaseButton
             type="button"

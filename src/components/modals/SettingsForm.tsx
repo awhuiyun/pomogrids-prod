@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 const { Howler } = require("howler");
 import { v4 as uuidv4 } from "uuid";
 import useUserStore from "@/stores/user";
@@ -11,11 +12,11 @@ import BaseInput from "../base/BaseInput";
 import BaseDropdown from "../base/BaseDropdown";
 import BaseFormTitle from "../base/BaseFormTitle";
 import { updateSettingsService } from "@/services/settings";
-import { updateUserTier } from "@/services/users";
 
 export default function SettingsForm() {
+  const router = useRouter();
   // Global states: useUserStore
-  const { user, tier, setTier } = useUserStore();
+  const { user, getPremiumStatus } = useUserStore();
 
   // Global states: useSettingStore
   const {
@@ -96,18 +97,8 @@ export default function SettingsForm() {
   }
 
   // Function to upgrade user tier
-  async function handleUpgradeButtonClick() {
-    try {
-      // PATCH request: Upgrade user's tier from basic to premium
-      await updateUserTier(user, { tier: "premium" });
-
-      // Save tier change in useUserStore
-      setTier("premium");
-    } catch (error) {
-      // console.log(error);
-    }
-
-    // Close Settings Form modal
+  function handleUpgradeButtonClick() {
+    router.push("/get-premium");
     toggleIsSettingOpen(false);
   }
 
@@ -216,8 +207,8 @@ export default function SettingsForm() {
             </p>
           )}
 
-          {/* Basic users */}
-          {tier === "basic" && (
+          {/* Non-premium users */}
+          {!getPremiumStatus() && (
             <p className="text-sm text-center mt-2">
               To customize, sign up for{" "}
               <span className="text-blue4 hover:underline cursor-pointer">
@@ -237,12 +228,12 @@ export default function SettingsForm() {
               id="pomodoroTimerInput"
               value={pomodoroTimerInput}
               className={`w-20 h-[34px] ${
-                (tier === "basic" || !user) &&
+                (!getPremiumStatus() || !user) &&
                 " text-slate-400 cursor-not-allowed"
               }`}
               onChange={handleInputChange}
               required={true}
-              disabled={tier === "basic" || !user ? true : false}
+              disabled={!getPremiumStatus() || !user ? true : false}
             />
 
             <BaseInput
@@ -251,12 +242,12 @@ export default function SettingsForm() {
               id="shortBreakTimerInput"
               value={shortBreakTimerInput}
               className={`w-20 h-[34px] ${
-                (tier === "basic" || !user) &&
+                (!getPremiumStatus() || !user) &&
                 " text-slate-400 cursor-not-allowed"
               }`}
               onChange={handleInputChange}
               required={true}
-              disabled={tier === "basic" || !user ? true : false}
+              disabled={!getPremiumStatus() || !user ? true : false}
             />
 
             <BaseInput
@@ -265,12 +256,12 @@ export default function SettingsForm() {
               id="longBreakTimerInput"
               value={longBreakTimerInput}
               className={`w-20 h-[34px] ${
-                (tier === "basic" || !user) &&
+                (!getPremiumStatus() || !user) &&
                 " text-slate-400 cursor-not-allowed"
               }`}
               onChange={handleInputChange}
               required={true}
-              disabled={tier === "basic" || !user ? true : false}
+              disabled={!getPremiumStatus() || !user ? true : false}
             />
           </div>
         </section>
@@ -284,12 +275,12 @@ export default function SettingsForm() {
             id="numberOfPomodoroSessionsInCycleInput"
             value={numberOfPomodoroSessionsInCycleInput}
             className={`w-20 h-[34px] ${
-              (tier === "basic" || !user) &&
+              (!getPremiumStatus() || !user) &&
               " text-slate-400 cursor-not-allowed"
             }`}
             onChange={handleInputChange}
             required={true}
-            disabled={tier === "basic" || !user ? true : false}
+            disabled={!getPremiumStatus() || !user ? true : false}
           />
         </section>
 
@@ -302,12 +293,12 @@ export default function SettingsForm() {
               id="alarmRingtoneInput"
               value={alarmRingtoneInput}
               className={`w-32 h-[34px] ${
-                (tier === "basic" || !user) &&
+                (!getPremiumStatus() || !user) &&
                 " text-slate-400 cursor-not-allowed"
               }`}
               onChange={handleInputChange}
               required={true}
-              disabled={tier === "basic" || !user ? true : false}
+              disabled={!getPremiumStatus() || !user ? true : false}
               options={[
                 {
                   label: "Buzzer",
@@ -326,12 +317,12 @@ export default function SettingsForm() {
               id="alarmVolumeInput"
               value={alarmVolumeInput}
               className={`w-32 h-[34px] ${
-                (tier === "basic" || !user) &&
+                (!getPremiumStatus() || !user) &&
                 " text-slate-400 cursor-not-allowed"
               }`}
               onChange={handleInputChange}
               required={true}
-              disabled={tier === "basic" || !user ? true : false}
+              disabled={!getPremiumStatus() || !user ? true : false}
               min="0"
               max="1"
               step="0.1"
@@ -347,12 +338,12 @@ export default function SettingsForm() {
             id="weekStartInput"
             value={weekStartInput}
             className={`w-32 h-[34px] ${
-              (tier === "basic" || !user) &&
+              (!getPremiumStatus() || !user) &&
               " text-slate-400 cursor-not-allowed"
             }`}
             onChange={handleInputChange}
             required={true}
-            disabled={tier === "basic" || !user ? true : false}
+            disabled={!getPremiumStatus() || !user ? true : false}
             options={[
               {
                 label: "Monday",
@@ -380,7 +371,7 @@ export default function SettingsForm() {
             />{" "}
           </Link>
         )}
-        {user && tier === "basic" && (
+        {user && !getPremiumStatus() && (
           <div onClick={handleUpgradeButtonClick} className="mx-auto">
             <BaseButton
               type="button"
@@ -389,7 +380,7 @@ export default function SettingsForm() {
             />
           </div>
         )}
-        {user && tier === "premium" && (
+        {user && getPremiumStatus() && (
           <BaseButton
             type="submit"
             label="Save settings"

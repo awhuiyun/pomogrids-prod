@@ -1,36 +1,38 @@
 import { Response, Request } from "express";
 import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
-import { ApiResponseError, IUserTier } from "@/types";
 
-export default async function updateUserTierHandler(
-  req: Request,
-  res: Response<String | ApiResponseError>
-) {
+export default async function getProfileHandler(req: Request, res: Response) {
   try {
     // Authenticate jwt
     const decodedToken = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
     const uid = decodedToken.uid;
-    const { tier } = req.body as IUserTier;
 
     // Prisma query
-    await prisma.user.update({
-      data: {
-        tier: tier,
-      },
+    const profile = await prisma.user.findUnique({
       where: {
         id: uid,
       },
+      select: {
+        id: true,
+        email: true,
+        stripeCustomerId: true,
+        stripeSubscriptionStatus: true,
+      },
     });
 
-    return res.send("Successfully updated user tier!");
+    if (!profile) {
+      throw new Error();
+    }
+
+    return res.send(profile);
   } catch (error) {
-    console.error(" PATCH /users/update-user-tier", error);
+    console.error(" POST /settings/get-settings", error);
     return res.status(400).json({
       status: "error",
-      message: "request to update user tier failed",
+      message: "request to get settings failed",
     });
   }
 }

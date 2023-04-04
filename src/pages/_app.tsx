@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import type { AppProps } from "next/app";
 import { auth } from "@/utils/firebase/auth";
@@ -9,11 +8,11 @@ import Layout from "@/components/Layout";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
 import ToastContainer from "@/components/toasts/ToastContainer";
-import { getUserTier, createNewAccount } from "@/services/users";
+import { getProfile, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {
   // Global states
-  const { setUser, setEmail, setUserId, setTier } = useUserStore();
+  const { setUser, setProfile } = useUserStore();
   const { addToast, toasts } = useToastStore();
 
   useEffect(() => {
@@ -22,25 +21,21 @@ export default function App({ Component, pageProps }: AppProps) {
         // User logged in
         if (user) {
           setUser(user);
-          setEmail(user.email ?? "");
-          setUserId(user.uid);
 
           // POST request: Create new account if user is new
           await createNewAccount(user);
 
-          // POST request: Retrieve user's tier
-          const tier = await getUserTier(user);
-
-          if (tier) {
-            setTier(tier.tier);
+          // POST request: Retrieve user's profile details
+          const profile = await getProfile(user);
+          console.log(profile);
+          if (profile) {
+            setProfile(profile);
           }
         } // User logged out
         else {
           // Set all states to default
           setUser(null);
-          setEmail("");
-          setUserId("");
-          setTier("");
+          setProfile(null);
         }
       } catch (error) {
         // Add toast notification

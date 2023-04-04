@@ -9,21 +9,19 @@ import { createCheckOutSessionService } from "@/services/payments";
 
 export default function GetPremiumPage() {
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
-  const user_id = useUserStore((state) => state.user_id);
-  const tier = useUserStore((state) => state.tier);
+  const { profile, getPremiumStatus } = useUserStore();
   const addToast = useToastStore((state) => state.addToast);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleClickSubscribe(type: "monthly" | "yearly") {
     // Get user to sign in
-    if (!user) {
+    if (!profile) {
       router.push("/signin");
       return;
     }
 
     // Check if user is already a premium user
-    if (tier === "premium") {
+    if (getPremiumStatus()) {
       addToast({
         uniqueId: uuidv4(),
         className: "bg-green-50 text-green-700",
@@ -36,15 +34,15 @@ export default function GetPremiumPage() {
     // Create checkout session
     const priceId =
       type === "monthly"
-        ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY as string) // monthly
-        : (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY as string); // yearly
+        ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY as string)
+        : (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY as string);
 
     try {
       setIsLoading(true);
 
       const payload = {
         priceId,
-        profileId: user_id,
+        profileId: profile?.id,
       };
 
       await createCheckOutSessionService(payload);

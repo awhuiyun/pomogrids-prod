@@ -1,38 +1,29 @@
 import { create } from "zustand";
 import { User } from "firebase/auth";
+import { Profile } from "@/types";
+import { profileIsPremium } from "@/utils";
 
 interface IUseUserStore {
   user: User | null;
-  user_id: string;
-  email: string;
-  tier: string;
+  profile: Profile | null;
   setUser: (user: User | null) => void;
-  setUserId: (id: string) => void;
-  setEmail: (email: string) => void;
-  setTier: (tier: string) => void;
+  setProfile: (profile: Profile | null) => void;
+  getPremiumStatus: () => boolean;
 }
 
-const useUserStore = create<IUseUserStore>((set) => ({
+const useUserStore = create<IUseUserStore>((set, get) => ({
   user: null,
-  user_id: "",
-  email: "",
-  tier: "",
+  profile: null,
   setUser: (user: User | null) =>
     set(() => ({
       user: user,
     })),
-  setUserId: (id: string) =>
+  setProfile: (profile: Profile | null) =>
     set(() => ({
-      user_id: id,
+      profile: profile,
     })),
-  setEmail: (email: string) =>
-    set(() => ({
-      email: email,
-    })),
-  setTier: (tier: string) =>
-    set(() => ({
-      tier: tier,
-    })),
+  getPremiumStatus: () =>
+    profileIsPremium(get().profile?.stripeSubscriptionStatus),
 }));
 
 export default useUserStore;

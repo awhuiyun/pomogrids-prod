@@ -10,19 +10,17 @@ import { createPortalSessionService } from "@/services/payments";
 
 export default function SettingsStripePortal() {
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
-  const user_id = useUserStore((state) => state.user_id);
-  const tier = useUserStore((state) => state.tier);
+  const { profile, getPremiumStatus } = useUserStore();
   const addToast = useToastStore((state) => state.addToast);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleMySubscription() {
-    if (!user) return;
+    if (!profile) return;
 
     try {
       setIsLoading(true);
 
-      const payload: CreatePortalSessionPayload = { profileId: user_id };
+      const payload: CreatePortalSessionPayload = { profileId: profile?.id };
 
       await createPortalSessionService(payload);
     } catch (error) {
@@ -36,25 +34,27 @@ export default function SettingsStripePortal() {
   }
 
   // User is on Premium plan
-  return (
-    <div className="space-y-4">
-      <p>
-        You are currently on the{" "}
-        <span className="text-emerald-500 font-semibold">Premium</span> plan.
-      </p>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <div onClick={handleMySubscription}>
-          <BaseButton
-            type="button"
-            label="Manage my subscription"
-            className="text-white bg-blue4 px-4 py-2"
-          />
-        </div>
-      )}
-    </div>
-  );
+  if (getPremiumStatus()) {
+    return (
+      <div className="space-y-4">
+        <p>
+          You are currently on the{" "}
+          <span className="text-emerald-500 font-semibold">Premium</span> plan.
+        </p>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div onClick={handleMySubscription}>
+            <BaseButton
+              type="button"
+              label="Manage my subscription"
+              className="text-white bg-blue4 px-4 py-2"
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   // User is on Free plan
   return (
