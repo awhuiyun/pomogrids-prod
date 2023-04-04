@@ -10,3 +10,11 @@ export interface CreateCheckoutSessionPayload {
 export interface CreateCheckoutSessionResponse {
   sessionUrl: string;
 }
+
+export interface CreatePortalSessionPayload {
+  profileId: string;
+}
+
+export interface CreatePortalSessionResponse {
+  sessionUrl: string;
+}
