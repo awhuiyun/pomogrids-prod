@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
           // POST request: Retrieve user's profile details
           const profile = await getProfile(user);
-          console.log(profile);
+
           if (profile) {
             setProfile(profile);
           }
