@@ -96,7 +96,7 @@ export default function SettingsForm() {
     }
   }
 
-  // Function to upgrade user tier
+  // Function to route user to getPremium page
   function handleUpgradeButtonClick() {
     router.push("/get-premium");
     toggleIsSettingOpen(false);

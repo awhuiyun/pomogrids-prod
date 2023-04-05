@@ -2,7 +2,7 @@ import axios from "axios";
 import { User } from "firebase/auth";
 import { Profile } from "@/types";
 
-// Function to get user tiers
+// Function to get user profile
 export async function getProfile(user: User | null): Promise<Profile | void> {
   try {
     if (user) {

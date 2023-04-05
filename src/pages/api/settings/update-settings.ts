@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, UpdateSettingsPayload } from "@/types";
+import { profileIsPremium } from "@/utils";
 
 export default async function updateSettingsHandler(
   req: Request,
@@ -23,18 +24,20 @@ export default async function updateSettingsHandler(
       week_start,
     } = req.body as UpdateSettingsPayload;
 
-    // Prisma query: Check for user's tier
-    const tier = await prisma.user.findUnique({
+    // Prisma query: Check if user is premium
+    const profile = await prisma.user.findUnique({
       where: {
         id: uid,
       },
       select: {
-        tier: true,
+        stripeSubscriptionStatus: true,
       },
     });
 
+    const isPremium = profileIsPremium(profile?.stripeSubscriptionStatus);
+
     // If user is premium:
-    if (tier?.tier === "premium") {
+    if (isPremium) {
       // Prisma query: Update settings
       await prisma.settings.update({
         data: {
@@ -54,7 +57,7 @@ export default async function updateSettingsHandler(
       return res.send("Settings successfully updated!");
     } // If user is not premium
     else {
-      return res.send("Not authorized");
+      throw new Error();
     }
   } catch (error) {
     console.error(" PATCH /settings/update-settings", error);
