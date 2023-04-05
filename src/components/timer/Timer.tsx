@@ -10,9 +10,7 @@ import BaseButton from "../base/BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
 import buzzer from "public/assets/buzzer.mp3";
 import calm from "public/assets/calm.mp3";
-
-// Function to format date
-const formatDate = timeFormat("%d/%m/%Y");
+import { formatDate } from "@/utils";
 
 export default function Timer() {
   // Global states: useUserStore
