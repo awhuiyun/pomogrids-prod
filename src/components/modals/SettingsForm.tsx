@@ -96,12 +96,6 @@ export default function SettingsForm() {
     }
   }
 
-  // Function to route user to getPremium page
-  function handleUpgradeButtonClick() {
-    router.push("/get-premium");
-    toggleIsSettingOpen(false);
-  }
-
   // Function to handle form submit
   async function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -200,9 +194,13 @@ export default function SettingsForm() {
           {!user && (
             <p className="text-sm text-center mt-2">
               Please{" "}
-              <span className="text-blue4 hover:underline cursor-pointer">
+              <Link
+                href="/signin"
+                className="text-blue4 hover:underline cursor-pointer"
+                onClick={toggleSettingsFormOpenFalse}
+              >
                 sign in
-              </span>
+              </Link>
               . This is a premium feature.
             </p>
           )}
@@ -211,9 +209,14 @@ export default function SettingsForm() {
           {!getPremiumStatus() && (
             <p className="text-sm text-center mt-2">
               To customize, sign up for{" "}
-              <span className="text-blue4 hover:underline cursor-pointer">
-                premium.
-              </span>
+              <Link
+                href="/get-premium"
+                className="text-blue4 hover:underline cursor-pointer"
+                onClick={toggleSettingsFormOpenFalse}
+              >
+                premium
+              </Link>
+              .
             </p>
           )}
         </section>
@@ -372,13 +375,17 @@ export default function SettingsForm() {
           </Link>
         )}
         {user && !getPremiumStatus() && (
-          <div onClick={handleUpgradeButtonClick} className="mx-auto">
+          <Link
+            href="/get-premium"
+            className="mx-auto"
+            onClick={toggleSettingsFormOpenFalse}
+          >
             <BaseButton
               type="button"
               label="Upgrade to premium"
               className="text-white bg-blue4 px-4 py-2 w-fit text-sm"
             />
-          </div>
+          </Link>
         )}
         {user && getPremiumStatus() && (
           <BaseButton
