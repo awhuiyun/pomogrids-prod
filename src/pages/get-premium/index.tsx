@@ -9,14 +9,15 @@ import { createCheckOutSessionService } from "@/services/payments";
 
 export default function GetPremiumPage() {
   const router = useRouter();
-  const { profile, getPremiumStatus } = useUserStore();
+  const { profile, getPremiumStatus, isLoading } = useUserStore();
   const addToast = useToastStore((state) => state.addToast);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCheckoutSessionLoading, setIsCheckoutSessionLoading] =
+    useState(false);
 
   async function handleClickSubscribe(type: "monthly" | "yearly") {
     // Get user to sign in
     if (!profile) {
-      router.push("/signin");
+      router.push("/signin/premium");
       return;
     }
 
@@ -38,7 +39,7 @@ export default function GetPremiumPage() {
         : (process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_YEARLY as string);
 
     try {
-      setIsLoading(true);
+      setIsCheckoutSessionLoading(true);
 
       const payload = {
         priceId,
@@ -52,11 +53,11 @@ export default function GetPremiumPage() {
         className: "bg-red-50 text-red-700",
         content: "Something went wrong...please try again!",
       });
-      setIsLoading(false);
+      setIsCheckoutSessionLoading(false);
     }
   }
-
   if (isLoading) return <LoadingSpinner />;
+  if (isCheckoutSessionLoading) return <LoadingSpinner />;
   return (
     <div className="flex flex-col space-y-4">
       <div

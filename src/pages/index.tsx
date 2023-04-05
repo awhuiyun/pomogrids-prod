@@ -9,7 +9,6 @@ import SettingsForm from "@/components/modals/SettingsForm";
 import TaskForm from "@/components/modals/TaskForm";
 import TaskEditMenu from "@/components/tasks/TaskEditMenu";
 import Grid from "@/components/grid/Grid";
-import UnderConstruction from "@/components/modals/UnderConstruction";
 import IntroModal from "@/components/modals/IntroModal";
 import { useEffect, useState } from "react";
 import useUserStore from "@/stores/user";
