@@ -5,15 +5,7 @@ import useUserStore from "@/stores/user";
 
 export default function Nav() {
   // Global states: useUserStore
-  const { profile, setProfile, setUser } = useUserStore();
-
-  function handleUserSignOut() {
-    signOutwithGoogle();
-
-    // Reset global states
-    setUser(null);
-    setProfile(null);
-  }
+  const { user, profile, isLoading, getPremiumStatus } = useUserStore();
 
   return (
     <div className="flex items-center py-4 space-x-6 sm:space-x-4">
@@ -21,15 +13,8 @@ export default function Nav() {
         Pomogrids <span className="text-xs ml-1 text-blue4">BETA</span>
       </Link>
       <div className="flex-grow"></div>
-      {profile ? (
-        <div onClick={handleUserSignOut}>
-          <BaseButton
-            type="button"
-            label="Sign Out"
-            className="text-red-500 hover:underline underline-offset-2"
-          />
-        </div>
-      ) : (
+      {/* Sign in page */}
+      {!user && !isLoading && (
         <Link href="/signin">
           <BaseButton
             type="button"
@@ -40,13 +25,26 @@ export default function Nav() {
       )}
 
       {/* Premium page */}
-      <Link href="/get-premium">
-        <BaseButton
-          type="button"
-          label="Premium"
-          className="text-blue4 hover:underline underline-offset-2 ml-4"
-        />
-      </Link>
+      {(!user || !getPremiumStatus()) && !isLoading && (
+        <Link href="/get-premium">
+          <BaseButton
+            type="button"
+            label="Premium"
+            className="text-blue4 hover:underline underline-offset-2 ml-4"
+          />
+        </Link>
+      )}
+
+      {/* Settings Page */}
+      {profile && !isLoading && (
+        <Link href="/account-settings">
+          <BaseButton
+            type="button"
+            label="Account"
+            className="text-blue4 hover:underline underline-offset-2 ml-4"
+          />
+        </Link>
+      )}
 
       {/* How-to button */}
       <Link href="/how-to">

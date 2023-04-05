@@ -12,12 +12,14 @@ import { getProfile, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {
   // Global states
-  const { setUser, setProfile } = useUserStore();
+  const { setUser, setProfile, setIsLoading } = useUserStore();
   const { addToast, toasts } = useToastStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       try {
+        setIsLoading(true);
+
         // User logged in
         if (user) {
           setUser(user);
@@ -37,7 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
           setUser(null);
           setProfile(null);
         }
+
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
+
         // Add toast notification
         addToast({
           uniqueId: uuidv4(),

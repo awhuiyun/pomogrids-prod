@@ -36,13 +36,17 @@ export default function SettingsStripePortal() {
   // User is on Premium plan
   if (getPremiumStatus()) {
     return (
-      <div className="space-y-4">
-        <p>
+      <div className="space-y-6">
+        <p className="text-xl">
           You are currently on the{" "}
           <span className="text-emerald-500 font-semibold">Premium</span> plan.
         </p>
         {isLoading ? (
-          <LoadingSpinner />
+          <BaseButton
+            type="button"
+            label="Loading..."
+            className="text-white bg-blue1 px-4 py-2 cursor-wait"
+          />
         ) : (
           <div onClick={handleMySubscription}>
             <BaseButton
@@ -58,8 +62,8 @@ export default function SettingsStripePortal() {
 
   // User is on Free plan
   return (
-    <div className="space-y-4">
-      <p>
+    <div className="space-y-6">
+      <p className="text-xl">
         You are currently on the{" "}
         <span className="text-emerald-500 font-semibold">Free</span> plan.
       </p>
