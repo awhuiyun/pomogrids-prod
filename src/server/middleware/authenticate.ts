@@ -1,4 +1,4 @@
-import { app } from "../utils/firebase-admin";
+import { app, auth } from "../utils/firebase-admin";
 
 export async function authenticateJWT(authorizationHeader: string | undefined) {
   const authHeader = authorizationHeader;
@@ -6,7 +6,9 @@ export async function authenticateJWT(authorizationHeader: string | undefined) {
   if (authHeader) {
     try {
       const idToken = authHeader.split(" ")[1];
-      const decodedToken = await app.auth().verifyIdToken(idToken);
+
+      const decodedToken = await auth.verifyIdToken(idToken);
+
       return decodedToken;
     } catch (error) {
       // console.log(error);

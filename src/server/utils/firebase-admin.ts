@@ -10,3 +10,5 @@ export const app =
           projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
         }),
       });
+
+export const auth = admin.auth(app);
