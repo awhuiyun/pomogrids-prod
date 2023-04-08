@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import useUserStore from "@/stores/user";
-import useToastStore from "@/stores/toast";
+import useUserStore from "@/stores/useUserStore";
+import useToastStore from "@/stores/useToastStore";
 import BaseButton from "../base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CreatePortalSessionPayload } from "@/types";
@@ -11,7 +11,7 @@ import { createPortalSessionService } from "@/services/payments";
 export default function SettingsStripePortal() {
   const router = useRouter();
   const { profile, getPremiumStatus } = useUserStore();
-  const addToast = useToastStore((state) => state.addToast);
+  const addErrorToast = useToastStore((state) => state.addErrorToast);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleMySubscription() {
@@ -24,11 +24,7 @@ export default function SettingsStripePortal() {
 
       await createPortalSessionService(payload);
     } catch (error) {
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content: "Something went wrong...please try again!",
-      });
+      addErrorToast("Something went wrong...please try again!");
       setIsLoading(false);
     }
   }

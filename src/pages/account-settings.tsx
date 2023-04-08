@@ -1,7 +1,7 @@
 import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SettingsStripePortal from "@/components/settings/SettingsStripePortal";
-import useUserStore from "@/stores/user";
+import useUserStore from "@/stores/useUserStore";
 import { signOutwithGoogle } from "@/utils/firebase/auth";
 import { useRouter } from "next/router";
 

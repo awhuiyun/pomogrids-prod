@@ -5,11 +5,7 @@ export interface IBaseInput {
   id: string;
   value: string | number;
   className?: string;
-  onChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required: boolean;
   disabled?: boolean;
   min?: string | number;

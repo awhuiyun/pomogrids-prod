@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import useTaskStore from "@/stores/tasks";
-import useUserStore from "@/stores/user";
-import useToastStore from "@/stores/toast";
+import useTaskStore from "@/stores/useTaskStore";
+import useUserStore from "@/stores/useUserStore";
+import useToastStore from "@/stores/useToastStore";
 import TaskMenuItem from "./TaskMenuItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -29,7 +29,7 @@ export default function TaskEditMenu() {
     archiveTask,
     toggleIsTaskEditMenuOpen,
   } = useTaskStore();
-  const { addToast } = useToastStore();
+  const { addErrorToast } = useToastStore();
 
   // Variable to store the position of the menu
   const position = {
@@ -66,12 +66,9 @@ export default function TaskEditMenu() {
       archiveTask(taskEditMenuId, false);
 
       // Add toast notification
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content:
-          "Something went wrong with archiving task. Please try again! 😫",
-      });
+      addErrorToast(
+        "Something went wrong with archiving task. Please try again! 😫"
+      );
 
       // Reset
       setTaskEditMenuid("");
@@ -112,12 +109,9 @@ export default function TaskEditMenu() {
       });
 
       // Add toast notification
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content:
-          "Something went wrong with deleting task. Please try again! 😫",
-      });
+      addErrorToast(
+        "Something went wrong with deleting task. Please try again! 😫"
+      );
 
       // Reset
       setTaskEditMenuid("");

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { IToastItem } from "@/types/toasts.types";
-import useToastStore from "@/stores/toast";
+import useToastStore from "@/stores/useToastStore";
 
 export default function ToastItem({
   uniqueId,

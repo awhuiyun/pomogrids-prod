@@ -10,10 +10,9 @@ export default async function updateSettingsHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
     const {
       pomodoro_minutes,
       short_break_minutes,

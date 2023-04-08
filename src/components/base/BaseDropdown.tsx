@@ -8,11 +8,7 @@ export interface IBaseDropdown {
   id: string;
   value: string | number;
   className: string;
-  onChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => void;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   required: boolean;
   disabled: boolean;
   options: IOptions[];

@@ -1,4 +1,4 @@
-import useTaskStore from "@/stores/tasks";
+import useTaskStore from "@/stores/useTaskStore";
 import TaskItem from "./TaskItem";
 
 export default function TaskContainer() {

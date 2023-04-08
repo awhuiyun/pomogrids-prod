@@ -10,10 +10,7 @@ export default async function getSettingsHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
-
-    // User successfully authenticated
-    const uid = decodedToken.uid;
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // Prisma query
     const settings = await prisma.settings.findUnique({

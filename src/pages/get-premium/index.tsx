@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import useUserStore from "@/stores/user";
-import useToastStore from "@/stores/toast";
+import useUserStore from "@/stores/useUserStore";
+import useToastStore from "@/stores/useToastStore";
 import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { createCheckOutSessionService } from "@/services/payments";
@@ -10,7 +10,7 @@ import { createCheckOutSessionService } from "@/services/payments";
 export default function GetPremiumPage() {
   const router = useRouter();
   const { profile, getPremiumStatus, isLoading } = useUserStore();
-  const addToast = useToastStore((state) => state.addToast);
+  const { addSuccessToast, addErrorToast } = useToastStore();
   const [isCheckoutSessionLoading, setIsCheckoutSessionLoading] =
     useState(false);
 
@@ -23,11 +23,7 @@ export default function GetPremiumPage() {
 
     // Check if user is already a premium user
     if (getPremiumStatus()) {
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-green-50 text-green-700",
-        content: "You are already a premium user!",
-      });
+      addSuccessToast("You are already a premium user!");
 
       return;
     }
@@ -48,11 +44,7 @@ export default function GetPremiumPage() {
 
       await createCheckOutSessionService(payload);
     } catch (error) {
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content: "Something went wrong...please try again!",
-      });
+      addErrorToast("Something went wrong...please try again!");
       setIsCheckoutSessionLoading(false);
     }
   }

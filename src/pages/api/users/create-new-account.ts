@@ -9,12 +9,9 @@ export default async function createNewUserHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid, email } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
-    const email = decodedToken.email ?? "";
-
     // Prisma query: Check if user already exists
     const user = await prisma.user.findUnique({
       where: {
@@ -32,7 +29,7 @@ export default async function createNewUserHandler(
     await prisma.user.create({
       data: {
         id: uid,
-        email: email,
+        email: email ?? "",
         settings: {
           create: {
             pomodoro_minutes: 25,

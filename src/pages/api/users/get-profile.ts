@@ -5,11 +5,9 @@ import { authenticateJWT } from "@/server/middleware/authenticate";
 export default async function getProfileHandler(req: Request, res: Response) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
-
     // Prisma query
     const profile = await prisma.user.findUnique({
       where: {

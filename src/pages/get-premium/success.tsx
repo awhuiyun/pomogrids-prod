@@ -1,6 +1,6 @@
 import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import useUserStore from "@/stores/user";
+import useUserStore from "@/stores/useUserStore";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";

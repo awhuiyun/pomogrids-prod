@@ -9,7 +9,7 @@ export default async function updateTaskAfterSessionHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
     const { task_id, number_of_sessions, number_of_minutes } =

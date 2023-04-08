@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-import useGridStore from "@/stores/grid";
-import useSettingStore from "@/stores/settings";
+import useGridStore from "@/stores/useGridStore";
+import useSettingStore from "@/stores/useSettingStore";
 import { drawGrids, generateDatesInYear, generateGridData } from "@/utils";
 
 export default function Grid() {

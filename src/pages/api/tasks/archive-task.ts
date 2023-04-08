@@ -15,7 +15,7 @@ export default async function archiveTaskHandler(
     const { task_id } = req.body as ArchiveTaskPayload;
 
     // Prisma query
-    const task = await prisma.task.update({
+    await prisma.task.update({
       data: {
         is_archived: true,
       },

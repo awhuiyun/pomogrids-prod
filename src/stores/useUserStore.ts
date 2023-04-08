@@ -16,7 +16,7 @@ interface IUseUserStore {
 const useUserStore = create<IUseUserStore>((set, get) => ({
   user: null,
   profile: null,
-  isLoading: false,
+  isLoading: true,
   setUser: (user: User | null) =>
     set(() => ({
       user: user,

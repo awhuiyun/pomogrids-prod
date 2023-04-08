@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import { ITaskItem } from "@/types/";
-import useTaskStore from "@/stores/tasks";
+import useTaskStore from "@/stores/useTaskStore";
 
 export default function TaskItem({
   uniqueId,

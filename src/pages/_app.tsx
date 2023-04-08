@@ -5,15 +5,15 @@ import type { AppProps } from "next/app";
 import { auth } from "@/utils/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import Layout from "@/components/Layout";
-import useUserStore from "@/stores/user";
-import useToastStore from "@/stores/toast";
+import useUserStore from "@/stores/useUserStore";
+import useToastStore from "@/stores/useToastStore";
 import ToastContainer from "@/components/toasts/ToastContainer";
 import { getProfile, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {
   // Global states
   const { setUser, setProfile, setIsLoading } = useUserStore();
-  const { addToast, toasts } = useToastStore();
+  const { addErrorToast, toasts } = useToastStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -45,11 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
         setIsLoading(false);
 
         // Add toast notification
-        addToast({
-          uniqueId: uuidv4(),
-          className: "bg-red-50 text-red-700",
-          content: "Something went wrong. Please try again! 😫",
-        });
+        addErrorToast("Something went wrong. Please try again! 😫");
       }
     });
   }, []);

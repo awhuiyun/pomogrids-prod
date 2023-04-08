@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
-import useSettingStore from "@/stores/settings";
+import useSettingStore from "@/stores/useSettingStore";
 import Timer from "./Timer";
 
 export default function TimerContainer() {

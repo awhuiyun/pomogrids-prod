@@ -3,5 +3,5 @@ export interface IBaseFormTitle {
 }
 
 export default function BaseFormTitle({ title }: IBaseFormTitle) {
-  return <p className="font-bold text-2xl text-center">{title}</p>;
+  return <h2 className="font-bold text-2xl text-center">{title}</h2>;
 }

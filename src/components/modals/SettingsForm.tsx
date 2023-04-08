@@ -3,10 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 const { Howler } = require("howler");
 import { v4 as uuidv4 } from "uuid";
-import useUserStore from "@/stores/user";
-import useSettingStore from "@/stores/settings";
-import useTimerStore from "@/stores/timer";
-import useToastStore from "@/stores/toast";
+import useUserStore from "@/stores/useUserStore";
+import useSettingStore from "@/stores/useSettingStore";
+import useTimerStore from "@/stores/useTimerStore";
+import useToastStore from "@/stores/useToastStore";
 import BaseButton from "../base/BaseButton";
 import BaseInput from "../base/BaseInput";
 import BaseDropdown from "../base/BaseDropdown";
@@ -14,9 +14,9 @@ import BaseFormTitle from "../base/BaseFormTitle";
 import { updateSettingsService } from "@/services/settings";
 
 export default function SettingsForm() {
-  const router = useRouter();
   // Global states: useUserStore
   const { user, getPremiumStatus } = useUserStore();
+  const isPremium = getPremiumStatus();
 
   // Global states: useSettingStore
   const {
@@ -39,7 +39,7 @@ export default function SettingsForm() {
   } = useSettingStore();
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
-  const { addToast } = useToastStore();
+  const { addErrorToast } = useToastStore();
 
   // Variables to store original values
   const origPomodoroTimer = pomodoroTimerMinutes;
@@ -68,34 +68,47 @@ export default function SettingsForm() {
   const [weekStartInput, setWeekStartInput] = useState(weekStart);
 
   // Function to toggle isSettingsFormOpen=False
-  function toggleSettingsFormOpenFalse() {
-    // Close modal & reset states
+  function closeSettingsForm() {
+    // Close modal
     toggleIsSettingOpen(false);
   }
 
   //  Function to handle input changes
-  function handleInputChange(
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
+  function handlePomodoroTimerInputChange(
+    e: React.ChangeEvent<HTMLInputElement>
   ) {
-    if (e.target.id === "pomodoroTimerInput") {
-      setPomodoroTimerInput(parseInt(e.target.value));
-    } else if (e.target.id === "shortBreakTimerInput") {
-      setShortBreakTimerInput(parseInt(e.target.value));
-    } else if (e.target.id === "longBreakTimerInput") {
-      setLongBreakTimerInput(parseInt(e.target.value));
-    } else if (e.target.id === "numberOfPomodoroSessionsInCycleInput") {
-      setNumberOfPomodoroSessionsInCycleInput(parseInt(e.target.value));
-    } else if (e.target.id === "alarmRingtoneInput") {
-      setAlarmRingtoneInput(e.target.value);
-    } else if (e.target.id === "alarmVolumeInput") {
-      setAlarmVolumeInput(parseFloat(e.target.value));
-    } else if (e.target.id === "weekStartInput") {
-      setWeekStartInput(e.target.value);
-    }
+    setPomodoroTimerInput(parseInt(e.target.value));
   }
 
+  function handleShortBreakInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setShortBreakTimerInput(parseInt(e.target.value));
+  }
+
+  function handleLongBreakInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setLongBreakTimerInput(parseInt(e.target.value));
+  }
+
+  function handleNumberOfPomodoroSessionsInCycleInputChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    setNumberOfPomodoroSessionsInCycleInput(parseInt(e.target.value));
+  }
+
+  function handleAlarmRingtoneInputChange(
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) {
+    setAlarmRingtoneInput(e.target.value);
+  }
+
+  function handleAlarmVolumeInputChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    setAlarmVolumeInput(parseFloat(e.target.value));
+  }
+
+  function handleWeekStartInputChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setWeekStartInput(e.target.value);
+  }
   // Function to handle form submit
   async function handleSubmitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -166,19 +179,16 @@ export default function SettingsForm() {
       }
 
       // Add toast notification
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content:
-          "Something went wrong with updating settings. Please try again! 😫",
-      });
+      addErrorToast(
+        "Something went wrong with updating settings. Please try again! 😫"
+      );
     }
   }
 
   return (
     <div
       className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50"
-      onClick={toggleSettingsFormOpenFalse}
+      onClick={closeSettingsForm}
     >
       <form
         className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-16 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
@@ -197,7 +207,7 @@ export default function SettingsForm() {
               <Link
                 href="/signin"
                 className="text-blue4 hover:underline cursor-pointer"
-                onClick={toggleSettingsFormOpenFalse}
+                onClick={closeSettingsForm}
               >
                 sign in
               </Link>
@@ -206,13 +216,13 @@ export default function SettingsForm() {
           )}
 
           {/* Non-premium users */}
-          {!getPremiumStatus() && (
+          {!isPremium && (
             <p className="text-sm text-center mt-2">
               To customize, sign up for{" "}
               <Link
                 href="/get-premium"
                 className="text-blue4 hover:underline cursor-pointer"
-                onClick={toggleSettingsFormOpenFalse}
+                onClick={closeSettingsForm}
               >
                 premium
               </Link>
@@ -231,12 +241,11 @@ export default function SettingsForm() {
               id="pomodoroTimerInput"
               value={pomodoroTimerInput}
               className={`w-20 h-[34px] ${
-                (!getPremiumStatus() || !user) &&
-                " text-slate-400 cursor-not-allowed"
+                !isPremium && " text-slate-400 cursor-not-allowed"
               }`}
-              onChange={handleInputChange}
+              onChange={handlePomodoroTimerInputChange}
               required={true}
-              disabled={!getPremiumStatus() || !user ? true : false}
+              disabled={!isPremium}
             />
 
             <BaseInput
@@ -245,12 +254,11 @@ export default function SettingsForm() {
               id="shortBreakTimerInput"
               value={shortBreakTimerInput}
               className={`w-20 h-[34px] ${
-                (!getPremiumStatus() || !user) &&
-                " text-slate-400 cursor-not-allowed"
+                !isPremium && " text-slate-400 cursor-not-allowed"
               }`}
-              onChange={handleInputChange}
+              onChange={handleShortBreakInputChange}
               required={true}
-              disabled={!getPremiumStatus() || !user ? true : false}
+              disabled={!isPremium}
             />
 
             <BaseInput
@@ -259,12 +267,11 @@ export default function SettingsForm() {
               id="longBreakTimerInput"
               value={longBreakTimerInput}
               className={`w-20 h-[34px] ${
-                (!getPremiumStatus() || !user) &&
-                " text-slate-400 cursor-not-allowed"
+                !isPremium && " text-slate-400 cursor-not-allowed"
               }`}
-              onChange={handleInputChange}
+              onChange={handleLongBreakInputChange}
               required={true}
-              disabled={!getPremiumStatus() || !user ? true : false}
+              disabled={!isPremium}
             />
           </div>
         </section>
@@ -278,12 +285,11 @@ export default function SettingsForm() {
             id="numberOfPomodoroSessionsInCycleInput"
             value={numberOfPomodoroSessionsInCycleInput}
             className={`w-20 h-[34px] ${
-              (!getPremiumStatus() || !user) &&
-              " text-slate-400 cursor-not-allowed"
+              !isPremium && " text-slate-400 cursor-not-allowed"
             }`}
-            onChange={handleInputChange}
+            onChange={handleNumberOfPomodoroSessionsInCycleInputChange}
             required={true}
-            disabled={!getPremiumStatus() || !user ? true : false}
+            disabled={!isPremium}
           />
         </section>
 
@@ -296,12 +302,11 @@ export default function SettingsForm() {
               id="alarmRingtoneInput"
               value={alarmRingtoneInput}
               className={`w-32 h-[34px] ${
-                (!getPremiumStatus() || !user) &&
-                " text-slate-400 cursor-not-allowed"
+                !isPremium && " text-slate-400 cursor-not-allowed"
               }`}
-              onChange={handleInputChange}
+              onChange={handleAlarmRingtoneInputChange}
               required={true}
-              disabled={!getPremiumStatus() || !user ? true : false}
+              disabled={!isPremium}
               options={[
                 {
                   label: "Buzzer",
@@ -320,12 +325,11 @@ export default function SettingsForm() {
               id="alarmVolumeInput"
               value={alarmVolumeInput}
               className={`w-32 h-[34px] ${
-                (!getPremiumStatus() || !user) &&
-                " text-slate-400 cursor-not-allowed"
+                !isPremium && " text-slate-400 cursor-not-allowed"
               }`}
-              onChange={handleInputChange}
+              onChange={handleAlarmVolumeInputChange}
               required={true}
-              disabled={!getPremiumStatus() || !user ? true : false}
+              disabled={!isPremium}
               min="0"
               max="1"
               step="0.1"
@@ -341,12 +345,11 @@ export default function SettingsForm() {
             id="weekStartInput"
             value={weekStartInput}
             className={`w-32 h-[34px] ${
-              (!getPremiumStatus() || !user) &&
-              " text-slate-400 cursor-not-allowed"
+              !isPremium && " text-slate-400 cursor-not-allowed"
             }`}
-            onChange={handleInputChange}
+            onChange={handleWeekStartInputChange}
             required={true}
-            disabled={!getPremiumStatus() || !user ? true : false}
+            disabled={!isPremium}
             options={[
               {
                 label: "Monday",
@@ -362,11 +365,7 @@ export default function SettingsForm() {
 
         {/* Button */}
         {!user && (
-          <Link
-            href="/signin"
-            className="mx-auto"
-            onClick={toggleSettingsFormOpenFalse}
-          >
+          <Link href="/signin" className="mx-auto" onClick={closeSettingsForm}>
             <BaseButton
               type="button"
               label="Sign in"
@@ -374,11 +373,11 @@ export default function SettingsForm() {
             />{" "}
           </Link>
         )}
-        {user && !getPremiumStatus() && (
+        {user && !isPremium && (
           <Link
             href="/get-premium"
             className="mx-auto"
-            onClick={toggleSettingsFormOpenFalse}
+            onClick={closeSettingsForm}
           >
             <BaseButton
               type="button"
@@ -387,7 +386,7 @@ export default function SettingsForm() {
             />
           </Link>
         )}
-        {user && getPremiumStatus() && (
+        {user && isPremium && (
           <BaseButton
             type="submit"
             label="Save settings"

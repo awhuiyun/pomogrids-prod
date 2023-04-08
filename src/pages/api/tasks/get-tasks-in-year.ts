@@ -13,10 +13,9 @@ export default async function getTasksInYearHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
     const { year } = req.body as GetTaskInYearPayload;
 
     // Prisma query: Return the tasks found in the below date range

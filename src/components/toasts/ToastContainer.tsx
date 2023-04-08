@@ -1,5 +1,5 @@
 import ToastItem from "./ToastItem";
-import useToastStore from "@/stores/toast";
+import useToastStore from "@/stores/useToastStore";
 
 export default function ToastContainer() {
   // Global states: useToastStore

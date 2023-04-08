@@ -13,8 +13,7 @@ export default async function createCheckoutSessionHandler(
   try {
     const { priceId, profileId } = req.body as CreateCheckoutSessionPayload;
 
-    const { customerId, currentSubscriptionStatus } =
-      await createOrRetrieveCustomer(profileId);
+    const { customerId } = await createOrRetrieveCustomer(profileId);
 
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: "auto",

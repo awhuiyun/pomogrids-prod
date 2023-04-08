@@ -1,8 +1,8 @@
 import Head from "next/head";
-import useTaskStore from "@/stores/tasks";
-import useSettingStore from "@/stores/settings";
-import useToastStore from "@/stores/toast";
-import useGridStore from "@/stores/grid";
+import useTaskStore from "@/stores/useTaskStore";
+import useSettingStore from "@/stores/useSettingStore";
+import useToastStore from "@/stores/useToastStore";
+import useGridStore from "@/stores/useGridStore";
 import TimerContainer from "@/components/timer/TimerContainer";
 import TaskContainer from "@/components/tasks/TaskContainer";
 import SettingsForm from "@/components/modals/SettingsForm";
@@ -11,8 +11,8 @@ import TaskEditMenu from "@/components/tasks/TaskEditMenu";
 import Grid from "@/components/grid/Grid";
 import IntroModal from "@/components/modals/IntroModal";
 import { useEffect, useState } from "react";
-import useUserStore from "@/stores/user";
-import useTimerStore from "@/stores/timer";
+import useUserStore from "@/stores/useUserStore";
+import useTimerStore from "@/stores/useTimerStore";
 import {
   getTasksInYearService,
   getUnarchivedTasksService,
@@ -40,7 +40,7 @@ export default function Home() {
   const { user } = useUserStore();
   const { setTimerMinutes, setRemainingDurationInMilliseconds } =
     useTimerStore();
-  const { addToast } = useToastStore();
+  const { addErrorToast } = useToastStore();
 
   // Local states
   const [isIntroModalOpen, setIsIntroModalOpen] = useState(false);
@@ -118,11 +118,7 @@ export default function Home() {
           setIsLoading(false);
         } catch (error) {
           // Add toast notification
-          addToast({
-            uniqueId: uuidv4(),
-            className: "bg-red-50 text-red-700",
-            content: "Something went wrong. Please try again! 😫",
-          });
+          addErrorToast("Something went wrong. Please try again! 😫");
         }
       } else {
         setTasksInTheYear([]);

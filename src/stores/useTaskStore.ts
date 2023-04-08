@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ITaskItem } from "../types/";
+import { ITaskItem } from "../types";
 
 interface IUseTaskStore {
   tasks: ITaskItem[];

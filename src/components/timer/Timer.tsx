@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { timeFormat } from "d3";
 const { Howl, Howler } = require("howler");
-import useTimerStore from "@/stores/timer";
-import useSettingStore from "@/stores/settings";
-import useTaskStore from "@/stores/tasks";
-import useUserStore from "@/stores/user";
-import useGridStore from "@/stores/grid";
+import useTimerStore from "@/stores/useTimerStore";
+import useSettingStore from "@/stores/useSettingStore";
+import useTaskStore from "@/stores/useTaskStore";
+import useUserStore from "@/stores/useUserStore";
+import useGridStore from "@/stores/useGridStore";
 import BaseButton from "../base/BaseButton";
 import { updateTaskAfterSessionService } from "@/services/tasks";
 import buzzer from "public/assets/buzzer.mp3";

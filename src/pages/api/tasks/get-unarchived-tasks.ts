@@ -9,11 +9,9 @@ export default async function getUnarchivedTasksHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
-
     // Prisma query: Return all unarchived tasks
     const unarchivedTasks = await prisma.task.findMany({
       where: {

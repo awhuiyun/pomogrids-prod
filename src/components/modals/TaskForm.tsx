@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import useTaskStore from "@/stores/tasks";
-import useUserStore from "@/stores/user";
-import useToastStore from "@/stores/toast";
+import useTaskStore from "@/stores/useTaskStore";
+import useUserStore from "@/stores/useUserStore";
+import useToastStore from "@/stores/useToastStore";
 import BaseButton from "../base/BaseButton";
 import BaseInput from "../base/BaseInput";
 import {
@@ -17,7 +17,7 @@ export default function TaskForm() {
   const { addTask, deleteTask } = useTaskStore();
   const { tasks, unselectAllTasksForEdit, setEditsToSelectedTaskForEdit } =
     useTaskStore();
-  const { addToast } = useToastStore();
+  const { addErrorToast } = useToastStore();
 
   // Global states: useUserStore
   const { user } = useUserStore();
@@ -40,16 +40,18 @@ export default function TaskForm() {
     taskFormType === "create" ? 0 : taskSelectedForEdit.completedNumOfSessions;
 
   // Function to handle input changes
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.id === "taskName") {
-      setTaskNameInput(e.target.value);
-    } else {
-      setTargetNumOfSessionsInput(parseInt(e.target.value));
-    }
+  function handleTaskNameInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTaskNameInput(e.target.value);
+  }
+
+  function handleTargetNumOfSessionInputChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    setTargetNumOfSessionsInput(parseInt(e.target.value));
   }
 
   // Function to toggle isTaskFromOpen=False
-  function toggleTaskFormOpenFalse() {
+  function closeTaskForm() {
     // Close modal & reset states
     toggleTaskFormOpen("");
     unselectAllTasksForEdit();
@@ -86,12 +88,9 @@ export default function TaskForm() {
       deleteTask(uniqueId);
 
       // Add toast notification
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content:
-          "Something went wrong with creating task. Please try again! 😫",
-      });
+      addErrorToast(
+        "Something went wrong with creating task. Please try again! 😫"
+      );
     }
   }
 
@@ -118,12 +117,9 @@ export default function TaskForm() {
       );
 
       // Add toast notification
-      addToast({
-        uniqueId: uuidv4(),
-        className: "bg-red-50 text-red-700",
-        content:
-          "Something went wrong with updating task. Please try again! 😫",
-      });
+      addErrorToast(
+        "Something went wrong with updating task. Please try again! 😫"
+      );
     }
   }
 
@@ -148,7 +144,7 @@ export default function TaskForm() {
   return (
     <div
       className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50"
-      onClick={toggleTaskFormOpenFalse}
+      onClick={closeTaskForm}
     >
       <form
         className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
@@ -178,13 +174,7 @@ export default function TaskForm() {
             type="text"
             id="taskName"
             value={taskNameInput}
-            onChange={
-              handleInputChange as (
-                e:
-                  | React.ChangeEvent<HTMLInputElement>
-                  | React.ChangeEvent<HTMLSelectElement>
-              ) => void
-            }
+            onChange={handleTaskNameInputChange}
             required={true}
           />
 
@@ -193,13 +183,7 @@ export default function TaskForm() {
             type="number"
             id="targetNumOfSessionsInput"
             value={targetNumOfSessionsInput}
-            onChange={
-              handleInputChange as (
-                e:
-                  | React.ChangeEvent<HTMLInputElement>
-                  | React.ChangeEvent<HTMLSelectElement>
-              ) => void
-            }
+            onChange={handleTargetNumOfSessionInputChange}
             required={true}
             min={taskFormType === "create" ? 1 : completedNumOfSessionsInput}
           />
