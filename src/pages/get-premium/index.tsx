@@ -1,9 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import useUserStore from "@/stores/useUserStore";
 import useToastStore from "@/stores/useToastStore";
-import BaseButton from "@/components/base/BaseButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { createCheckOutSessionService } from "@/services/payments";
 
@@ -48,35 +46,56 @@ export default function GetPremiumPage() {
       setIsCheckoutSessionLoading(false);
     }
   }
+
+  function handleSubscribeMonthlyButton() {
+    // e.preventDefault();
+    handleClickSubscribe("monthly");
+  }
+
+  function handleSubscribeYearlyButton() {
+    handleClickSubscribe("yearly");
+  }
+
   if (isLoading) return <LoadingSpinner />;
   if (isCheckoutSessionLoading) return <LoadingSpinner />;
   return (
-    <div className="flex flex-col space-y-4">
-      <div
-        onClick={(e) => {
-          e.preventDefault();
-          handleClickSubscribe("monthly");
-        }}
-      >
-        <BaseButton
+    <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded px-4 py-12 max-w-md h-fit mx-auto">
+      <h1 className="text-3xl font-bold text-center">
+        Subscribe to Premium <br />
+        to unlock custom timers
+      </h1>
+      <p className="mt-4 text-sm text-center">
+        ...and future features, such as custom heat map themes!
+      </p>
+      <div className="mt-10 flex flex-row space-x-4 mx-auto">
+        <button
           type="button"
-          label="Monthly"
-          className="text-white bg-blue4 px-4 py-2 w-fit"
-        />
-      </div>
-
-      <div
-        onClick={(e) => {
-          e.preventDefault();
-          handleClickSubscribe("yearly");
-        }}
-      >
-        <BaseButton
+          className="text-black bg-blue0 border border-blue3 w-full h-44 rounded"
+          onClick={handleSubscribeMonthlyButton}
+        >
+          <span className="text-4xl">$3</span> <br />
+          monthly
+        </button>
+        <button
           type="button"
-          label="Annual"
-          className="text-white bg-blue4 px-4 py-2 w-fit"
-        />
+          className="text-white bg-blue3 w-full h-44 rounded"
+          onClick={handleSubscribeYearlyButton}
+        >
+          <span className="text-4xl">$30</span> <br />
+          yearly
+        </button>
       </div>
+      <p className="w-fit mx-auto mt-16">
+        Payments handled securely by{" "}
+        <a
+          href="https://stripe.com/en-gb-sg"
+          target="_blank"
+          className="text-blue3 hover:underline underline-offset-2"
+        >
+          Stripe
+        </a>
+        .
+      </p>
     </div>
   );
 }
