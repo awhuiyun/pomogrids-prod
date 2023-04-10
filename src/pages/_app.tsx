@@ -12,14 +12,13 @@ import { getProfile, createNewAccount } from "@/services/users";
 
 export default function App({ Component, pageProps }: AppProps) {
   // Global states
-  const { setUser, setProfile, setIsLoading } = useUserStore();
+  const { setUser, setProfile, setIsLoading, profile } = useUserStore();
   const { addErrorToast, toasts } = useToastStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       try {
         setIsLoading(true);
-
         // User logged in
         if (user) {
           setUser(user);
@@ -33,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
           if (profile) {
             setProfile(profile);
           }
+          console.log(profile);
         } // User logged out
         else {
           // Set all states to default

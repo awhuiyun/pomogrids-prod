@@ -19,7 +19,7 @@ export default function Signin() {
 
   return (
     <div>
-      <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded px-4 py-8 w-[415px] h-fit mx-auto">
+      <div className="border border-slate-900 shadow-custom shadow-slate-900 rounded px-4 py-8 max-w-md h-fit mx-auto">
         <h1 className="text-4xl font-bold text-center">Sign in / Sign up</h1>
         <p className="mt-4 text-center">
           Signing in persists your data so you can use

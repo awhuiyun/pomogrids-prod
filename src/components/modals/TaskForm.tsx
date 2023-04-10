@@ -143,11 +143,11 @@ export default function TaskForm() {
 
   return (
     <div
-      className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50"
+      className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50 px-4"
       onClick={closeTaskForm}
     >
       <form
-        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-28 mx-auto bg-white max-w-[500px] text-slate-900 p-6 space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >

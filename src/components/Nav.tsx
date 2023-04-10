@@ -8,9 +8,10 @@ export default function Nav() {
   const isPremium = getPremiumStatus();
 
   return (
-    <div className="flex items-center py-4 space-x-6 sm:space-x-4">
-      <Link href="/" className="font-bold text-base">
-        Pomogrids <span className="text-xs ml-1 text-blue4">BETA</span>
+    <div className="flex items-center py-4 space-x-4 text-[10px] sm:space-x-6 sm:text-base">
+      <Link href="/" className="font-bold">
+        Pomogrids{" "}
+        <span className="text-[8px] sm:text-xs ml-1 text-blue4">BETA</span>
       </Link>
       <div className="flex-grow"></div>
       {/* Sign in page */}

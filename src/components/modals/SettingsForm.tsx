@@ -187,11 +187,11 @@ export default function SettingsForm() {
 
   return (
     <div
-      className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50"
+      className="backdrop-blur-sm inset-0 bg-slate-700/20 fixed fade-in z-50 px-4"
       onClick={closeSettingsForm}
     >
       <form
-        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-16 mx-auto bg-white w-[500px] text-slate-900 p-6 space-y-8"
+        className="flex flex-col border border-slate-900 shadow-custom shadow-slate-900 rounded sticky top-16 mx-auto bg-white max-w-[500px] text-slate-900 px-6 py-4 space-y-5 sm:py-6 sm:space-y-8"
         onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmitClick}
       >
@@ -233,7 +233,7 @@ export default function SettingsForm() {
 
         {/* Timer Section */}
         <section>
-          <p className="font-bold text-lg mb-2">Timer</p>
+          <p className="font-bold sm:text-lg mb-2">Timer</p>
           <div className="flex flex-row space-x-4">
             <BaseInput
               label="Pomodoro:"
@@ -278,7 +278,7 @@ export default function SettingsForm() {
 
         {/* Cycle Section */}
         <section className="space-y-2">
-          <p className="font-bold text-lg">Cycle</p>
+          <p className="font-bold sm:text-lg">Cycle</p>
           <BaseInput
             label="Number of pomodoro sessions before a long break"
             type="number"
@@ -295,7 +295,7 @@ export default function SettingsForm() {
 
         {/* Alarm Ringtone Section */}
         <section>
-          <p className="font-bold text-lg mb-2">Alarm</p>
+          <p className="font-bold sm:text-lg mb-2">Alarm</p>
           <div className="flex flex-row space-x-4">
             <BaseDropdown
               label="Sound"
@@ -339,7 +339,7 @@ export default function SettingsForm() {
 
         {/* Grid Section */}
         <section>
-          <p className="font-bold text-lg mb-2">Grid</p>
+          <p className="font-bold sm:text-lg mb-2">Grid</p>
           <BaseDropdown
             label="Start of week:"
             id="weekStartInput"
@@ -369,7 +369,7 @@ export default function SettingsForm() {
             <BaseButton
               type="button"
               label="Sign in"
-              className="text-white bg-blue4 px-4 py-2 w-fit text-sm"
+              className="text-white bg-blue4 px-4 py-2 w-fit text-xs sm:text-sm"
             />{" "}
           </Link>
         )}
@@ -382,7 +382,7 @@ export default function SettingsForm() {
             <BaseButton
               type="button"
               label="Upgrade to premium"
-              className="text-white bg-blue4 px-4 py-2 w-fit text-sm"
+              className="text-white bg-blue4 px-4 py-2 w-fit text-xs sm:text-sm"
             />
           </Link>
         )}
@@ -390,7 +390,7 @@ export default function SettingsForm() {
           <BaseButton
             type="submit"
             label="Save settings"
-            className="text-white bg-blue4 px-4 py-2 w-fit mx-auto text-sm"
+            className="text-white bg-blue4 px-4 py-2 w-fit mx-auto text-xs sm:text-sm"
           />
         )}
       </form>

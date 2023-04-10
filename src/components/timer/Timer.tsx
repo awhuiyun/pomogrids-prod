@@ -333,10 +333,10 @@ export default function Timer() {
   return (
     <div>
       {/* Timer Option Headers: Pomodoro, Short Break, Long Break, Cycle */}
-      <div className="flex space-x-4 mt-6 w-full place-content-center">
+      <div className="flex space-x-4 mt-6 w-full place-content-center text-xs sm:text-base">
         {(!isSessionOn || (isSessionOn && timerOption === "pomodoro")) && (
           <div
-            className={`w-[115px] px-2 py-1 rounded  text-center ${
+            className={`w-[115px] px-2 py-1 rounded text-center ${
               !isSessionOn && "cursor-pointer"
             } ${timerOption === "pomodoro" && "font-bold bg-blue1"}`}
             onClick={isSessionOn ? undefined : handleToggleToPomodoroTimerClick}
