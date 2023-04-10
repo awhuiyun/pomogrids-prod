@@ -11,12 +11,11 @@ import { updateTaskAfterSessionService } from "@/services/tasks";
 import buzzer from "public/assets/buzzer.mp3";
 import calm from "public/assets/calm.mp3";
 import { formatDate } from "@/utils";
+import useToastStore from "@/stores/useToastStore";
 
 export default function Timer() {
-  // Global states: useUserStore
+  // Global states
   const { user } = useUserStore();
-
-  // Global states: useSettingStore
   const {
     timerOption,
     pomodoroTimerMinutes,
@@ -27,8 +26,6 @@ export default function Timer() {
     alarmVolume,
     setTimerOption,
   } = useSettingStore();
-
-  // Global states: useTimerStore
   const {
     timerMinutes,
     timerSeconds,
@@ -50,17 +47,14 @@ export default function Timer() {
     incrementPomodoroCountInCycle,
     setPomodoroCountInCycleToOne,
   } = useTimerStore();
-
-  // Global states: useTaskStore
   const {
     tasks,
     unselectAllTasksForTimer,
     taskSelectedForTimer,
     addSessionCountToTaskAndCheckCompletion,
   } = useTaskStore();
-
-  // Global states: useGridStore
   const { addTask } = useGridStore();
+  const { addErrorToast } = useToastStore();
 
   // Functions that plays different alarm sounds
   const calmSound = new Howl({
@@ -239,8 +233,9 @@ export default function Timer() {
       (timerOption === "pomodoro" || timerOption === "cycle") &&
       taskSelectedForTimer === ""
     ) {
-      alert("Pls select a task to work on!");
-      return "";
+      // Add toast notification
+      addErrorToast("Please select a task to work on!");
+      return;
     }
 
     // Update isCycleOn = True when user starts a cycle
