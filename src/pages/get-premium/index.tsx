@@ -47,15 +47,6 @@ export default function GetPremiumPage() {
     }
   }
 
-  function handleSubscribeMonthlyButton() {
-    // e.preventDefault();
-    handleClickSubscribe("monthly");
-  }
-
-  function handleSubscribeYearlyButton() {
-    handleClickSubscribe("yearly");
-  }
-
   if (isLoading) return <LoadingSpinner />;
   if (isCheckoutSessionLoading) return <LoadingSpinner />;
   return (
@@ -71,7 +62,7 @@ export default function GetPremiumPage() {
         <button
           type="button"
           className="text-black bg-blue0 border border-blue3 w-full h-44 rounded"
-          onClick={handleSubscribeMonthlyButton}
+          onClick={() => handleClickSubscribe("monthly")}
         >
           <span className="text-4xl">$3</span> <br />
           monthly
@@ -79,7 +70,7 @@ export default function GetPremiumPage() {
         <button
           type="button"
           className="text-white bg-blue3 w-full h-44 rounded"
-          onClick={handleSubscribeYearlyButton}
+          onClick={() => handleClickSubscribe("yearly")}
         >
           <span className="text-4xl">$30</span> <br />
           yearly
