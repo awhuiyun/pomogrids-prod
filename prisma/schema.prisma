@@ -10,8 +10,11 @@ datasource db {
 
 model User {
   id String @id
-  email String 
-  tier String
+  email String @unique
+
+  stripeCustomerId String?
+  stripeSubscriptionStatus String?
+
   tasks Task[]
   settings Settings?
 }

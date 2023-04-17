@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { Settings } from "@prisma/client";
 import { ApiResponseError } from "@/types";
@@ -10,10 +10,7 @@ export default async function getSettingsHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
-
-    // User successfully authenticated
-    const uid = decodedToken.uid;
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // Prisma query
     const settings = await prisma.settings.findUnique({

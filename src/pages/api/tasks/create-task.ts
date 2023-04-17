@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, CreateNewTaskPayload } from "@/types";
 
@@ -9,10 +9,9 @@ export default async function createNewTaskHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
     const {
       task_id,
       task_name,
@@ -22,7 +21,7 @@ export default async function createNewTaskHandler(
     } = req.body as CreateNewTaskPayload;
 
     // Prisma query
-    const task = await prisma.task.create({
+    await prisma.task.create({
       data: {
         id: task_id,
         task_name: task_name,

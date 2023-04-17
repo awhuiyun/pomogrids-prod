@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError } from "@/types";
 
@@ -9,12 +9,9 @@ export default async function createNewUserHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid, email } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
-    const email = decodedToken.email ?? "";
-
     // Prisma query: Check if user already exists
     const user = await prisma.user.findUnique({
       where: {
@@ -32,8 +29,7 @@ export default async function createNewUserHandler(
     await prisma.user.create({
       data: {
         id: uid,
-        email: email,
-        tier: "premium",
+        email: email ?? "",
         settings: {
           create: {
             pomodoro_minutes: 25,

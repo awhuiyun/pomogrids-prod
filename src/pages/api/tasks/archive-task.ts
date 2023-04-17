@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, ArchiveTaskPayload } from "@/types";
 
@@ -15,7 +15,7 @@ export default async function archiveTaskHandler(
     const { task_id } = req.body as ArchiveTaskPayload;
 
     // Prisma query
-    const task = await prisma.task.update({
+    await prisma.task.update({
       data: {
         is_archived: true,
       },

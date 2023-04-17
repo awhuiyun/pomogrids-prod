@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, DeleteExistingTaskPayload } from "@/types";
 
@@ -9,20 +9,20 @@ export default async function deleteExistingTaskHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
     const { task_id } = req.body as DeleteExistingTaskPayload;
 
     // Prisma query: Delete task from tasks_session table
-    const deleteSessions = await prisma.tasks_session.deleteMany({
+    await prisma.tasks_session.deleteMany({
       where: {
         task_id: task_id,
       },
     });
 
     //  Prisma query: Delete task from task table
-    const deleteTask = await prisma.task.delete({
+    await prisma.task.delete({
       where: {
         id: task_id,
       },

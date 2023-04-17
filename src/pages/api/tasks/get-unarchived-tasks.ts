@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "@/server/prisma/prismaClient";
+import { prisma } from "@/server/utils/prisma";
 import { authenticateJWT } from "@/server/middleware/authenticate";
 import { ApiResponseError, ITaskItem } from "@/types";
 
@@ -9,11 +9,9 @@ export default async function getUnarchivedTasksHandler(
 ) {
   try {
     // Authenticate jwt
-    const decodedToken = await authenticateJWT(req.headers.authorization);
+    const { uid } = await authenticateJWT(req.headers.authorization);
 
     // User successfully authenticated
-    const uid = decodedToken.uid;
-
     // Prisma query: Return all unarchived tasks
     const unarchivedTasks = await prisma.task.findMany({
       where: {
